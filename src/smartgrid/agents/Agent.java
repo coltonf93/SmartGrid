@@ -53,11 +53,11 @@ public abstract class Agent {
 	}
 	
 	public double getLastPrice(int t){
-		return this.lastPrices[0];
+		return this.lastPrices[t];
 	}
 	
 	public double getLastPrice2(int t){
-		return this.lastPrices2[0];
+		return this.lastPrices2[t];
 	}
 	
 	public double[] getLastPrices(){

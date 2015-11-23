@@ -130,7 +130,7 @@ public class SmartGridDriver{
 		//PROCESS THE STEP FUNCTIONS FOR ALL AGENTS
 		for(int d=0;d<days;d++){
 			smartPrint.println(4,"Begin Day "+d+": \n=========================================================\n=========================================================\n");
-			for(int t=0;t<23;t++){
+			for(int t=0;t<24;t++){
 				smartPrint.println(4,"Begin Hour "+t+": \n=========================================================");
 				for(int a=0;a<allAgents.size();a++){
 					allAgents.get(a).stepBegin(t);
@@ -163,6 +163,9 @@ public class SmartGridDriver{
 					}
 					//TODO sloppy code start refactor resets the exchange counter and summation
 					//System.out.println(agent.getName()+" exchanged with "+agent.getExchangeCount()+" other's with a price sum of "+agent.getPriceSum());
+					if(a==6 && t==23){
+						System.out.println("a6 solar hit t:"+t+" d:"+d);
+					}
 					agent.setPriceSum(0);
 					agent.setExchangeCount(0);
 					//sloppy code end refactor
