@@ -31,7 +31,7 @@ public abstract class Agent {
 	public ArrayList<Agent> getSellsTo(){
 		return this.sellsTo;
 	}
-	
+	[0]
 	public void setSellTo(Agent agent){
 		sellsTo.add(agent);
 	}

@@ -121,7 +121,7 @@ public class WindPower extends Agent implements Sellers{
 			this.lastSellBids[t]=this.sellPrice;
 		}
 		else{
-			this.lastSellBids[0]=0;
+			this.lastSellBids[t]=0;
 		}
 		
 		if(t==23){
