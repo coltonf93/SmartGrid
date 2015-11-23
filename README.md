@@ -1,5 +1,5 @@
 # SmartGrid
-Smart grid is a a simulation of a smart power grid. Each component of the smart grid is an intelligent agent looking to maximize its profit while minimizing it's expenses. Through experimentation we hope to find local and global and local convergence on agent buy and sell prices.
+Smart grid is a simulation of a smart power grid. Each component of the smart grid is an intelligent agent looking to maximize its profit while minimizing it's expenses. Through experimentation we hope to find local and global and local convergence on agent buy and sell prices.
 
 # Agents
 
