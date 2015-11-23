@@ -126,7 +126,6 @@ public class SmartGridDriver{
 			}
 		}
 		smartPrint.println(4,"Agents determining buy and sell prices, generation, decay, and consumption.");
-		//TODO consider linking all storage units to every other storage unit, to buy and sell to
 
 		//PROCESS THE STEP FUNCTIONS FOR ALL AGENTS
 		for(int d=0;d<days;d++){
