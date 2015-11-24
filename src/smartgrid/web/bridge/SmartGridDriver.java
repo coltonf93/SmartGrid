@@ -34,7 +34,7 @@ public class SmartGridDriver{
 
 	public static void main(String [] args){
 		smartPrint=smartPrint.getInstance();
-		smartPrint.enableTypes(new int[] {0,4,5,7});//Modify this to show different print statements, recommend to leave 0 and 7 on
+		smartPrint.enableTypes(new int[] {0,4,5,6,7});//Modify this to show different print statements, recommend to leave 0 and 7 on
 		int solarCount=3;
 		int windCount=5;
 		int consumerCount=5;

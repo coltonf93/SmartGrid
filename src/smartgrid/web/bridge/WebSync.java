@@ -9,9 +9,15 @@ public class WebSync {
 	 this.agents=agents;
 	}
 	
+	//Reset and start method
 	public void intializeNodes(){
 		//Runs every time program is reset
 		//intialize all the nodes and connections
+	}
+	
+	public void javaToJson(){
+		JSONObject obj = new JSONObject();
+		obj.put("name","foo");
 	}
 	
 	public void updateNodes(){
