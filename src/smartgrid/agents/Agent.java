@@ -31,12 +31,14 @@ public abstract class Agent {
 	public ArrayList<Agent> getSellsTo(){
 		return this.sellsTo;
 	}
-	[0]
+	
 	public void setSellTo(Agent agent){
+		smartPrint.println(1, this.name+" can now sell to "+agent.name);
 		sellsTo.add(agent);
 	}
 	
 	public void setBuyFrom(Agent agent){
+		smartPrint.println(1, this.name+" can now buy from "+agent.name);
 		buysFrom.add(agent);
 	}
 	

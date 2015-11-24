@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class SolarPower extends Agent implements Sellers{
 		int t0,t1;
-		double basePower,sellPrice,sellPower,profit,dailyProfit;
+		double basePower,sellPrice,sellPower,profit,dailyProfit,hourlyProfit;
 		double[] lastSellBids = {.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15};//How much the agent bided to sell the power yesterday at this time reccomended at least .15
 		String name;
 		Random rand = new Random();
@@ -19,6 +19,7 @@ public class SolarPower extends Agent implements Sellers{
 			this.sellPrice=0.1;
 			this.sellPower=0;
 			this.name=name;
+			smartPrint.println(1, this.name+" was created with base power "+basePower);
 		}
 	
 		@Override
@@ -58,6 +59,7 @@ public class SolarPower extends Agent implements Sellers{
 				this.sellPower-=units;
 				this.profit+=units*price;
 				this.dailyProfit+=units*price;
+				this.hourlyProfit+=units*price;
 				//TODO next 2 lines sloppy code please refactor
 				this.setExchangeCount(this.getExchangeCount()+1);
 				this.setPriceSum(this.getPriceSum()+price);
@@ -94,7 +96,16 @@ public class SolarPower extends Agent implements Sellers{
 		}
 		
 		@Override
+		public double getHourlyProfit(){
+			return this.hourlyProfit;
+		}
+		
+		@Override
 		public void stepBegin(int t){
+			if(t==0){
+				this.dailyProfit=0;
+			}
+			this.hourlyProfit=0;
 			if(t>=t0&&t<=t1){//Generates the power if it is during peak time
 				this.sellPower=this.basePower+(3*rand.nextDouble());//power generated [basePower-(basePower+3)]
 			}
@@ -102,7 +113,7 @@ public class SolarPower extends Agent implements Sellers{
 				this.sellPower=0;//If it's not during peak time no power is generated.
 			}
 			
-			smartPrint.println(1,this.name+" generated "+this.sellPower+" units of power.");
+			smartPrint.println(2,this.name+" generated "+this.sellPower+" units of power.");
 			//Calculates the buy price for this round at this specific time
 			if(Math.abs(this.lastPrices[t]-this.lastPrices2[t])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
 				this.setSellPrice(this.lastSellBids[t]+bidRatio*(this.lastPrices[t]-this.lastSellBids[t]));//modify bid price according to previous bid, price and bid ratio
@@ -116,13 +127,6 @@ public class SolarPower extends Agent implements Sellers{
 		}
 		
 		public void stepEnd(int t){
-			if(t==23){
-				this.dailyProfit=0;
-			}
-			
-			//TODO move print statements for daily profit here
-			
-			//TODO reset daily values for wind
 			this.lastSellBids[t]=this.sellPrice;
 			this.lastPrices2[t]=this.lastPrices[t];
 			this.lastPrices[t]=this.getAvgPrice();

@@ -1,7 +1,7 @@
 package smartgrid.agents;
 
 public class MainGrid extends Agent implements Buyers,Sellers{
-	double buyPrice,sellPrice,expense,profit,dailyProfit,dailyExpense,dailyNet;
+	double buyPrice,sellPrice,expense,profit,dailyProfit,dailyExpense,hourlyProfit,hourlyExpense;
 	String name;
 	double[] lastSellBids = new double[24];//array that can be returned to keep it uniform with others
 	double[] lastBuyBids = new double[24];//array that can be returned to keep it uniform with others
@@ -15,6 +15,7 @@ public class MainGrid extends Agent implements Buyers,Sellers{
 		this.dailyExpense=0;
 		this.expense=0;
 		this.init();
+		smartPrint.println(1,this.name+" was created and has a fixed [buy:sell] price of ["+this.buyPrice+","+this.sellPrice+"] and has unlimited buy and sell power");
 	}
 	
 	//TODO think of a cleaner way to do this since array's can't be specified in construcctor
@@ -65,6 +66,7 @@ public class MainGrid extends Agent implements Buyers,Sellers{
 		smartPrint.println(3,this.name+" sold "+units+" of its unlimited supply at "+price+"/unit.");
 		this.profit+=units*price;
 		this.dailyProfit+=units*price;
+		this.hourlyProfit+=units*price;
 		//TODO next 2 lines sloppy code please refactor
 		this.setExchangeCount(this.getExchangeCount()+1);
 		this.setPriceSum(this.getPriceSum()+price);
@@ -94,6 +96,7 @@ public class MainGrid extends Agent implements Buyers,Sellers{
 		smartPrint.println(3,this.name+" bought "+units+" out of its unlimited need at "+price+"/unit.");
 		this.expense+=units*price;
 		this.dailyExpense+=units*price;
+		this.hourlyExpense+=units*price;
 		//TODO next 2 lines sloppy code please refactor
 		this.setExchangeCount(this.getExchangeCount()+1);
 		this.setPriceSum(this.getPriceSum()+price);
@@ -127,6 +130,20 @@ public class MainGrid extends Agent implements Buyers,Sellers{
 		return this.dailyProfit-this.dailyExpense;
 	}
 	
+	@Override 
+	public double getHourlyProfit(){
+		return this.hourlyProfit;
+	}
+	
+	@Override
+	public double getHourlyExpense(){
+		return this.hourlyExpense;
+	}
+	
+	public double getHourlyNetProfit(){
+		return this.hourlyProfit-this.hourlyExpense;
+	}
+	
 	@Override
 	public double getLastSellBid(int t) {
 		return this.lastSellBids[t];
@@ -149,15 +166,18 @@ public class MainGrid extends Agent implements Buyers,Sellers{
 	
 	@Override
 	public void stepBegin(int t) {
+		if(t==0){
+			this.dailyExpense=0;
+			this.dailyProfit=0;
+		}
+		this.hourlyExpense=0;
+		this.hourlyProfit=0;
 		smartPrint.println(2,this.name+" never changes its buyBid and kept it set at "+this.getBuyPrice()+"/unit.");
 		smartPrint.println(2,this.name+" never changes its sellBid and kept it set at "+this.getSellPrice()+"/unit.");
 	}
 	
 	public void stepEnd(int t) {
 		//TODO move print statements for daily profit here
-		if(t==23){
-			this.dailyExpense=0;
-			this.dailyProfit=0;
-		}
+
 	}
 }

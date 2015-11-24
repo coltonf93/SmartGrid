@@ -4,7 +4,17 @@ import java.util.ArrayList;
 
 public class SmartPrint {
 	private static volatile SmartPrint instance;//singleton method
-	//types[errors,creation,step info,exchanges,formatText,dailyOverviews,globalOverviews,decisions]
+	/*List of SmartPrint categories and their numbers
+	 * ------------------------------------------------
+	 * 0) Error messages and Warning's Enabled by default
+	 * 1) Agent Initialization and Connection
+	 * 2) Begin Turn (Buy and Sell Power, and pricing determined.
+	 * 3) Exchanges (Who sold to who and for how much)
+	 * 4) Hourly Totals (Hourly Metrics)
+	 * 5) Daily Totals (Daily Metrics)
+	 * 6) Global Totals (Final Metrics on program completion)
+	 * 7) Hour and daily text dividers 
+	 */
 	Boolean[] types={true,false,false,false,false,false,false,false};
 	private SmartPrint(){}
 	

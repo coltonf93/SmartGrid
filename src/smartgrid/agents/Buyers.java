@@ -9,6 +9,7 @@ public interface Buyers {
 	public double getExpense();
 	public String getName();
 	double getDailyExpense();
+	double getHourlyExpense();
 	double getLastBuyBid(int t);
 	double[] getLastBuyBids();
 	public void stepBegin(int t);

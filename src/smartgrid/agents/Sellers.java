@@ -5,6 +5,7 @@ public interface Sellers{
 	public double getSellPower();
 	public double getProfit();
 	double getDailyProfit();
+	double getHourlyProfit();
 	public void setSellPrice(double sellPrice);
 	public double offer(Buyers buyer, double units);
 	public void sell(double units, double price);
