@@ -34,7 +34,7 @@ public class SmartGridDriver{
 
 	public static void main(String [] args){
 		smartPrint=smartPrint.getInstance();
-		smartPrint.enableTypes(new int[] {0,6});
+		smartPrint.enableTypes(new int[] {0,4,5,7});//Modify this to show different print statements, recommend to leave 0 and 7 on
 		int solarCount=3;
 		int windCount=5;
 		int consumerCount=5;
@@ -125,13 +125,12 @@ public class SmartGridDriver{
 				}
 			}
 		}
-		smartPrint.println(4,"Agents determining buy and sell prices, generation, decay, and consumption.");
 
 		//PROCESS THE STEP FUNCTIONS FOR ALL AGENTS
 		for(int d=0;d<days;d++){
-			smartPrint.println(4,"Begin Day "+d+": \n=========================================================\n=========================================================\n");
+			smartPrint.println(7,"\nBegin Day "+d+": \n=========================================================\n=========================================================\n");
 			for(int t=0;t<24;t++){
-				smartPrint.println(4,"Begin Hour "+t+": \n=========================================================");
+				smartPrint.println(7,"\nBegin Hour "+t+": \n=========================================================");
 				for(int a=0;a<allAgents.size();a++){
 					allAgents.get(a).stepBegin(t);
 				}
@@ -140,19 +139,40 @@ public class SmartGridDriver{
 				buyers.addAll((Collection<? extends Agent>)storage);//adds all the storage units to the list of buyers
 				buyers.add(mainGrid);
 				Collections.sort(buyers,highBuyer);//Sorts all of the buyers by, buy price, highest first
-				smartPrint.println(4,"\nSorting buyers by buy price DESC.");
 				for(int i=0;i<buyers.size();i++){
 					buyer=((Buyers)buyers.get(i));
 					sellers=buyers.get(i).getBuysFrom();
-					smartPrint.println(4,"\nSorting "+buyer.getName()+"'s Potential Sellers by their Sell Price ASC.");
 					Collections.sort(sellers,lowSeller);//matches the lowest price sellers to the highest price buyer
-					smartPrint.println(2,buyer.getName()+" needs "+buyer.getBuyPower()+" units for $"+buyer.getBuyPrice()+"/unit: \n-------------------------------------------------------");
+					smartPrint.println(3,"\n"+buyer.getName()+" needs "+buyer.getBuyPower()+" units for $"+buyer.getBuyPrice()+"/unit: \n-------------------------------------------------------");
 					for(int j=0;j<sellers.size()&&buyer.getBuyPower()>0;j++){//All connected sellers offer their prices and availability, cheapest first 
 						seller=(Sellers)sellers.get(j);//TODO Sellers is a higher level than storage so storage has issues I think
 						seller.offer(buyer, buyer.getBuyPower());
 						//System.out.println("Seller("+seller.getName()+") bid at "+seller.getSellPrice()+"\\unit and Buyer("+buyer.getName()+") bit at "+buyer.getBuyPrice()+"\\unit agreeing at "+price+"\\unit.");
 					}
 				}
+				
+				smartPrint.println(4,"\nHour("+t+") Hourly Totals\n----------------------------------------");
+				for(int i=0;i<consumers.size();i++){
+					Consumer consumerA = (Consumer)consumers.get(i);
+					smartPrint.println(4,consumerA.getName()+" earned a hourly total of -"+consumerA.getHourlyExpense()+".");
+				}
+				
+				for(int i=0;i<wind.size();i++){
+					WindPower windA = (WindPower)wind.get(i);
+					smartPrint.println(4,windA.getName()+" earned an hourly total of "+windA.getHourlyProfit()+".");
+				}
+				
+				for(int i=0;i<solar.size();i++){
+					SolarPower solarA = (SolarPower)solar.get(i);
+					smartPrint.println(4,solarA.getName()+" earned an hourly total of "+solarA.getHourlyProfit()+".");
+				}
+				
+				for(int i=0;i<storage.size();i++){
+					GridStorage storageA = (GridStorage)storage.get(i);
+					smartPrint.println(4,storageA.getName()+" earned an hourly total of "+storageA.getHourlyProfit()+" and spent an hourly total of "+storageA.getHourlyExpense()+" netting "+storageA.getHourlyNetProfit()+".");
+				}	
+				smartPrint.println(4,mainGrid.getName()+" earned an hourly total of "+mainGrid.getHourlyProfit()+" and spent an hourly total of "+mainGrid.getHourlyExpense()+" netting "+mainGrid.getHourlyNetProfit()+".");
+				
 				for(int a=0;a<allAgents.size();a++){
 					Agent agent=allAgents.get(a);
 					if(agent.getExchangeCount()>=1){
@@ -163,14 +183,12 @@ public class SmartGridDriver{
 					}
 					//TODO sloppy code start refactor resets the exchange counter and summation
 					//System.out.println(agent.getName()+" exchanged with "+agent.getExchangeCount()+" other's with a price sum of "+agent.getPriceSum());
-					if(a==6 && t==23){
-						System.out.println("a6 solar hit t:"+t+" d:"+d);
-					}
 					agent.setPriceSum(0);
 					agent.setExchangeCount(0);
 					//sloppy code end refactor
 					agent.stepEnd(t);
 				}
+				
 			}
 			//TODO For each expense and profit, create a daily profit and daily reward that resets when t=0, the other accumulate the entire time
 			smartPrint.println(5,"\nDay("+d+") Daily Totals\n========================================");

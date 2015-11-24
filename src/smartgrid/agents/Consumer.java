@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Consumer extends Agent implements Buyers{
 	double[] consumptionRate= {0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0,1.0,1.0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,2.0,2.0,2.0,2.0,0.25,.25};
-	double buyPrice, expense, buyPower, dailyExpense;
+	double buyPrice, expense, buyPower, dailyExpense, hourlyExpense;
 	double[] lastBuyBids = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};//How much the agent bid to buy for yesterday at this time Recommended 0
 	String name;
 	Random rand = new Random();
@@ -12,9 +12,10 @@ public class Consumer extends Agent implements Buyers{
 	public Consumer(String name){
 		super(name);
 		this.name=name;
-		this.buyPrice=.09;
 		this.expense=0;
 		this.dailyExpense=0;
+		this.hourlyExpense=0;
+		smartPrint.println(1, this.name+" was created with a variable class defined consumption rate.");
 	}
 	
 	@Override
@@ -33,6 +34,7 @@ public class Consumer extends Agent implements Buyers{
 			smartPrint.println(3,this.name+" bought "+units+"/"+this.buyPower+" units of power and has "+(this.buyPower-units)+" remaining at "+price+"/unit.");
 			this.expense+=units*price;
 			this.dailyExpense+=units*price;
+			this.hourlyExpense+=units*price;
 			this.buyPower-=units;
 			//TODO next 2 lines sloppy code please refactor
 			this.setExchangeCount(this.getExchangeCount()+1);
@@ -88,9 +90,17 @@ public class Consumer extends Agent implements Buyers{
 	public double[] getLastBuyBids(){
 		return this.lastBuyBids;
 	}
+	
+	@Override
+	public double getHourlyExpense(){
+		return this.hourlyExpense;
+	}
 		
 	@Override
 	public void stepBegin(int t){
+		if(t==0){
+			this.dailyExpense=0;
+		}
 		//TODO modify consumption scalar
 		this.buyPower=4*this.consumptionRate[t]*(1+rand.nextDouble());//randomScalar between -1cR to 1cR simulating consumption of user
 		smartPrint.println(2,this.name+" consumed and requires "+this.buyPower+" units of power");
@@ -108,10 +118,7 @@ public class Consumer extends Agent implements Buyers{
 	}
 	
 	public void stepEnd(int t){
-		if(t==23){
-			this.dailyExpense=0;
-			//TODO put print statements for daily totals here
-		}
+		this.hourlyExpense=0;
 		
 	//TODO put print statements for tic totals here
 		this.lastBuyBids[t]=this.buyPrice;

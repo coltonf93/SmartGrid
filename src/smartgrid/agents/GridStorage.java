@@ -1,7 +1,7 @@
 package smartgrid.agents;
 
 public class GridStorage extends Agent implements Buyers, Sellers{
-	double sellPrice, buyPrice, profit, expense, sellPower, buyPower, decayRate, storedPower, capacity,dailyExpense,dailyProfit,dailyNetProfit;
+	double sellPrice, buyPrice, profit, expense, sellPower, buyPower, decayRate, storedPower, capacity, dailyExpense,dailyProfit,hourlyProfit,hourlyExpense;
 	double[] lastSellBids = {.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15};//How much the agent bided to sell the power yesterday at this time recommended at least .15
 	double[] lastBuyBids = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};//How much the agent bid to buy for yesterday at this time recommended 0
 	
@@ -15,8 +15,9 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 		this.expense=0;
 		this.dailyExpense=0;
 		this.storedPower=.5*this.capacity;//starts half full
-		
-		smartPrint.println(1,this.name+" was created and has "+.5*this.capacity+" units of power at capacity "+this.capacity);
+		this.hourlyProfit=0;
+		this.hourlyExpense=0;
+		smartPrint.println(1,this.name+" was created and has "+.5*this.capacity+" units of power stored and a max capacity of "+this.capacity);
 	}
 	
 	public double getSellPower(){
@@ -51,6 +52,7 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 			this.storedPower-=units;
 			this.profit+=units*price;
 			this.dailyProfit+=units*price;
+			this.hourlyProfit+=units*price;
 			//TODO next 2 lines sloppy code please refactor
 			this.setExchangeCount(this.getExchangeCount()+1);
 			this.setPriceSum(this.getPriceSum()+price);
@@ -68,6 +70,7 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 			this.storedPower+=units;
 			this.expense+=units*price;
 			this.dailyExpense+=units*price;
+			this.hourlyExpense+=units*price;
 			//TODO next 2 lines sloppy code please refactor
 			this.setExchangeCount(this.getExchangeCount()+1);
 			this.setPriceSum(this.getPriceSum()+price);
@@ -136,6 +139,20 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 		return this.dailyProfit-this.dailyExpense;
 	}
 	
+	@Override 
+	public double getHourlyProfit(){
+		return this.hourlyProfit;
+	}
+	
+	@Override
+	public double getHourlyExpense(){
+		return this.hourlyExpense;
+	}
+	
+	public double getHourlyNetProfit(){
+		return this.hourlyProfit-this.hourlyExpense;
+	}
+	
 	@Override
 	public double getLastSellBid(int t) {
 		return this.lastSellBids[t];
@@ -158,6 +175,12 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 	
 	@Override
 	public void stepBegin(int t){
+		if(t==0){
+			dailyProfit=0;
+			dailyExpense=0;
+		}
+		this.hourlyExpense=0;
+		this.hourlyProfit=0;
 		if(Math.abs(this.lastPrices[t]-this.lastPrices2[t])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
 			this.setBuyPrice(this.lastBuyBids[t]+bidRatio*(this.lastPrices[t]-this.lastBuyBids[t]));//modify buyBid according to previous bid, price and bid ratio
 			smartPrint.println(2,this.name+" changed it's buyBid price from "+this.getLastBuyBid(t)+" to "+this.getBuyPrice()+"/unit.");
@@ -194,13 +217,7 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 	}
 	
 	public void stepEnd(int t){
-		//TODO move print statements for daily profit here
-		if(t==24){
-			dailyProfit=0;
-			dailyExpense=0;
-			//Put print statements for daily totals here
-		}
-		
+		//Daily totals print statements should go here.
 		//Put print statements for tic totals here
 		this.lastBuyBids[t]=this.getBuyPrice();
 		this.lastSellBids[t]=this.getSellPrice();

@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class WindPower extends Agent implements Sellers{
 	int t0,t1;
-	double basePower,sellPrice,sellPower,profit,dailyProfit;
+	double basePower,sellPrice,sellPower,profit,dailyProfit,hourlyProfit;
 	double[] lastSellBids = {.15,.15,.15,.15,.15,.15,.19,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15};//How much the agent bided to sell the power yesterday at this time reccomended at least .15
 	String name;
 	Random rand = new Random();
@@ -19,6 +19,8 @@ public class WindPower extends Agent implements Sellers{
 		this.name=name;
 		this.profit=0;
 		this.dailyProfit=0;
+		this.hourlyProfit=0;
+		smartPrint.println(1,this.name+" was created with base power: "+basePower+".");
 	}
 	
 
@@ -61,6 +63,7 @@ public class WindPower extends Agent implements Sellers{
 			this.sellPower-=units;
 			this.profit+=units*price;
 			this.dailyProfit+=units*price;
+			this.hourlyProfit+=units*price;
 			//TODO next 2 lines sloppy code please refactor
 			this.setExchangeCount(this.getExchangeCount()+1);
 			this.setPriceSum(this.getPriceSum()+price);
@@ -94,8 +97,17 @@ public class WindPower extends Agent implements Sellers{
 		return this.lastSellBids[t];
 	}
 	
+	@Override 
+	public double getHourlyProfit(){
+		return this.hourlyProfit;
+	}
+	
 	@Override
-	public void stepBegin(int t){		
+	public void stepBegin(int t){	
+		if(t==0){
+			dailyProfit=0;
+		}
+		this.hourlyProfit=0;
 		//TODO find a better model for wind generation, for now it is simply the opposite of solar.
 		if(t<=t0||t>=t1){//Generates the power if it is during peak time
 			this.sellPower=this.basePower+(3*rand.nextDouble());//power generated [basePower-(basePower+3)]
@@ -123,12 +135,6 @@ public class WindPower extends Agent implements Sellers{
 		else{
 			this.lastSellBids[t]=0;
 		}
-		
-		if(t==23){
-			dailyProfit=0;
-			//TODO put print statements for daily totals here
-		}
-		
 		//TODO put print statements for tic totals here
 		//TODO reset daily values for wind
 		this.lastSellBids[t]=this.sellPrice;
