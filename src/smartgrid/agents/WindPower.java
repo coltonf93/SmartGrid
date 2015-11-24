@@ -5,7 +5,7 @@ import java.util.Random;
 public class WindPower extends Agent implements Sellers{
 	int t0,t1;
 	double basePower,sellPrice,sellPower,profit,dailyProfit,hourlyProfit;
-	double[] lastSellBids = {.15,.15,.15,.15,.15,.15,.19,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15};//How much the agent bided to sell the power yesterday at this time reccomended at least .15
+	double[] lastSellBids = {.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99}; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
 	String name;
 	Random rand = new Random();
 	
@@ -129,6 +129,9 @@ public class WindPower extends Agent implements Sellers{
 	}
 	
 	public void stepEnd(int t){
+		if(sellPower>0){
+			smartPrint.println(0, "Error: Consumer did not get enough power.");
+		}
 		if(this.dailyProfit>0){
 			this.lastSellBids[t]=this.sellPrice;
 		}

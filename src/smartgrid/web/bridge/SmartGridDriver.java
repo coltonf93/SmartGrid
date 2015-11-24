@@ -15,7 +15,7 @@ public class SmartGridDriver{
 	private static Comparator<Agent> highBuyer;
 	private static ArrayList<Agent> sellers = new ArrayList<Agent>();
 	private static ArrayList<Agent> buyers = new ArrayList<Agent>();
-	private static int days=3;
+	private static int days=50;
 	static SmartPrint smartPrint;
 	static{	
 		lowSeller = new Comparator<Agent>(){
@@ -27,14 +27,14 @@ public class SmartGridDriver{
 		highBuyer = new Comparator<Agent>(){
 			@Override
 			public int compare(Agent b1, Agent b2){
-				return Double.compare(((Buyers)b1).getBuyPrice(), ((Buyers)b2).getBuyPrice());
+				return -1*Double.compare(((Buyers)b1).getBuyPrice(), ((Buyers)b2).getBuyPrice());
 			}
 		};
 	}
 
 	public static void main(String [] args){
 		smartPrint=smartPrint.getInstance();
-		smartPrint.enableTypes(new int[] {0,4,5,7});//Modify this to show different print statements, recommend to leave 0 and 7 on
+		smartPrint.enableTypes(new int[] {0});//Modify this to show different print statements, recommend to leave 0 and 7 on
 		int solarCount=3;
 		int windCount=5;
 		int consumerCount=5;
@@ -52,7 +52,7 @@ public class SmartGridDriver{
 		WebSync webSync = new WebSync(allAgents);
 		smartPrint.println(4,"Building the Main Grid");
 		//TODO make MainGrid configurable from the web interface that is to come
-		MainGrid mainGrid = new MainGrid("MainGrid",.03,.15);
+		MainGrid mainGrid = new MainGrid("MainGrid",.01,1.0);
 		allAgents.add(mainGrid);//creates a main grid with unlimited supply and demand buy:.05 and sell .30
 		smartPrint.println(4,"Building Consumers.");
 		//Creates all the consumers
@@ -139,6 +139,7 @@ public class SmartGridDriver{
 				buyers.addAll((Collection<? extends Agent>)storage);//adds all the storage units to the list of buyers
 				buyers.add(mainGrid);
 				Collections.sort(buyers,highBuyer);//Sorts all of the buyers by, buy price, highest first
+				
 				for(int i=0;i<buyers.size();i++){
 					buyer=((Buyers)buyers.get(i));
 					sellers=buyers.get(i).getBuysFrom();
@@ -150,6 +151,19 @@ public class SmartGridDriver{
 						//System.out.println("Seller("+seller.getName()+") bid at "+seller.getSellPrice()+"\\unit and Buyer("+buyer.getName()+") bit at "+buyer.getBuyPrice()+"\\unit agreeing at "+price+"\\unit.");
 					}
 				}
+				if(d==days-1&&t==23 || d==3 && t==23){
+				System.out.print("Buyers:\n==========================================================");
+				for(int i=0;i<buyers.size();i++){
+					buyer=((Buyers)buyers.get(i));
+					System.out.println("\n"+buyer.getName()+"($"+df.format(buyer.getBuyPrice())+") Sellers:\n--------------------------------");
+					for(int j=0;j<sellers.size();j++){
+						seller=(Sellers)sellers.get(j);
+						System.out.println(seller.getName()+"($"+df.format(seller.getSellPrice())+")");
+					}
+					
+				}
+				}
+				
 				
 				smartPrint.println(4,"\nHour("+t+") Hourly Totals\n----------------------------------------");
 				for(int i=0;i<consumers.size();i++){

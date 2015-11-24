@@ -2,8 +2,8 @@ package smartgrid.agents;
 
 public class GridStorage extends Agent implements Buyers, Sellers{
 	double sellPrice, buyPrice, profit, expense, sellPower, buyPower, decayRate, storedPower, capacity, dailyExpense,dailyProfit,hourlyProfit,hourlyExpense;
-	double[] lastSellBids = {.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15};//How much the agent bided to sell the power yesterday at this time recommended at least .15
-	double[] lastBuyBids = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};//How much the agent bid to buy for yesterday at this time recommended 0
+	double[] lastSellBids = {.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99}; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
+	double[] lastBuyBids = {.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02};//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
 	
 	public GridStorage(String name){
 		super(name);
@@ -98,7 +98,17 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 	}
 	//offer to buy from a seller
 	public double offer(Sellers seller, double units){
-		double price=(this.buyPrice+seller.getSellPrice())/2;
+		double price=0;//agreed upon exchange price
+		if(!seller.getName().equals("MainGrid")){
+			price=(this.buyPrice+seller.getSellPrice())/2;// if it's not the main grid the agent pays the average of buyer and selleer bids
+		}
+		else if(seller.getName().equals("MainGrid")&& this.storedPower<.2*this.capacity){
+			price=seller.getSellPrice();//If it's the main grid, the agent pays the price of the main grid
+		}
+		else{
+			smartPrint.println(3, this.name+" rejected main grid offer.");
+		}
+		//TODO implement sell to main grid functionality inverse to this
 		if(this.buyPower<=units){
 			seller.sell(this.buyPower,price);
 			this.buy(this.buyPower,price);
@@ -219,6 +229,13 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 	public void stepEnd(int t){
 		//Daily totals print statements should go here.
 		//Put print statements for tic totals here
+		if(this.buyPower>0){
+			smartPrint.println(0, "Warning: "+this.name+" did not buy as much as it allocated.");
+			
+		}
+		if(this.sellPower>0){
+			smartPrint.println(0, "Warning: "+this.name+" did not sell as much as it wanted.");
+		}
 		this.lastBuyBids[t]=this.getBuyPrice();
 		this.lastSellBids[t]=this.getSellPrice();
 		this.lastPrices2[t]=this.lastPrices[t];
