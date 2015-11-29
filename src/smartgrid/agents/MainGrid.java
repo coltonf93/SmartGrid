@@ -2,12 +2,10 @@ package smartgrid.agents;
 
 public class MainGrid extends Agent implements Buyers,Sellers{
 	double buyPrice,sellPrice,expense,profit,dailyProfit,dailyExpense,hourlyProfit,hourlyExpense;
-	String name;
 	double[] lastSellBids = new double[24];//array that can be returned to keep it uniform with others
 	double[] lastBuyBids = new double[24];//array that can be returned to keep it uniform with others
-	public MainGrid(String name,double buyPrice,double sellPrice){
-		super(name);
-		this.name=name;
+	public MainGrid(double buyPrice,double sellPrice){
+		super("MainGrid");
 		this.buyPrice=buyPrice;
 		this.sellPrice=sellPrice;
 		this.dailyProfit=0;
@@ -54,14 +52,6 @@ public class MainGrid extends Agent implements Buyers,Sellers{
 	}
 
 	@Override
-	public double offer(Buyers buyer, double units) {//always has enough to sell
-		double price=(this.sellPrice+buyer.getBuyPrice())/2;
-		buyer.buy(units,price);	
-		this.sell(units,price);	
-		return price;
-	}
-
-	@Override
 	public void sell(double units, double price) {
 		smartPrint.println(3,this.name+" sold "+units+" of its unlimited supply at "+price+"/unit.");
 		this.profit+=units*price;
@@ -81,14 +71,6 @@ public class MainGrid extends Agent implements Buyers,Sellers{
 	@Override
 	public double getBuyPrice() {
 		return this.buyPrice;
-	}
-
-	@Override
-	public double offer(Sellers seller, double units) {//Main grid has unlimited buying power
-		double price=(this.buyPrice+seller.getSellPrice())/2;
-		this.buy(units,price);
-		seller.sell(units,price);
-		return price;
 	}
 
 	@Override

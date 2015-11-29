@@ -7,7 +7,6 @@ public interface Sellers{
 	double getDailyProfit();
 	double getHourlyProfit();
 	public void setSellPrice(double sellPrice);
-	public double offer(Buyers buyer, double units);
 	public void sell(double units, double price);
 	public String getName();
 	public double getLastSellBid(int t);

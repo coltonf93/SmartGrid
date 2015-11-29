@@ -34,23 +34,6 @@ public class WindPower extends Agent implements Sellers{
 		this.sellPrice=sellPrice;
 	}
 
-	//Buyer offering to buy  from this seller
-	@Override
-	public double offer(Buyers buyer, double units){
-		//smartPrint.println(this.name+" offered to sell "+units+" at "+this.sellPrice+" to  "+buyer.getName());
-		double price =(buyer.getBuyPrice()+this.getSellPrice())/2; //The average of the buyers buy price and the sellers sell price is the price
-		if(this.sellPower>=units){//If the buyer asks for less than is available give what is needed.
-			buyer.buy(units, price);
-			this.sell(units, price);
-			
-		}
-		else if(this.sellPower>0){//If this has some power, but not enough to satisfy give the requested amount sell what is has
-			buyer.buy(this.sellPower,price);
-			this.sell(this.sellPower,price);	
-		}
-		return price;
-	}
-
 	@Override
 	public double getSellPrice() {
 		return this.sellPrice;

@@ -19,7 +19,17 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 		this.hourlyExpense=0;
 		smartPrint.println(1,this.name+" was created and has "+.5*this.capacity+" units of power stored and a max capacity of "+this.capacity);
 	}
-	
+	public double getPowerRating(){//if negative need to buy power, if 0 OK, if positive need to sell power, Regards to main grid
+		if(storedPower>(4/5*this.capacity)){
+			return this.storedPower-4/5*(this.capacity); 
+		}
+		else if(storedPower<1/5*this.capacity){
+			return storedPower-1/5*(this.capacity);//need to buy power
+		}
+		else{
+			return 0.0;//Don't need to buy or sell power
+		}
+	}
 	public double getSellPower(){
 		return this.sellPower;
 	}
@@ -62,6 +72,14 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 		}
 	}
 	
+	public void setSellPower(double sp){
+		this.sellPower=sp;
+	}
+	
+	public void setBuyPower(double bp){
+		this.buyPower=bp;
+	}
+	
 	@Override
 	public void buy(double units, double price){//TODO consider passing the seller object, to verify the seller
 		if(this.buyPower>=units){
@@ -95,50 +113,6 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 	
 	public double getDailyProfit(){
 		return this.dailyProfit;
-	}
-	//offer to buy from a seller
-	public double offer(Sellers seller, double units){
-		double price=0;//agreed upon exchange price
-		if(!seller.getName().equals("MainGrid")){
-			price=(this.buyPrice+seller.getSellPrice())/2;// if it's not the main grid the agent pays the average of buyer and selleer bids
-		}
-		else if(seller.getName().equals("MainGrid")&& this.storedPower<.2*this.capacity){
-			price=seller.getSellPrice();//If it's the main grid, the agent pays the price of the main grid
-		}
-		else{
-			smartPrint.println(3, this.name+" rejected main grid offer.");
-		}
-		//TODO implement sell to main grid functionality inverse to this
-		if(this.buyPower<=units){
-			seller.sell(this.buyPower,price);
-			this.buy(this.buyPower,price);
-		}
-		else if(this.buyPower>0){
-			this.expense-=price*units;
-			this.buyPower-=units;
-			seller.sell(units,price);
-			this.buy(units,price);
-		}
-		return price;
-	}
-	//offer to sell to a buyer
-	public double offer(Buyers buyer, double units){
-		double price=(this.sellPrice+buyer.getBuyPrice())/2;
-		if(units<=this.sellPower){//storage has more power than is needed, satisfy requested need.
-			buyer.buy(units,price);	
-			this.sell(units,price);	
-		}
-		else if(this.sellPower>0){//If storage has power available to give but does not have enough to satisfy need, give available
-			buyer.buy(sellPower, price);
-			this.sell(sellPower,price);
-			
-		}
-		return price;
-	}
-	
-	@Override
-	public String getName(){
-		return this.name;
 	}
 	
 	public double getNetProfit(){

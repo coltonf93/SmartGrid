@@ -7,42 +7,22 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
 import smartgrid.agents.*;
+import smartgrid.utilities.AuctionMaster;
 import smartgrid.utilities.SmartPrint;
 import smartgrid.web.bridge.WebSync;
 
 public class SmartGridDriver{
-	private static Comparator<Agent> lowSeller;
-	private static Comparator<Agent> highBuyer;
-	private static ArrayList<Agent> sellers = new ArrayList<Agent>();
-	private static ArrayList<Agent> buyers = new ArrayList<Agent>();
-	private static int days=50;
-	static SmartPrint smartPrint;
-	static{	
-		lowSeller = new Comparator<Agent>(){
-			@Override
-			public int compare(Agent s1, Agent s2){
-				return Double.compare(((Sellers)s1).getSellPrice(), ((Sellers)s2).getSellPrice());
-			}
-		};
-		highBuyer = new Comparator<Agent>(){
-			@Override
-			public int compare(Agent b1, Agent b2){
-				return -1*Double.compare(((Buyers)b1).getBuyPrice(), ((Buyers)b2).getBuyPrice());
-			}
-		};
-	}
-
+	private static int days=4;
 	public static void main(String [] args){
-		smartPrint=smartPrint.getInstance();
-		smartPrint.enableTypes(new int[] {0});//Modify this to show different print statements, recommend to leave 0 and 7 on
-		int solarCount=3;
-		int windCount=5;
-		int consumerCount=5;
-		int storageCount=4;
+		SmartPrint smartPrint=SmartPrint.getInstance();
+		AuctionMaster ac = new AuctionMaster();
+		smartPrint.enableTypes(new int[] {0,4,5,6});//Modify this to show different print statements, recommend to leave 0 and 7 on
+		int solarCount=2;//3
+		int windCount=2;//5
+		int consumerCount=2;
+		int storageCount=2;
 		int t0,t1;
 		DecimalFormat df = new DecimalFormat("#####.####");
-		Sellers seller;
-		Buyers buyer;
 		Random rand=new Random();
 		ArrayList<Agent> consumers = new ArrayList<Agent>();
 		ArrayList<Agent> solar = new ArrayList<Agent>();
@@ -52,7 +32,7 @@ public class SmartGridDriver{
 		WebSync webSync = new WebSync(allAgents);
 		smartPrint.println(4,"Building the Main Grid");
 		//TODO make MainGrid configurable from the web interface that is to come
-		MainGrid mainGrid = new MainGrid("MainGrid",.01,1.0);
+		MainGrid mainGrid = new MainGrid(.01,1.0);
 		allAgents.add(mainGrid);//creates a main grid with unlimited supply and demand buy:.05 and sell .30
 		smartPrint.println(4,"Building Consumers.");
 		//Creates all the consumers
@@ -62,7 +42,6 @@ public class SmartGridDriver{
 			mainGrid.setSellTo(consumers.get(i));
 			allAgents.add(consumers.get(i));
 		}
-		webSync = new WebSync(allAgents);
 		smartPrint.println(4,"Building Solar Generators and linking to Consumers.");
 		//Creates all the solar generators and links to all consumers
 		for(int i=0;i<solarCount;i++){
@@ -125,44 +104,40 @@ public class SmartGridDriver{
 				}
 			}
 		}
-
+		
+		//Adds all buy capable agents to buy list
+		ac.addBuyers((Collection<? extends Agent>)consumers);//adds all the consumers to the list of buyers
+		ac.addBuyers((Collection<? extends Agent>)storage);//adds all the storage units to the list of buyers
+		ac.addBuyer(mainGrid);
 		//PROCESS THE STEP FUNCTIONS FOR ALL AGENTS
 		for(int d=0;d<days;d++){
 			smartPrint.println(7,"\nBegin Day "+d+": \n=========================================================\n=========================================================\n");
 			for(int t=0;t<24;t++){
 				smartPrint.println(7,"\nBegin Hour "+t+": \n=========================================================");
+				//Process' all agent begin actions
 				for(int a=0;a<allAgents.size();a++){
 					allAgents.get(a).stepBegin(t);
 				}
-				buyers.clear();
-				buyers.addAll((Collection<? extends Agent>)consumers);//adds all the consumers to the list of buyers
-				buyers.addAll((Collection<? extends Agent>)storage);//adds all the storage units to the list of buyers
-				buyers.add(mainGrid);
-				Collections.sort(buyers,highBuyer);//Sorts all of the buyers by, buy price, highest first
+				ac.processExchanges();//Runs all of the auction and buy sell exchanges for agents
+		
+				//TODO remove if statement and nested loops when done with analysis
+				/*
+				if(d==days-1&&t==23 || d==0 && t==23){
+					System.out.print("Buyers[Day:"+d+", Hour:"+t+"]:\n==========================================================");
+					for(int i=0;i<buyers.size();i++){
+						buyer=((Buyers)buyers.get(i));
+						System.out.println("\n"+buyer.getName()+"($"+df.format(buyer.getBuyPrice())+") Possible Sellers:\n--------------------------------");
+						for(int j=0;j<sellers.size();j++){
+							seller=(Sellers)sellers.get(j);
+							if(seller.getSellPower()>0){
+								System.out.println(seller.getName()+"($"+df.format(seller.getSellPrice())+")");
+							}
+						}	
+					}
+				}*/
 				
-				for(int i=0;i<buyers.size();i++){
-					buyer=((Buyers)buyers.get(i));
-					sellers=buyers.get(i).getBuysFrom();
-					Collections.sort(sellers,lowSeller);//matches the lowest price sellers to the highest price buyer
-					smartPrint.println(3,"\n"+buyer.getName()+" needs "+buyer.getBuyPower()+" units for $"+buyer.getBuyPrice()+"/unit: \n-------------------------------------------------------");
-					for(int j=0;j<sellers.size()&&buyer.getBuyPower()>0;j++){//All connected sellers offer their prices and availability, cheapest first 
-						seller=(Sellers)sellers.get(j);//TODO Sellers is a higher level than storage so storage has issues I think
-						seller.offer(buyer, buyer.getBuyPower());
-						//System.out.println("Seller("+seller.getName()+") bid at "+seller.getSellPrice()+"\\unit and Buyer("+buyer.getName()+") bit at "+buyer.getBuyPrice()+"\\unit agreeing at "+price+"\\unit.");
-					}
-				}
-				if(d==days-1&&t==23 || d==3 && t==23){
-				System.out.print("Buyers:\n==========================================================");
-				for(int i=0;i<buyers.size();i++){
-					buyer=((Buyers)buyers.get(i));
-					System.out.println("\n"+buyer.getName()+"($"+df.format(buyer.getBuyPrice())+") Sellers:\n--------------------------------");
-					for(int j=0;j<sellers.size();j++){
-						seller=(Sellers)sellers.get(j);
-						System.out.println(seller.getName()+"($"+df.format(seller.getSellPrice())+")");
-					}
-					
-				}
-				}
+				
+				
 				
 				
 				smartPrint.println(4,"\nHour("+t+") Hourly Totals\n----------------------------------------");
