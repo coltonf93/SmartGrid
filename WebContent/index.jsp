@@ -12,7 +12,7 @@
     <link rel="stylesheet" type="text/css" href="css/theme.css"/>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
-    <script src="js/gridBuilder.js"></script>
+    <script src="js/gridBuilder.js?version=<%out.println((int)(Math.random()*99999));%>"></script>
     <meta charset=utf-8 />
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
   </head>

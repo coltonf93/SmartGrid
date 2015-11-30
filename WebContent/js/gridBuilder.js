@@ -1,245 +1,151 @@
-document.addEventListener('DOMContentLoaded', function(){ // on dom ready
-
-    var cy = cytoscape({
-        container: document.querySelector('#cy'),
-
-        boxSelectionEnabled: false,
-        autounselectify: true,
-
-        style: cytoscape.stylesheet()
-            .selector('node')
-            .css({
-                'content': 'data(id)',
-                width: '60px',
-                height: '60px',
-                'text-valign': 'center',
-                'color': 'white',
-                'text-outline-width': 2,
-                'text-outline-color': '#888',
-                'pie-size': '80%',
-                'pie-1-background-color': '#E8747C',
-                'pie-1-background-size': 'mapData(foo, 0, 10, 0, 100)',
-                'pie-2-background-color': '#74CBE8',
-                'pie-2-background-size': 'mapData(bar, 0, 10, 0, 100)',
-                'pie-3-background-color': '#74E883',
-                'pie-3-background-size': 'mapData(baz, 0, 10, 0, 100)'
-            })
-            .selector('edge')
-            .css({
-                'target-arrow-shape': 'triangle'
-            })
-            .selector(':selected')
-            .css({
-                'background-color': 'black',
-                'line-color': 'green',
-                'target-arrow-color': 'green',
-                'source-arrow-color': 'green'
-            })
-            .selector('.faded')
-            .css({
-                'opacity': 0.15,
-                'text-opacity': 0
-            }),
-
-        elements: {
-            nodes: [
-                { data: { id: 'st0', foo: 2, bar: 3, baz: 5 } },
-                { data: { id: 's0', foo: 0, bar: 0, baz: 10 } },
-                { data: { id: 's1', foo: 0, bar: 0, baz: 10 } },
-                { data: { id: 's2', foo: 0, bar: 0, baz: 10 } },
-                { data: { id: 'w0', foo: 0, bar: 0, baz: 10 } },
-                { data: { id: 'st1', foo: 7, bar: 1, baz: 2 } },
-                { data: { id: 'w1', foo: 0, bar: 0, baz: 10 } },
-                { data: { id: 'w2', foo: 0, bar: 0, baz: 10} },
-                { data: { id: 'w3', foo: 0, bar: 0, baz: 10 } },
-                { data: { id: 'w4', foo: 0, bar: 0, baz: 10 } },
-                { data: { id: 'st2', foo: 2, bar: 3, baz: 5 } },
-                { data: { id: 'c0', foo: 10, bar: 0, baz: 0 } },
-                { data: { id: 'c1', foo: 10, bar: 0, baz: 0 } },
-                { data: { id: 'st3', foo: 2, bar: 3, baz: 5 } },
-                { data: { id: 'c2', foo: 10, bar: 0, baz: 0 } },
-                { data: { id: 'c3', foo: 10, bar: 0, baz: 0 } },
-                { data: { id: 'c4', foo: 10, bar: 0, baz: 0 } },
-                { data: { id: 'main', foo: 3, bar: 0, baz: 7 } }
-            ],
-
-            edges: [
-                /*s0 edges selling to */
-                { data: { id: 'link7a', weight: 1, source: 's0', target: 'c0' } },
-                { data: { id: 'link8a', weight: 1, source: 's0', target: 'c1' } },
-                { data: { id: 'link9a', weight: 1, source: 's0', target: 'c2' } },
-                { data: { id: 'link10a', weight: 1, source: 's0', target: 'c3' } },
-                { data: { id: 'link11a', weight: 1, source: 's0', target: 'c4' } },
-                { data: { id: 'link12a', weight: 1, source: 's0', target: 'st0' } },
-                { data: { id: 'link13a', weight: 1, source: 's0', target: 'st1' } },
-                { data: { id: 'link14a', weight: 1, source: 's0', target: 'st2' } },
-                { data: { id: 'link15a', weight: 1, source: 's0', target: 'st3' } },
-                { data: { id: 'link16a', weight: 1, source: 's0', target: 'main' } },
-
-                /*s1 edges selling to*/
-                { data: { id: 'link7b', weight: 1, source: 's1', target: 'c0' } },
-                { data: { id: 'link8b', weight: 1, source: 's1', target: 'c1' } },
-                { data: { id: 'link9b', weight: 1, source: 's1', target: 'c2' } },
-                { data: { id: 'link10b', weight: 1, source: 's1', target: 'c3' } },
-                { data: { id: 'link11b', weight: 1, source: 's1', target: 'c4' } },
-                { data: { id: 'link12b', weight: 1, source: 's1', target: 'st0' } },
-                { data: { id: 'link13b', weight: 1, source: 's1', target: 'st1' } },
-                { data: { id: 'link14b', weight: 1, source: 's1', target: 'st2' } },
-                { data: { id: 'link15b', weight: 1, source: 's1', target: 'st3' } },
-                { data: { id: 'link16b', weight: 1, source: 's1', target: 'main' } },
-
-                /*s2 edges selling to*/
-                { data: { id: 'link7c', weight: 1, source: 's2', target: 'c0' } },
-                { data: { id: 'link8c', weight: 1, source: 's2', target: 'c1' } },
-                { data: { id: 'link9c', weight: 1, source: 's2', target: 'c2' } },
-                { data: { id: 'link10c', weight: 1, source: 's2', target: 'c3' } },
-                { data: { id: 'link11c', weight: 1, source: 's2', target: 'c4' } },
-                { data: { id: 'link12c', weight: 1, source: 's2', target: 'st0' } },
-                { data: { id: 'link13c', weight: 1, source: 's2', target: 'st1' } },
-                { data: { id: 'link14c', weight: 1, source: 's2', target: 'st2' } },
-                { data: { id: 'link15c', weight: 1, source: 's2', target: 'st3' } },
-                { data: { id: 'link16c', weight: 1, source: 's2', target: 'main' } },
-
-                /*w0 edges selling to*/
-                { data: { id: 'link7d', weight: 1, source: 'w0', target: 'c0' } },
-                { data: { id: 'link8d', weight: 1, source: 'w0', target: 'c1' } },
-                { data: { id: 'link9d', weight: 1, source: 'w0', target: 'c2' } },
-                { data: { id: 'link10d', weight: 1, source: 'w0', target: 'c3' } },
-                { data: { id: 'link11d', weight: 1, source: 'w0', target: 'c4' } },
-                { data: { id: 'link12d', weight: 1, source: 'w0', target: 'st0' } },
-                { data: { id: 'link13d', weight: 1, source: 'w0', target: 'st1' } },
-                { data: { id: 'link14d', weight: 1, source: 'w0', target: 'st2' } },
-                { data: { id: 'link15d', weight: 1, source: 'w0', target: 'st3' } },
-                { data: { id: 'link16d', weight: 1, source: 'w0', target: 'main' } },
-
-                /*w1 edges selling to*/
-                { data: { id: 'link7e', weight: 1, source: 'w1', target: 'c0' } },
-                { data: { id: 'link8e', weight: 1, source: 'w1', target: 'c1' } },
-                { data: { id: 'link9e', weight: 1, source: 'w1', target: 'c2' } },
-                { data: { id: 'link10e', weight: 1, source: 'w1', target: 'c3' } },
-                { data: { id: 'link11e', weight: 1, source: 'w1', target: 'c4' } },
-                { data: { id: 'link12e', weight: 1, source: 'w1', target: 'st0' } },
-                { data: { id: 'link13e', weight: 1, source: 'w1', target: 'st1' } },
-                { data: { id: 'link14e', weight: 1, source: 'w1', target: 'st2' } },
-                { data: { id: 'link15e', weight: 1, source: 'w1', target: 'st3' } },
-                { data: { id: 'link16e', weight: 1, source: 'w1', target: 'main' } },
-
-                /*w2 edges selling to*/
-                { data: { id: 'link7f', weight: 1, source: 'w2', target: 'c0' } },
-                { data: { id: 'link8f', weight: 1, source: 'w2', target: 'c1' } },
-                { data: { id: 'link9f', weight: 1, source: 'w2', target: 'c2' } },
-                { data: { id: 'link10f', weight: 1, source: 'w2', target: 'c3' } },
-                { data: { id: 'link11f', weight: 1, source: 'w2', target: 'c4' } },
-                { data: { id: 'link12f', weight: 1, source: 'w2', target: 'st0' } },
-                { data: { id: 'link13f', weight: 1, source: 'w2', target: 'st1' } },
-                { data: { id: 'link14f', weight: 1, source: 'w2', target: 'st2' } },
-                { data: { id: 'link15f', weight: 1, source: 'w2', target: 'st3' } },
-                { data: { id: 'link16f', weight: 1, source: 'w2', target: 'main' } },
-
-                /*w3 edges selling to*/
-                { data: { id: 'link7g', weight: 1, source: 'w3', target: 'c0' } },
-                { data: { id: 'link8g', weight: 1, source: 'w3', target: 'c1' } },
-                { data: { id: 'link9g', weight: 1, source: 'w3', target: 'c2' } },
-                { data: { id: 'link10g', weight: 1, source: 'w3', target: 'c3' } },
-                { data: { id: 'link11g', weight: 1, source: 'w3', target: 'c4' } },
-                { data: { id: 'link12g', weight: 1, source: 'w3', target: 'st0' } },
-                { data: { id: 'link13g', weight: 1, source: 'w3', target: 'st1' } },
-                { data: { id: 'link14g', weight: 1, source: 'w3', target: 'st2' } },
-                { data: { id: 'link15g', weight: 1, source: 'w3', target: 'st3' } },
-                { data: { id: 'link16g', weight: 1, source: 'w3', target: 'main' } },
-
-                /*w4 edges selling to*/
-                { data: { id: 'link7h', weight: 1, source: 'w4', target: 'c0' } },
-                { data: { id: 'link8h', weight: 1, source: 'w4', target: 'c1' } },
-                { data: { id: 'link9h', weight: 1, source: 'w4', target: 'c2' } },
-                { data: { id: 'link10h', weight: 1, source: 'w4', target: 'c3' } },
-                { data: { id: 'link11h', weight: 1, source: 'w4', target: 'c4' } },
-                { data: { id: 'link12h', weight: 1, source: 'w4', target: 'st0' } },
-                { data: { id: 'link13h', weight: 1, source: 'w4', target: 'st1' } },
-                { data: { id: 'link14h', weight: 1, source: 'w4', target: 'st2' } },
-                { data: { id: 'link15h', weight: 1, source: 'w4', target: 'st3' } },
-                { data: { id: 'link16h', weight: 1, source: 'w4', target: 'main' } },
-
-                /*st0 edges selling to*/
-                { data: { id: 'link7i', weight: 1, source: 'st0', target: 'c0' } },
-                { data: { id: 'link8i', weight: 1, source: 'st0', target: 'c1' } },
-                { data: { id: 'link9i', weight: 1, source: 'st0', target: 'c2' } },
-                { data: { id: 'link10i', weight: 1, source: 'st0', target: 'c3' } },
-                { data: { id: 'link11i', weight: 1, source: 'st0', target: 'c4' } },
-                { data: { id: 'link13i', weight: 1, source: 'st0', target: 'st1' } },
-                { data: { id: 'link14i', weight: 1, source: 'st0', target: 'st2' } },
-                { data: { id: 'link15i', weight: 1, source: 'st0', target: 'st3' } },
-                { data: { id: 'link16i', weight: 1, source: 'st0', target: 'main' } },
-
-                /*st1 edges selling to*/
-                { data: { id: 'link7j', weight: 1, source: 'st1', target: 'c0' } },
-                { data: { id: 'link8j', weight: 1, source: 'st1', target: 'c1' } },
-                { data: { id: 'link9j', weight: 1, source: 'st1', target: 'c2' } },
-                { data: { id: 'link10j', weight: 1, source: 'st1', target: 'c3' } },
-                { data: { id: 'link11j', weight: 1, source: 'st1', target: 'c4' } },
-                { data: { id: 'link13j', weight: 1, source: 'st1', target: 'st0' } },
-                { data: { id: 'link14j', weight: 1, source: 'st1', target: 'st2' } },
-                { data: { id: 'link15j', weight: 1, source: 'st1', target: 'st3' } },
-                { data: { id: 'link16j', weight: 1, source: 'st1', target: 'main' } },
-
-                /*st2 edges selling to*/
-                { data: { id: 'link7k', weight: 1, source: 'st2', target: 'c0' } },
-                { data: { id: 'link8k', weight: 1, source: 'st2', target: 'c1' } },
-                { data: { id: 'link9k', weight: 1, source: 'st2', target: 'c2' } },
-                { data: { id: 'link10k', weight: 1, source: 'st2', target: 'c3' } },
-                { data: { id: 'link11k', weight: 1, source: 'st2', target: 'c4' } },
-                { data: { id: 'link13k', weight: 1, source: 'st2', target: 'st0' } },
-                { data: { id: 'link14k', weight: 1, source: 'st2', target: 'st1' } },
-                { data: { id: 'link15k', weight: 1, source: 'st2', target: 'st3' } },
-                { data: { id: 'link16k', weight: 1, source: 'st2', target: 'main' } },
-
-                /*st3 edges selling to*/
-                { data: { id: 'link7l', weight: 1, source: 'st3', target: 'c0' } },
-                { data: { id: 'link8l', weight: 1, source: 'st3', target: 'c1' } },
-                { data: { id: 'link9l', weight: 1, source: 'st3', target: 'c2' } },
-                { data: { id: 'link10l', weight: 1, source: 'st3', target: 'c3' } },
-                { data: { id: 'link11l', weight: 1, source: 'st3', target: 'c4' } },
-                { data: { id: 'link13l', weight: 1, source: 'st3', target: 'st0' } },
-                { data: { id: 'link14l', weight: 1, source: 'st3', target: 'st1' } },
-                { data: { id: 'link15l', weight: 1, source: 'st3', target: 'st2' } },
-                { data: { id: 'link16l', weight: 1, source: 'st3', target: 'main' } },
-
-                /*main edges selling to*/
-                { data: { id: 'link7m', weight: 1, source: 'main', target: 'c0' } },
-                { data: { id: 'link8m', weight: 1, source: 'main', target: 'c1' } },
-                { data: { id: 'link9m', weight: 1, source: 'main', target: 'c2' } },
-                { data: { id: 'link10m', weight: 1, source: 'main', target: 'c3' } },
-                { data: { id: 'link11m', weight: 1, source: 'main', target: 'c4' } },
-                { data: { id: 'link13m', weight: 1, source: 'main', target: 'st0' } },
-                { data: { id: 'link14m', weight: 1, source: 'main', target: 'st1' } },
-                { data: { id: 'link15m', weight: 1, source: 'main', target: 'st2' } },
-                { data: { id: 'link16m', weight: 1, source: 'main', target: 'st3' } },
-            ]
-        },
-
-
-
-        layout: {
-            /*ring, grid and*/
-            name: 'grid',
-            padding: 10
-        }
-    });
-
-
-
-    cy.on('tap', 'node', function(e){
-        var node = e.cyTarget;
-        var neighborhood = node.neighborhood().add(node);
-
-        cy.elements().addClass('faded');
-        neighborhood.removeClass('faded');
-    });
-
-    cy.on('tap', function(e){
-        if( e.cyTarget === cy ){
-            cy.elements().removeClass('faded');
-        }
-    });
-
-}); // on dom ready
+document.addEventListener('DOMContentLoaded', function(){ var cy = cytoscape({ container: document.querySelector('#cy'), boxSelectionEnabled: false, autounselectify: true, style: cytoscape.stylesheet() .selector('node') .css({ 'content': 'data(id)', width: '60px', height: '60px', 'text-valign': 'center', 'color': 'white', 'text-outline-width': 2, 'text-outline-color': '#888', 'pie-size': '80%', 'pie-1-background-color': '#E8747C', 'pie-1-background-size': 'mapData(foo, 0, 10, 0, 100)', 'pie-2-background-color': '#74CBE8', 'pie-2-background-size': 'mapData(bar, 0, 10, 0, 100)', 'pie-3-background-color': '#74E883', 'pie-3-background-size': 'mapData(baz, 0, 10, 0, 100)' }) .selector('edge') .css({ 'target-arrow-shape': 'triangle' }) .selector(':selected') .css({ 'background-color': 'black', 'line-color': 'green', 'target-arrow-color': 'green', 'source-arrow-color': 'green' }) .selector('.faded') .css({ 'opacity': 0.15, 'text-opacity': 0 }),
+elements: {nodes:[{ data: { id: 'MainGrid', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Consumer 1', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Consumer 2', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Consumer 3', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Consumer 4', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Consumer 5', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Solar 1', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Solar 2', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Solar 3', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Wind 1', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Wind 2', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Wind 3', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Wind 4', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Wind 5', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Storage 1', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Storage 2', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Storage 3', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Storage 4', foo: 3, bar: 3, baz: 4 } },
+{ data: { id: 'Storage 5', foo: 3, bar: 3, baz: 4 } },
+],
+edges:[{ data: { id: 'link00', weight: 1, source: 'Storage 1', target: 'MainGrid' } },
+{ data: { id: 'link01', weight: 1, source: 'Solar 3', target: 'MainGrid' } },
+{ data: { id: 'link02', weight: 1, source: 'Wind 1', target: 'MainGrid' } },
+{ data: { id: 'link03', weight: 1, source: 'Storage 2', target: 'MainGrid' } },
+{ data: { id: 'link04', weight: 1, source: 'Wind 2', target: 'MainGrid' } },
+{ data: { id: 'link05', weight: 1, source: 'Wind 3', target: 'MainGrid' } },
+{ data: { id: 'link06', weight: 1, source: 'Solar 2', target: 'MainGrid' } },
+{ data: { id: 'link07', weight: 1, source: 'Solar 1', target: 'MainGrid' } },
+{ data: { id: 'link08', weight: 1, source: 'Wind 4', target: 'MainGrid' } },
+{ data: { id: 'link09', weight: 1, source: 'Wind 5', target: 'MainGrid' } },
+{ data: { id: 'link010', weight: 1, source: 'Storage 3', target: 'MainGrid' } },
+{ data: { id: 'link011', weight: 1, source: 'Storage 5', target: 'MainGrid' } },
+{ data: { id: 'link012', weight: 1, source: 'Storage 4', target: 'MainGrid' } },
+{ data: { id: 'link10', weight: 1, source: 'Storage 1', target: 'Consumer 1' } },
+{ data: { id: 'link11', weight: 1, source: 'Solar 3', target: 'Consumer 1' } },
+{ data: { id: 'link12', weight: 1, source: 'Wind 1', target: 'Consumer 1' } },
+{ data: { id: 'link13', weight: 1, source: 'Storage 2', target: 'Consumer 1' } },
+{ data: { id: 'link14', weight: 1, source: 'Wind 2', target: 'Consumer 1' } },
+{ data: { id: 'link15', weight: 1, source: 'Wind 3', target: 'Consumer 1' } },
+{ data: { id: 'link16', weight: 1, source: 'Solar 2', target: 'Consumer 1' } },
+{ data: { id: 'link17', weight: 1, source: 'Solar 1', target: 'Consumer 1' } },
+{ data: { id: 'link18', weight: 1, source: 'Wind 4', target: 'Consumer 1' } },
+{ data: { id: 'link19', weight: 1, source: 'Wind 5', target: 'Consumer 1' } },
+{ data: { id: 'link110', weight: 1, source: 'Storage 3', target: 'Consumer 1' } },
+{ data: { id: 'link111', weight: 1, source: 'Storage 5', target: 'Consumer 1' } },
+{ data: { id: 'link112', weight: 1, source: 'Storage 4', target: 'Consumer 1' } },
+{ data: { id: 'link113', weight: 1, source: 'MainGrid', target: 'Consumer 1' } },
+{ data: { id: 'link20', weight: 1, source: 'Storage 1', target: 'Consumer 2' } },
+{ data: { id: 'link21', weight: 1, source: 'Solar 3', target: 'Consumer 2' } },
+{ data: { id: 'link22', weight: 1, source: 'Wind 1', target: 'Consumer 2' } },
+{ data: { id: 'link23', weight: 1, source: 'Storage 2', target: 'Consumer 2' } },
+{ data: { id: 'link24', weight: 1, source: 'Wind 2', target: 'Consumer 2' } },
+{ data: { id: 'link25', weight: 1, source: 'Wind 3', target: 'Consumer 2' } },
+{ data: { id: 'link26', weight: 1, source: 'Solar 2', target: 'Consumer 2' } },
+{ data: { id: 'link27', weight: 1, source: 'Solar 1', target: 'Consumer 2' } },
+{ data: { id: 'link28', weight: 1, source: 'Wind 4', target: 'Consumer 2' } },
+{ data: { id: 'link29', weight: 1, source: 'Wind 5', target: 'Consumer 2' } },
+{ data: { id: 'link210', weight: 1, source: 'Storage 3', target: 'Consumer 2' } },
+{ data: { id: 'link211', weight: 1, source: 'Storage 5', target: 'Consumer 2' } },
+{ data: { id: 'link212', weight: 1, source: 'Storage 4', target: 'Consumer 2' } },
+{ data: { id: 'link213', weight: 1, source: 'MainGrid', target: 'Consumer 2' } },
+{ data: { id: 'link30', weight: 1, source: 'Storage 1', target: 'Consumer 3' } },
+{ data: { id: 'link31', weight: 1, source: 'Solar 3', target: 'Consumer 3' } },
+{ data: { id: 'link32', weight: 1, source: 'Wind 1', target: 'Consumer 3' } },
+{ data: { id: 'link33', weight: 1, source: 'Storage 2', target: 'Consumer 3' } },
+{ data: { id: 'link34', weight: 1, source: 'Wind 2', target: 'Consumer 3' } },
+{ data: { id: 'link35', weight: 1, source: 'Wind 3', target: 'Consumer 3' } },
+{ data: { id: 'link36', weight: 1, source: 'Solar 2', target: 'Consumer 3' } },
+{ data: { id: 'link37', weight: 1, source: 'Solar 1', target: 'Consumer 3' } },
+{ data: { id: 'link38', weight: 1, source: 'Wind 4', target: 'Consumer 3' } },
+{ data: { id: 'link39', weight: 1, source: 'Wind 5', target: 'Consumer 3' } },
+{ data: { id: 'link310', weight: 1, source: 'Storage 3', target: 'Consumer 3' } },
+{ data: { id: 'link311', weight: 1, source: 'Storage 5', target: 'Consumer 3' } },
+{ data: { id: 'link312', weight: 1, source: 'Storage 4', target: 'Consumer 3' } },
+{ data: { id: 'link313', weight: 1, source: 'MainGrid', target: 'Consumer 3' } },
+{ data: { id: 'link40', weight: 1, source: 'Storage 1', target: 'Consumer 4' } },
+{ data: { id: 'link41', weight: 1, source: 'Solar 3', target: 'Consumer 4' } },
+{ data: { id: 'link42', weight: 1, source: 'Wind 1', target: 'Consumer 4' } },
+{ data: { id: 'link43', weight: 1, source: 'Storage 2', target: 'Consumer 4' } },
+{ data: { id: 'link44', weight: 1, source: 'Wind 2', target: 'Consumer 4' } },
+{ data: { id: 'link45', weight: 1, source: 'Wind 3', target: 'Consumer 4' } },
+{ data: { id: 'link46', weight: 1, source: 'Solar 2', target: 'Consumer 4' } },
+{ data: { id: 'link47', weight: 1, source: 'Solar 1', target: 'Consumer 4' } },
+{ data: { id: 'link48', weight: 1, source: 'Wind 4', target: 'Consumer 4' } },
+{ data: { id: 'link49', weight: 1, source: 'Wind 5', target: 'Consumer 4' } },
+{ data: { id: 'link410', weight: 1, source: 'Storage 3', target: 'Consumer 4' } },
+{ data: { id: 'link411', weight: 1, source: 'Storage 5', target: 'Consumer 4' } },
+{ data: { id: 'link412', weight: 1, source: 'Storage 4', target: 'Consumer 4' } },
+{ data: { id: 'link413', weight: 1, source: 'MainGrid', target: 'Consumer 4' } },
+{ data: { id: 'link50', weight: 1, source: 'Storage 1', target: 'Consumer 5' } },
+{ data: { id: 'link51', weight: 1, source: 'Solar 3', target: 'Consumer 5' } },
+{ data: { id: 'link52', weight: 1, source: 'Wind 1', target: 'Consumer 5' } },
+{ data: { id: 'link53', weight: 1, source: 'Storage 2', target: 'Consumer 5' } },
+{ data: { id: 'link54', weight: 1, source: 'Wind 2', target: 'Consumer 5' } },
+{ data: { id: 'link55', weight: 1, source: 'Wind 3', target: 'Consumer 5' } },
+{ data: { id: 'link56', weight: 1, source: 'Solar 2', target: 'Consumer 5' } },
+{ data: { id: 'link57', weight: 1, source: 'Solar 1', target: 'Consumer 5' } },
+{ data: { id: 'link58', weight: 1, source: 'Wind 4', target: 'Consumer 5' } },
+{ data: { id: 'link59', weight: 1, source: 'Wind 5', target: 'Consumer 5' } },
+{ data: { id: 'link510', weight: 1, source: 'Storage 3', target: 'Consumer 5' } },
+{ data: { id: 'link511', weight: 1, source: 'Storage 5', target: 'Consumer 5' } },
+{ data: { id: 'link512', weight: 1, source: 'Storage 4', target: 'Consumer 5' } },
+{ data: { id: 'link513', weight: 1, source: 'MainGrid', target: 'Consumer 5' } },
+{ data: { id: 'link140', weight: 1, source: 'Solar 3', target: 'Storage 1' } },
+{ data: { id: 'link141', weight: 1, source: 'Wind 1', target: 'Storage 1' } },
+{ data: { id: 'link142', weight: 1, source: 'Wind 2', target: 'Storage 1' } },
+{ data: { id: 'link143', weight: 1, source: 'Wind 3', target: 'Storage 1' } },
+{ data: { id: 'link144', weight: 1, source: 'Solar 2', target: 'Storage 1' } },
+{ data: { id: 'link145', weight: 1, source: 'Solar 1', target: 'Storage 1' } },
+{ data: { id: 'link146', weight: 1, source: 'Wind 4', target: 'Storage 1' } },
+{ data: { id: 'link147', weight: 1, source: 'Wind 5', target: 'Storage 1' } },
+{ data: { id: 'link148', weight: 1, source: 'MainGrid', target: 'Storage 1' } },
+{ data: { id: 'link150', weight: 1, source: 'Solar 3', target: 'Storage 2' } },
+{ data: { id: 'link151', weight: 1, source: 'Wind 1', target: 'Storage 2' } },
+{ data: { id: 'link152', weight: 1, source: 'Wind 2', target: 'Storage 2' } },
+{ data: { id: 'link153', weight: 1, source: 'Wind 3', target: 'Storage 2' } },
+{ data: { id: 'link154', weight: 1, source: 'Solar 2', target: 'Storage 2' } },
+{ data: { id: 'link155', weight: 1, source: 'Solar 1', target: 'Storage 2' } },
+{ data: { id: 'link156', weight: 1, source: 'Wind 4', target: 'Storage 2' } },
+{ data: { id: 'link157', weight: 1, source: 'Wind 5', target: 'Storage 2' } },
+{ data: { id: 'link158', weight: 1, source: 'MainGrid', target: 'Storage 2' } },
+{ data: { id: 'link160', weight: 1, source: 'Solar 3', target: 'Storage 3' } },
+{ data: { id: 'link161', weight: 1, source: 'Wind 1', target: 'Storage 3' } },
+{ data: { id: 'link162', weight: 1, source: 'Wind 2', target: 'Storage 3' } },
+{ data: { id: 'link163', weight: 1, source: 'Wind 3', target: 'Storage 3' } },
+{ data: { id: 'link164', weight: 1, source: 'Solar 2', target: 'Storage 3' } },
+{ data: { id: 'link165', weight: 1, source: 'Solar 1', target: 'Storage 3' } },
+{ data: { id: 'link166', weight: 1, source: 'Wind 4', target: 'Storage 3' } },
+{ data: { id: 'link167', weight: 1, source: 'Wind 5', target: 'Storage 3' } },
+{ data: { id: 'link168', weight: 1, source: 'MainGrid', target: 'Storage 3' } },
+{ data: { id: 'link170', weight: 1, source: 'Solar 3', target: 'Storage 4' } },
+{ data: { id: 'link171', weight: 1, source: 'Wind 1', target: 'Storage 4' } },
+{ data: { id: 'link172', weight: 1, source: 'Wind 2', target: 'Storage 4' } },
+{ data: { id: 'link173', weight: 1, source: 'Wind 3', target: 'Storage 4' } },
+{ data: { id: 'link174', weight: 1, source: 'Solar 2', target: 'Storage 4' } },
+{ data: { id: 'link175', weight: 1, source: 'Solar 1', target: 'Storage 4' } },
+{ data: { id: 'link176', weight: 1, source: 'Wind 4', target: 'Storage 4' } },
+{ data: { id: 'link177', weight: 1, source: 'Wind 5', target: 'Storage 4' } },
+{ data: { id: 'link178', weight: 1, source: 'MainGrid', target: 'Storage 4' } },
+{ data: { id: 'link180', weight: 1, source: 'Solar 3', target: 'Storage 5' } },
+{ data: { id: 'link181', weight: 1, source: 'Wind 1', target: 'Storage 5' } },
+{ data: { id: 'link182', weight: 1, source: 'Wind 2', target: 'Storage 5' } },
+{ data: { id: 'link183', weight: 1, source: 'Wind 3', target: 'Storage 5' } },
+{ data: { id: 'link184', weight: 1, source: 'Solar 2', target: 'Storage 5' } },
+{ data: { id: 'link185', weight: 1, source: 'Solar 1', target: 'Storage 5' } },
+{ data: { id: 'link186', weight: 1, source: 'Wind 4', target: 'Storage 5' } },
+{ data: { id: 'link187', weight: 1, source: 'Wind 5', target: 'Storage 5' } },
+{ data: { id: 'link188', weight: 1, source: 'MainGrid', target: 'Storage 5' } },
+]},
+layout: { /*ring, grid and*/ name: 'grid', padding: 10 } }); cy.on('tap', 'node', function(e){ var node = e.cyTarget; var neighborhood = node.neighborhood().add(node); cy.elements().addClass('faded'); neighborhood.removeClass('faded'); }); cy.on('tap', function(e){ if( e.cyTarget === cy ){ cy.elements().removeClass('faded'); } }); }); /* on dom ready*/

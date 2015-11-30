@@ -1,5 +1,7 @@
 package smartgrid.web.bridge;
 
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,15 +14,16 @@ import smartgrid.utilities.SmartPrint;
 import smartgrid.web.bridge.WebSync;
 
 public class SmartGridDriver{
-	private static int days=9999;
+	private static int days=100;
 	public static void main(String [] args){
+		
 		SmartPrint smartPrint=SmartPrint.getInstance();
 		AuctionMaster ac = new AuctionMaster();
 		smartPrint.enableTypes(new int[] {0,6});//Modify this to show different print statements, recommend to leave 0 and 7 on
-		int solarCount=2;//3
-		int windCount=2;//5
-		int consumerCount=2;
-		int storageCount=2;
+		int solarCount=3;
+		int windCount=5;
+		int consumerCount=5;
+		int storageCount=5;
 		int t0,t1;
 		DecimalFormat df = new DecimalFormat("#####.####");
 		Random rand=new Random();
@@ -94,7 +97,7 @@ public class SmartGridDriver{
 		}
 		//EXPERIMENTAL FEATURE
 		smartPrint.println(4,"Linking all storage units to eachother.");
-		for(int i=0;i<storageCount;i++){
+		/*for(int i=0;i<storageCount;i++){
 			for(int j=0;j<storageCount;j++){
 				if(i!=j){
 					storage.get(i).setBuyFrom(storage.get(j));
@@ -103,8 +106,8 @@ public class SmartGridDriver{
 					storage.get(j).setSellTo(storage.get(i));
 				}
 			}
-		}
-		
+		}*/
+		WebSync ws = new WebSync(allAgents);
 		//Adds all buy capable agents to buy list
 		ac.addBuyers((Collection<? extends Agent>)consumers);//adds all the consumers to the list of buyers
 		ac.addBuyers((Collection<? extends Agent>)storage);//adds all the storage units to the list of buyers
@@ -248,6 +251,14 @@ public class SmartGridDriver{
 		}
 		
 		smartPrint.println(6,mainGrid.getName()+" earned a total of "+df.format(mainGrid.getProfit())+" and spent a total of "+df.format(mainGrid.getExpense())+" today netting "+df.format(mainGrid.getNetProfit())+".");
+	    //Writes a js file for graphics rendering
+		try {
+			ws.writeJS();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}	
 }
 //TODO Consider: randomize the order of agents with the same price.
