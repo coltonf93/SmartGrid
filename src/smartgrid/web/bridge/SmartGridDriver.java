@@ -12,11 +12,11 @@ import smartgrid.utilities.SmartPrint;
 import smartgrid.web.bridge.WebSync;
 
 public class SmartGridDriver{
-	private static int days=4;
+	private static int days=9999;
 	public static void main(String [] args){
 		SmartPrint smartPrint=SmartPrint.getInstance();
 		AuctionMaster ac = new AuctionMaster();
-		smartPrint.enableTypes(new int[] {0,4,5,6});//Modify this to show different print statements, recommend to leave 0 and 7 on
+		smartPrint.enableTypes(new int[] {0,6});//Modify this to show different print statements, recommend to leave 0 and 7 on
 		int solarCount=2;//3
 		int windCount=2;//5
 		int consumerCount=2;

@@ -51,13 +51,14 @@ public class AuctionMaster {
 						((GridStorage)buyer).setBuyPower(-1*((GridStorage)buyer).getPowerRating());//buy up to min threshold
 					}
 					else{
+						smartPrint.println(3,buyer.getName()+" refused to buy from MainGrid but still wanted to buy "+buyer.getBuyPower()+" more units.");
 						((GridStorage)buyer).setBuyPower(0.0);//refuse to buy from main grid
 					}
 				}
 			}
 			else{//the buyer is main grid
 				price=buyer.getBuyPrice();//price is main grid buy price
-				if(seller.getClass()==smartgrid.agents.GridStorage.class){//TODO find a better implementation for this to break cohesion
+				if(seller.getClass()==smartgrid.agents.GridStorage.class && seller.getSellPower()>0){//TODO find a better implementation for this to break cohesion
 					if(((GridStorage)seller).getPowerRating() > 0.0){
 						((GridStorage)seller).setSellPower(((GridStorage)seller).getPowerRating());//sell down to max threshold
 					}
@@ -74,8 +75,8 @@ public class AuctionMaster {
 		//Run actual trade with agreed upon price
 		if(buyer.getBuyPower()>0&&seller.getSellPower()>0){
 			if(buyer.getBuyPower()>=seller.getSellPower()){
-				seller.sell(seller.getSellPower(), price);
 				buyer.buy(seller.getSellPower(), price);
+				seller.sell(seller.getSellPower(), price);
 			}
 			else if(buyer.getBuyPower()<=seller.getSellPower()){
 				seller.sell(buyer.getBuyPower(), price);

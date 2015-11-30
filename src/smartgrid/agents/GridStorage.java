@@ -2,8 +2,8 @@ package smartgrid.agents;
 
 public class GridStorage extends Agent implements Buyers, Sellers{
 	double sellPrice, buyPrice, profit, expense, sellPower, buyPower, decayRate, storedPower, capacity, dailyExpense,dailyProfit,hourlyProfit,hourlyExpense;
-	double[] lastSellBids = {.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99,.99}; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
-	double[] lastBuyBids = {.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02,.02};//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
+	double[] lastSellBids = {1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98}; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
+	double[] lastBuyBids = {.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04};//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
 	
 	public GridStorage(String name){
 		super(name);
@@ -20,11 +20,11 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 		smartPrint.println(1,this.name+" was created and has "+.5*this.capacity+" units of power stored and a max capacity of "+this.capacity);
 	}
 	public double getPowerRating(){//if negative need to buy power, if 0 OK, if positive need to sell power, Regards to main grid
-		if(storedPower>(4/5*this.capacity)){
-			return this.storedPower-4/5*(this.capacity); 
+		if(storedPower>(.8*this.capacity)){
+			return this.storedPower-.8*(this.capacity); 
 		}
-		else if(storedPower<1/5*this.capacity){
-			return storedPower-1/5*(this.capacity);//need to buy power
+		else if(storedPower<.2*this.capacity){
+			return storedPower-.2*(this.capacity);//need to buy power
 		}
 		else{
 			return 0.0;//Don't need to buy or sell power
@@ -215,5 +215,5 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 		this.lastPrices2[t]=this.lastPrices[t];
 		this.lastPrices[t]=this.getAvgPrice();
 		
-	}
+	} 
 }
