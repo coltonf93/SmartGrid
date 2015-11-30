@@ -3,7 +3,6 @@ package smartgrid.agents;
 public interface Buyers {
 	public void setBuyPrice(double buy);
 	public double getBuyPrice();
-	public double offer(Sellers seller, double units);
 	public void buy(double units, double price);
 	public double getBuyPower();
 	public double getExpense();

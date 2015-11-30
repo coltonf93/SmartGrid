@@ -2,8 +2,8 @@ package smartgrid.agents;
 
 public class GridStorage extends Agent implements Buyers, Sellers{
 	double sellPrice, buyPrice, profit, expense, sellPower, buyPower, decayRate, storedPower, capacity, dailyExpense,dailyProfit,hourlyProfit,hourlyExpense;
-	double[] lastSellBids = {.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15};//How much the agent bided to sell the power yesterday at this time recommended at least .15
-	double[] lastBuyBids = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};//How much the agent bid to buy for yesterday at this time recommended 0
+	double[] lastSellBids = {1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98}; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
+	double[] lastBuyBids = {.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04};//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
 	
 	public GridStorage(String name){
 		super(name);
@@ -19,7 +19,17 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 		this.hourlyExpense=0;
 		smartPrint.println(1,this.name+" was created and has "+.5*this.capacity+" units of power stored and a max capacity of "+this.capacity);
 	}
-	
+	public double getPowerRating(){//if negative need to buy power, if 0 OK, if positive need to sell power, Regards to main grid
+		if(storedPower>(.8*this.capacity)){
+			return this.storedPower-.8*(this.capacity); 
+		}
+		else if(storedPower<.2*this.capacity){
+			return storedPower-.2*(this.capacity);//need to buy power
+		}
+		else{
+			return 0.0;//Don't need to buy or sell power
+		}
+	}
 	public double getSellPower(){
 		return this.sellPower;
 	}
@@ -62,6 +72,14 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 		}
 	}
 	
+	public void setSellPower(double sp){
+		this.sellPower=sp;
+	}
+	
+	public void setBuyPower(double bp){
+		this.buyPower=bp;
+	}
+	
 	@Override
 	public void buy(double units, double price){//TODO consider passing the seller object, to verify the seller
 		if(this.buyPower>=units){
@@ -95,40 +113,6 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 	
 	public double getDailyProfit(){
 		return this.dailyProfit;
-	}
-	//offer to buy from a seller
-	public double offer(Sellers seller, double units){
-		double price=(this.buyPrice+seller.getSellPrice())/2;
-		if(this.buyPower<=units){
-			seller.sell(this.buyPower,price);
-			this.buy(this.buyPower,price);
-		}
-		else if(this.buyPower>0){
-			this.expense-=price*units;
-			this.buyPower-=units;
-			seller.sell(units,price);
-			this.buy(units,price);
-		}
-		return price;
-	}
-	//offer to sell to a buyer
-	public double offer(Buyers buyer, double units){
-		double price=(this.sellPrice+buyer.getBuyPrice())/2;
-		if(units<=this.sellPower){//storage has more power than is needed, satisfy requested need.
-			buyer.buy(units,price);	
-			this.sell(units,price);	
-		}
-		else if(this.sellPower>0){//If storage has power available to give but does not have enough to satisfy need, give available
-			buyer.buy(sellPower, price);
-			this.sell(sellPower,price);
-			
-		}
-		return price;
-	}
-	
-	@Override
-	public String getName(){
-		return this.name;
 	}
 	
 	public double getNetProfit(){
@@ -219,10 +203,17 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 	public void stepEnd(int t){
 		//Daily totals print statements should go here.
 		//Put print statements for tic totals here
+		if(this.buyPower>0){
+			smartPrint.println(0, "Warning: "+this.name+" did not buy as much as it allocated.");
+			
+		}
+		if(this.sellPower>0){
+			smartPrint.println(0, "Warning: "+this.name+" did not sell as much as it wanted.");
+		}
 		this.lastBuyBids[t]=this.getBuyPrice();
 		this.lastSellBids[t]=this.getSellPrice();
 		this.lastPrices2[t]=this.lastPrices[t];
 		this.lastPrices[t]=this.getAvgPrice();
 		
-	}
+	} 
 }

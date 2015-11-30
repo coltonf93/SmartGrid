@@ -5,7 +5,7 @@ import java.util.Random;
 public class SolarPower extends Agent implements Sellers{
 		int t0,t1;
 		double basePower,sellPrice,sellPower,profit,dailyProfit,hourlyProfit;
-		double[] lastSellBids = {.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15,.15};//How much the agent bided to sell the power yesterday at this time reccomended at least .15
+		double[] lastSellBids = {1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98}; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
 		String name;
 		Random rand = new Random();
 		
@@ -30,21 +30,6 @@ public class SolarPower extends Agent implements Sellers{
 		@Override
 		public void setSellPrice(double sellPrice) {
 			this.sellPrice=sellPrice;
-		}
-	
-		//Buyer offering to buy  from this seller
-		@Override
-		public double offer(Buyers buyer, double units){
-			double price =(buyer.getBuyPrice()+this.getSellPrice())/2; //The average of the buyers buy price and the sellers sell price is the price
-			if(this.sellPower>units){//If the buyer asks for less than is available give what is needed.
-				buyer.buy(units,price);
-				this.sell(units, price);			
-			}
-			else if(this.sellPower>0){//If this has some power, but not enough to satisfy give the requested amount sell what is has
-				buyer.buy(this.sellPower,price);
-				this.sell(this.sellPower,price);	
-			}
-			return price;
 		}
 
 		@Override
@@ -107,10 +92,11 @@ public class SolarPower extends Agent implements Sellers{
 			}
 			this.hourlyProfit=0;
 			if(t>=t0&&t<=t1){//Generates the power if it is during peak time
-				this.sellPower=this.basePower+(3*rand.nextDouble());//power generated [basePower-(basePower+3)]
+				//this.sellPower=this.basePower+(3*rand.nextDouble());//power generated [basePower-(basePower+3)]
+				this.sellPower=1;
 			}
 			else{
-				this.sellPower=0;//If it's not during peak time no power is generated.
+				this.sellPower=.1;//If it's not during peak time no power is generated.
 			}
 			
 			smartPrint.println(2,this.name+" generated "+this.sellPower+" units of power.");
@@ -127,6 +113,9 @@ public class SolarPower extends Agent implements Sellers{
 		}
 		
 		public void stepEnd(int t){
+			if(sellPower>0){
+				smartPrint.println(0, "Error: Consumer did not get enough power.");
+			}
 			this.lastSellBids[t]=this.sellPrice;
 			this.lastPrices2[t]=this.lastPrices[t];
 			this.lastPrices[t]=this.getAvgPrice();

@@ -5,7 +5,7 @@ import java.util.Random;
 public class Consumer extends Agent implements Buyers{
 	double[] consumptionRate= {0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0,1.0,1.0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,2.0,2.0,2.0,2.0,0.25,.25};
 	double buyPrice, expense, buyPower, dailyExpense, hourlyExpense;
-	double[] lastBuyBids = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};//How much the agent bid to buy for yesterday at this time Recommended 0
+	double[] lastBuyBids = {.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04};//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
 	String name;
 	Random rand = new Random();
 	
@@ -44,21 +44,6 @@ public class Consumer extends Agent implements Buyers{
 			smartPrint.println(0,"ERROR "+this.name+" tried to buy "+(this.buyPower-units)+" more power than it needs.");
 			//TODO throw exception if true
 		}
-	}
-	
-	//TODO find a way to prevent this from being called, exchange or something rather than buy sell e.g. exchange(Seller, quantity, price)
-	public double offer(Sellers seller, double units){
-		//smartPrint.println(this.name+" offered to by "+units+" at "+this.buyPrice+" to seller "+seller.getName());
-		double price=(this.buyPrice+seller.getSellPrice())/2;//The price is the average of the sellers price and this buyers price
-		if(this.buyPower<=units){//If the seller is selling more than the buyer needs, the buyer only buys what it needs
-			this.buy(this.buyPower,price);
-			seller.sell(buyPower,price);	
-		}
-		else if(this.buyPower>0){//If the seller doesn't have enough to satisfy the need, buy all that is offered.
-			this.buy(units,price);
-			seller.sell(units,price);
-		}
-		return price;
 	}
 
 	@Override
@@ -102,7 +87,8 @@ public class Consumer extends Agent implements Buyers{
 			this.dailyExpense=0;
 		}
 		//TODO modify consumption scalar
-		this.buyPower=4*this.consumptionRate[t]*(1+rand.nextDouble());//randomScalar between -1cR to 1cR simulating consumption of user
+		//this.buyPower=4*this.consumptionRate[t]*(1+rand.nextDouble());//randomScalar between -1cR to 1cR simulating consumption of user
+		this.buyPower=2;
 		smartPrint.println(2,this.name+" consumed and requires "+this.buyPower+" units of power");
 		
 		
@@ -119,6 +105,10 @@ public class Consumer extends Agent implements Buyers{
 	
 	public void stepEnd(int t){
 		this.hourlyExpense=0;
+		
+		if(buyPower>0){
+			smartPrint.println(0, "Error: Consumer did not get enough power.");
+		}
 		
 	//TODO put print statements for tic totals here
 		this.lastBuyBids[t]=this.buyPrice;
