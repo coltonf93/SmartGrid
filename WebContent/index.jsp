@@ -24,12 +24,12 @@
         <h1>SMART  GRID</h1>
         <div class="sideCount">
           <div class="dayCount">
-             <span class="dCount">365</span> Days
+             <span id="dCount"></span> Days
           </div>
         </div>
         <div class="sideCount">
           <div class="timeCount">
-            <span class="tCount">23</span>:00 Hours
+            <span id="tCount"></span>:00 Hours
           </div>
         </div>
         <ul class="menu">

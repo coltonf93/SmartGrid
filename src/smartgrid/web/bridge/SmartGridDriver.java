@@ -253,7 +253,7 @@ public class SmartGridDriver{
 		smartPrint.println(6,mainGrid.getName()+" earned a total of "+df.format(mainGrid.getProfit())+" and spent a total of "+df.format(mainGrid.getExpense())+" today netting "+df.format(mainGrid.getNetProfit())+".");
 	    //Writes a js file for graphics rendering
 		try {
-			ws.writeJS();
+			ws.writeJS((days-1),23);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
