@@ -12,7 +12,7 @@
     <link rel="stylesheet" type="text/css" href="css/theme.css"/>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
-    <script src="js/gridBuilder.js"></script>
+    <script src="js/gridBuilder.js?version=<%out.println((int)(Math.random()*99999));%>"></script>
     <meta charset=utf-8 />
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
   </head>
@@ -24,12 +24,12 @@
         <h1>SMART  GRID</h1>
         <div class="sideCount">
           <div class="dayCount">
-             <span class="dCount">365</span> Days
+             <span id="dCount"></span> Days
           </div>
         </div>
         <div class="sideCount">
           <div class="timeCount">
-            <span class="tCount">23</span>:00 Hours
+            <span id="tCount"></span>:00 Hours
           </div>
         </div>
         <ul class="menu">
@@ -50,65 +50,19 @@
     <div id="content">
       <div class="mainChart">
         <div id="cy"></div>
-        <table>
-          <tr>
-            <th>Agent</th>
-            <th>Buy Price</th>
-            <th>Sell Price</th>
-            <th>Daily Reward</th>
-            <th>Total Reward</th>
-          </tr>
-
-          <tr>
-            <td>Agent 0</td>
-            <td>$0.01</td>
-            <td>$0.02</td>
-            <td>$999.99</td>
-            <td>$99999.99</td>
-          </tr>
-
-          <tr>
-            <td>Agent 1</td>
-            <td>$0.01</td>
-            <td>$0.02</td>
-            <td>$999.99</td>
-            <td>$99999.99</td>
-          </tr>
-          <tr>
-            <td>Agent 2</td>
-            <td>$0.01</td>
-            <td>$0.02</td>
-            <td>$999.99</td>
-            <td>$99999.99</td>
-          </tr>
-          <tr>
-            <td>Agent 3</td>
-            <td>$0.01</td>
-            <td>$0.02</td>
-            <td>$999.99</td>
-            <td>$99999.99</td>
-          </tr>
-          <tr>
-            <td>Agent 4</td>
-            <td>$0.01</td>
-            <td>$0.02</td>
-            <td>$999.99</td>
-            <td>$99999.99</td>
-          </tr>
-          <tr>
-            <td>Agent 5</td>
-            <td>$0.01</td>
-            <td>$0.02</td>
-            <td>$999.99</td>
-            <td>$99999.99</td>
-          </tr>
-          <tr>
-            <td>Agent 6</td>
-            <td>$0.01</td>
-            <td>$0.02</td>
-            <td>$999.99</td>
-            <td>$99999.99</td>
-          </tr>
+        <table id="agentData">
+	        <thead>
+	          <tr>
+	            <th>Agent</th>
+	            <th>Buy Price</th>
+	            <th>Sell Price</th>
+	            <th>Daily Net Profit</th>
+	            <th>Total Net Profit</th>
+	          </tr>
+	          </thead>
+	          <tbody>
+	          
+	          </tbody>
         </table>
       </div>
 
