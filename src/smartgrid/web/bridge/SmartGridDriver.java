@@ -9,24 +9,25 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
 import smartgrid.agents.*;
-import smartgrid.utilities.AuctionMaster;
-import smartgrid.utilities.SmartPrint;
+import smartgrid.utilities.*;
 import smartgrid.web.bridge.WebSync;
 
 public class SmartGridDriver{
-	private static int days=100;
+	private static int days=198;
 	public static void main(String [] args){
 		
 		SmartPrint smartPrint=SmartPrint.getInstance();
 		AuctionMaster ac = new AuctionMaster();
-		smartPrint.enableTypes(new int[] {0,6});//Modify this to show different print statements, recommend to leave 0 and 7 on
-		int solarCount=3;
-		int windCount=5;
+		smartPrint.enableTypes(new int[] {0,1,6});//Modify this to show different print statements, recommend to leave 0 and 7 on
+		int solarCount=2;
+		int windCount=1;
 		int consumerCount=5;
-		int storageCount=5;
+		int storageCount=2;
+		double connectivity=0.3;//Computes to about 50%
 		int t0,t1;
 		DecimalFormat df = new DecimalFormat("#####.####");
 		Random rand=new Random();
+		ArrayList<Agent> generators=new ArrayList<Agent>();
 		ArrayList<Agent> consumers = new ArrayList<Agent>();
 		ArrayList<Agent> solar = new ArrayList<Agent>();
 		ArrayList<Agent> wind = new ArrayList<Agent>();
@@ -41,62 +42,35 @@ public class SmartGridDriver{
 		//Creates all the consumers
 		for(int i=0;i<consumerCount;i++){
 			consumers.add(new Consumer("Consumer "+(i+1)));
-			consumers.get(i).setBuyFrom(mainGrid);
-			mainGrid.setSellTo(consumers.get(i));
 			allAgents.add(consumers.get(i));
 		}
-		smartPrint.println(4,"Building Solar Generators and linking to Consumers.");
+		smartPrint.println(4,"Building Solar Generators");
 		//Creates all the solar generators and links to all consumers
 		for(int i=0;i<solarCount;i++){
 			t0=(rand.nextInt(2) + 1) + 9;
 			t1=(rand.nextInt(2) + 1) + 16;
 			solar.add(new SolarPower("Solar "+(i+1),t0,t1));
-			mainGrid.setBuyFrom(solar.get(i));
-			solar.get(i).setSellTo(mainGrid);
-			for(int j=0;j<consumerCount;j++){
-				solar.get(i).setSellTo(consumers.get(j));
-				consumers.get(j).setBuyFrom(solar.get(i));
-			}
+			generators.add(solar.get(i));
 			allAgents.add(solar.get(i));
 		}
 		smartPrint.println(4,"Building Wind Generators and linking to Consumers.");
-		//Creates all the wind generators and links to all consumers
+		//Creates all the wind generators
 		for(int i=0;i<windCount;i++){
 			t0=(rand.nextInt(2) + 1) + 9;
 			t1=(rand.nextInt(2) + 1) + 16;
 			wind.add(new WindPower("Wind "+(i+1),t0,t1));
-			mainGrid.setBuyFrom(wind.get(i));
-			wind.get(i).setSellTo(mainGrid);
-			for(int j=0;j<consumerCount;j++){
-				wind.get(i).setSellTo(consumers.get(j));
-				consumers.get(j).setBuyFrom(wind.get(i));
-			}
+			generators.add(wind.get(i));
 			allAgents.add(wind.get(i));
 		}
 		smartPrint.println(4,"Building Grid Stroage's and linking to Consumers, Wind Generators, and Solar Generators.");
 		//Creates all the storage facilities and links to all consumers and power generators
 		for(int i=0;i<storageCount;i++){
 			storage.add(new GridStorage("Storage "+(i+1)));
-			storage.get(i).setSellTo(mainGrid);
-			storage.get(i).setBuyFrom(mainGrid);
-			mainGrid.setSellTo(storage.get(i));
-			mainGrid.setBuyFrom(storage.get(i));
-			for(int j=0;j<consumerCount;j++){
-				storage.get(i).setSellTo(consumers.get(j));
-				consumers.get(j).setBuyFrom(storage.get(i));
-			}
-			for(int j=0;j<windCount;j++){
-				storage.get(i).setBuyFrom(wind.get(j));
-				wind.get(j).setSellTo(storage.get(i));
-			}
-			for(int j=0;j<solarCount;j++){
-				storage.get(i).setBuyFrom(solar.get(j));
-				solar.get(j).setSellTo(storage.get(i));
-			}
 			allAgents.add(storage.get(i));
 		}
+		ConnectionBuilder connBuild=new ConnectionBuilder(connectivity,generators,consumers,storage,mainGrid);
 		//EXPERIMENTAL FEATURE
-		smartPrint.println(4,"Linking all storage units to eachother.");
+		//smartPrint.println(4,"Linking all storage units to eachother.");
 		/*for(int i=0;i<storageCount;i++){
 			for(int j=0;j<storageCount;j++){
 				if(i!=j){

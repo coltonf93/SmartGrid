@@ -13,7 +13,7 @@ public abstract class Agent {
 	double[] lastPrices2 = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};//The average price power was exchanged for two days ago at this time for this agent
 	double avgPrice=0;  
 	double lastPriceDifference=.005; //Must be less than .8 recommended .005
-	double bidRatio = .5; 
+	double bidRatio = .1; 
 	protected String name;
 	SmartPrint smartPrint;
 	
@@ -93,6 +93,20 @@ public abstract class Agent {
 	
 	public double getAvgPrice(){
 		return avgPrice;
+	}
+	
+	public boolean isConnected(Agent agent){//TODO inefficient consider a refactor.
+		for(int i=0;i<buysFrom.size();i++){
+			if(agent.getName().equals(buysFrom.get(i).getName())){
+				return true;
+			}
+		}
+		for(int i=0;i<sellsTo.size();i++){
+			if(agent.getName().equals(sellsTo.get(i).getName())){
+				return true;
+			}
+		}
+		return false;
 	}
 	//END OF SLOPPY CODE RETHINK DESIGN
 	
