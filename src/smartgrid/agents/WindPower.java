@@ -4,25 +4,28 @@ import java.util.Random;
 
 public class WindPower extends Agent implements Sellers{
 	int t0,t1;
-	double basePower,sellPrice,sellPower,profit,dailyProfit,hourlyProfit;
+	double sellPrice,sellPower,profit,dailyProfit,hourlyProfit;
+	static double genVar;
+	static double generation[];
 	double[] lastSellBids = {1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98}; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
 	String name;
 	Random rand = new Random();
 	
-	public WindPower(String name, int t0, int t1){
+	public WindPower(String name){
 		super(name);
-		this.t0=t0;
-		this.t1=t1;
-		this.basePower=4; 
 		this.sellPrice=0.1;
 		this.sellPower=0;
 		this.name=name;
 		this.profit=0;
 		this.dailyProfit=0;
 		this.hourlyProfit=0;
-		smartPrint.println(1,this.name+" was created with base power: "+basePower+".");
+		smartPrint.println(1,this.name+" was created.");
 	}
 	
+	public static void setGeneration(double[] generationS, double genVarS){
+		generation=generationS;
+		genVar=genVarS;
+	}
 
 	@Override
 	public double getSellPower() {
@@ -91,13 +94,9 @@ public class WindPower extends Agent implements Sellers{
 			dailyProfit=0;
 		}
 		this.hourlyProfit=0;
-		//TODO find a better model for wind generation, for now it is simply the opposite of solar.
-		if(t<=t0||t>=t1){//Generates the power if it is during peak time
-			//this.sellPower=this.basePower+(3*rand.nextDouble());//power generated [basePower-(basePower+3)]
-			this.sellPower=1;
-		}
-		else{
-			this.sellPower=0.1;//If it's not during peak time no power is generated.
+		this.sellPower=generation[t]+rand.nextDouble()*(genVar+1)*Math.random() < 0.5 ? -1 : 1;//Base generation +/- the variability
+		if(this.sellPower<0){
+			this.sellPower=0;
 		}
 		smartPrint.println(2,this.name+" generated "+this.sellPower+" units of power.");
 		

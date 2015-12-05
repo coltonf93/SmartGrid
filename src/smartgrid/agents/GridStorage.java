@@ -1,14 +1,16 @@
 package smartgrid.agents;
 
+import java.util.Random;
+
 public class GridStorage extends Agent implements Buyers, Sellers{
 	double sellPrice, buyPrice, profit, expense, sellPower, buyPower, decayRate, storedPower, capacity, dailyExpense,dailyProfit,hourlyProfit,hourlyExpense;
 	double[] lastSellBids = {1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98}; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
 	double[] lastBuyBids = {.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04};//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
-	
-	public GridStorage(String name){
+	Random rand=new Random();
+	public GridStorage(String name, double capacity, double capVar, double decay){
 		super(name);
-		this.capacity=30.0;
-		this.decayRate=.2;
+		this.capacity=capacity+rand.nextDouble()*(capVar+1)*Math.random() < 0.5 ? -1 : 1;
+		this.decayRate=decay;
 		this.name=name;	
 		this.profit=0;
 		this.dailyProfit=0;
