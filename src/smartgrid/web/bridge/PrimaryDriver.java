@@ -1,9 +1,14 @@
 package smartgrid.web.bridge;
 
-public class PrimaryDriver {
+import java.util.Map;
 
-	public static void main(String[] args) {
-		
+public class PrimaryDriver {
+	public PrimaryDriver(Map<String, String[]> parameters){
+		for(String parameter : parameters.keySet()) {
+		    if(parameter.toLowerCase().startsWith("sCount")) {
+		        //your code here
+		    }
+		}
 	}
 
 }
