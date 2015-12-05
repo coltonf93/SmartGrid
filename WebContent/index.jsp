@@ -43,7 +43,7 @@
           <%} %></li>
             <li><a href="index.jsp?page=home"><i class="fa ion-ios-speedometer"></i> <span>Dashboard</span></a></li>
             <li><a href="index.jsp?page=create"><i class="fa ion-plus"></i> <span>New</span></a></li>
-            <li><a href="index.jsp?page=load"><i class="fa fa-link"></i> <span>Load</span></a></li>
+            <li><a href="index.jsp?page=load"><i class="fa ion-ios-download"></i> <span>Load</span></a></li>
           </ul>
         </section>
       </aside>

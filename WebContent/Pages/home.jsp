@@ -21,7 +21,7 @@
 			<span class="info-box-icon bg-aqua"><i
 				class="ion ion-battery-charging"></i></span>
 			<div class="info-box-content">
-				<span class="info-box-number"><h2><span id='sCount'>99</span> Storage</h2></span>
+				<span class="info-box-number"><h2><span id='sCount'></span> Storage</h2></span>
 			</div>
 		</div>
 	</div>
@@ -31,7 +31,7 @@
 			<span class="info-box-icon bg-red"><i
 				class="fa ion-home"></i></span>
 			<div class="info-box-content">
-				<span class="info-box-number"><h2><span id='cCount'>99</span> Consumers</h2></span>
+				<span class="info-box-number"><h2><span id='cCount'></span> Consumers</h2></span>
 			</div>
 		</div>
 		<!-- /.info-box -->
@@ -46,7 +46,7 @@
 			<span class="info-box-icon bg-green"><i
 				class="ion ion-ios-bolt"></i></span>
 			<div class="info-box-content">
-				<span class="info-box-number"><h2><span id='gCount'>99</span> Generators</h2></span>
+				<span class="info-box-number"><h2><span id='gCount'></span> Generators</h2></span>
 			</div>
 			<!-- /.info-box-content -->
 		</div>
@@ -58,7 +58,7 @@
 			<span class="info-box-icon bg-yellow"><i
 				class="ion ion-android-calendar"></i></span>
 			<div class="info-box-content">
-				<span class="info-box-number"><h2><span id='dCount'>500</span> Days</h2></span>
+				<span class="info-box-number"><h2><span id='dCount'></span> Days</h2></span>
 			</div>
 		</div>
 	</div>
@@ -75,6 +75,8 @@
   <div class="col-md-9">
   <div class="box box-default color-palette-box">
   <div class="box-header with-border">
+ 	<h3 class="box-title"><i class="ion ion-ios-eye"></i> Agent Details</h3>
+  	</div>
   <table id="agentData" class="table table-striped table-bordered" cellspacing="0" width="100%">
 		<thead>
 			<tr>
@@ -90,7 +92,7 @@
 		</tbody>
 	</table>
 	</div>
-	</div>
+
   </div>
   </div>
 	<script src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>

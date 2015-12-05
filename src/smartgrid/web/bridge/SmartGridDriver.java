@@ -13,16 +13,16 @@ import smartgrid.utilities.*;
 import smartgrid.web.bridge.WebSync;
 
 public class SmartGridDriver{
-	private static int days=198;
+	private static int days=366;
 	public static void main(String [] args){
 		SmartPrint smartPrint=SmartPrint.getInstance();
 		AuctionMaster ac = new AuctionMaster();
 		smartPrint.enableTypes(new int[] {0,1,6});//Modify this to show different print statements, recommend to leave 0 and 7 on
 		int solarCount=10;
 		int windCount=10;
-		int consumerCount=25;
-		int storageCount=8;
-		double connectivity=0.3;//Computes to about 50%
+		int consumerCount=20;
+		int storageCount=20;
+		double connectivity=0.2;//Computes to about 50%
 		DecimalFormat df = new DecimalFormat("#####.####");
 		Random rand=new Random();
 		ArrayList<Agent> generators=new ArrayList<Agent>();
