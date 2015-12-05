@@ -80,7 +80,7 @@
 						<input class="form-control input-lg" type="number" step="1" name="cCount" min="0" max="100" value="10"> 
 						<br>
 					    <label for="cGen">Consumption/Time[1:24]</label>
-						<input class="form-control" type="text" name="cGen" maxlength="47" value="1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1">
+						<input class="form-control" type="text" name="cGen" maxlength="47" value="0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0,1.0,1.0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,2.0,2.0,2.0,2.0,0.25,.25">
 						<br> 
 						<label for="cVar">Consumption Variability(+/-)</label>
 						<input class="form-control input-sm" name="cVar" step="any" type="number" value="0" min="0" max="10">
@@ -100,7 +100,7 @@
 						<input required class="form-control input-lg" type="number" step="1" name="sCount" min="0" max="100" value="10"> 
 						<br>
 					    <label for="sGen">Generation/Time[1:24]</label>
-						<input required class="form-control" type="text" name="sGen" maxlength="47" value="1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1">
+						<input required class="form-control" type="text" name="sGen" maxlength="47" value="0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0">
 						<br> 
 						<label for="sVar">Generation Variability(+/-)</label>
 						<input required class="form-control input-sm" name="sVar" step="any" type="number" value="0" min="0" max="10">

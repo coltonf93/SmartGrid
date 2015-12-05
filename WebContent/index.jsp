@@ -3,8 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 2 | Starter</title>
-    <!-- Tell the browser to be responsive to screen width -->
+    <title>Smart Grid</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -22,7 +21,7 @@
       <!-- Main Header -->
       <header class="main-header">
         <!-- Logo -->
-        <a href="index2.html" class="logo">
+        <a href="index.jsp" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
           <span class="logo-mini"><b>S</b>G</span>
           <!-- logo for regular state and mobile devices -->
@@ -31,26 +30,18 @@
 
         <!-- Header Navbar -->
         <nav class="navbar navbar-static-top" role="navigation">
-          <!-- Sidebar toggle button-->
           <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">Toggle navigation</span>
           </a>
-          <!-- Navbar Right Menu -->
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-  <!-- Top Middle navigation -->
             </ul>
           </div>
         </nav>
       </header>
-      <!-- Left side column. contains the logo and sidebar -->
       <aside class="main-sidebar">
-
-        <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
-          <!-- Sidebar Menu -->
           <ul class="sidebar-menu">
-            <!-- Optionally, you can add icons to the links -->
             <li class="header">
           <%if(request.getParameter("testName")!=null){
             session.setAttribute( "testName",request.getParameter("testName"));%>
@@ -58,12 +49,11 @@
           <%} else if(session.getAttribute("testName")!=null){%>
             <h2><%= session.getAttribute("testName")%></h2>
           <%} %></li>
-            <li><a href="index.jsp?page=home"><i class="fa fa-link"></i> <span>Dashboard</span></a></li>
-            <li><a href="index.jsp?page=create"><i class="fa fa-link"></i> <span>New</span></a></li>
+            <li><a href="index.jsp?page=home"><i class="fa ion-ios-speedometer"></i> <span>Dashboard</span></a></li>
+            <li><a href="index.jsp?page=create"><i class="fa ion-plus"></i> <span>New</span></a></li>
             <li><a href="index.jsp?page=load"><i class="fa fa-link"></i> <span>Load</span></a></li>
-          </ul><!-- /.sidebar-menu -->
+          </ul>
         </section>
-        <!-- /.sidebar -->
       </aside>
 
       <!-- Content Wrapper. Contains page content -->

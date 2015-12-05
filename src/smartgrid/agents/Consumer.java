@@ -3,8 +3,9 @@ package smartgrid.agents;
 import java.util.Random;
 
 public class Consumer extends Agent implements Buyers{
-	double[] consumptionRate= {0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0,1.0,1.0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,2.0,2.0,2.0,2.0,0.25,.25};
+	static double[] consumption;
 	double buyPrice, expense, buyPower, dailyExpense, hourlyExpense;
+	static double consVar;
 	double[] lastBuyBids = {.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04};//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
 	String name;
 	Random rand = new Random();
@@ -16,6 +17,11 @@ public class Consumer extends Agent implements Buyers{
 		this.dailyExpense=0;
 		this.hourlyExpense=0;
 		smartPrint.println(1, this.name+" was created with a variable class defined consumption rate.");
+	}
+	
+	public static void setConsumption(double[] consumptionS, double consVarS){
+		consumption=consumptionS;
+		consVar=consVarS;
 	}
 	
 	@Override
@@ -88,7 +94,7 @@ public class Consumer extends Agent implements Buyers{
 		}
 		//TODO modify consumption scalar
 		//this.buyPower=4*this.consumptionRate[t]*(1+rand.nextDouble());//randomScalar between -1cR to 1cR simulating consumption of user
-		this.buyPower=2;
+		this.buyPower=consumption[t]+rand.nextDouble()*(this.consVar+1)*Math.random() < 0.5 ? -1 : 1;//Base consumption +/- the variability
 		smartPrint.println(2,this.name+" consumed and requires "+this.buyPower+" units of power");
 		
 		

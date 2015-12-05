@@ -4,22 +4,26 @@ import java.util.Random;
 
 public class SolarPower extends Agent implements Sellers{
 		int t0,t1;
-		double basePower,sellPrice,sellPower,profit,dailyProfit,hourlyProfit;
+		double sellPrice,sellPower,profit,dailyProfit,hourlyProfit;
+		static double genVar;
+		static double[] generation;
 		double[] lastSellBids = {1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98}; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
 		String name;
 		Random rand = new Random();
 		
-		public SolarPower(String name, int t0, int t1){
+		public SolarPower(String name){
 			super(name);
-			this.t0=t0;
-			this.t1=t1;
-			this.basePower=4; 
 			this.profit=0;
 			this.dailyProfit=0;
 			this.sellPrice=0.1;
 			this.sellPower=0;
 			this.name=name;
-			smartPrint.println(1, this.name+" was created with base power "+basePower);
+			smartPrint.println(1, this.name+" was created.");
+		}
+		
+		public static void setGeneration(double[] generationS, double genVarS){
+			generation=generationS;
+			genVar=genVarS;
 		}
 	
 		@Override
@@ -91,14 +95,10 @@ public class SolarPower extends Agent implements Sellers{
 				this.dailyProfit=0;
 			}
 			this.hourlyProfit=0;
-			if(t>=t0&&t<=t1){//Generates the power if it is during peak time
-				//this.sellPower=this.basePower+(3*rand.nextDouble());//power generated [basePower-(basePower+3)]
-				this.sellPower=1;
+			this.sellPower=generation[t]+rand.nextDouble()*(this.genVar+1)*Math.random() < 0.5 ? -1 : 1;//Base generation +/- the variability
+			if(this.sellPower<0){
+				this.sellPower=0;
 			}
-			else{
-				this.sellPower=.1;//If it's not during peak time no power is generated.
-			}
-			
 			smartPrint.println(2,this.name+" generated "+this.sellPower+" units of power.");
 			//Calculates the buy price for this round at this specific time
 			if(Math.abs(this.lastPrices[t]-this.lastPrices2[t])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is

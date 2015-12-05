@@ -15,7 +15,6 @@ import smartgrid.web.bridge.WebSync;
 public class SmartGridDriver{
 	private static int days=198;
 	public static void main(String [] args){
-		
 		SmartPrint smartPrint=SmartPrint.getInstance();
 		AuctionMaster ac = new AuctionMaster();
 		smartPrint.enableTypes(new int[] {0,1,6});//Modify this to show different print statements, recommend to leave 0 and 7 on
@@ -33,6 +32,12 @@ public class SmartGridDriver{
 		ArrayList<Agent> wind = new ArrayList<Agent>();
 		ArrayList<Agent> storage = new ArrayList<Agent>();
 		ArrayList<Agent> allAgents = new ArrayList<Agent>();
+		double[] consumerConsumption={0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0,1.0,1.0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,2.0,2.0,2.0,2.0,0.25,.25};
+		double[] solarGeneration={0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0};
+		double[] windGeneration={1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1};
+		SolarPower.setGeneration(solarGeneration,.25);
+		WindPower.setGeneration(windGeneration,.25);
+		Consumer.setConsumption(consumerConsumption,.25);
 		WebSync webSync = new WebSync(allAgents);
 		smartPrint.println(4,"Building the Main Grid");
 		//TODO make MainGrid configurable from the web interface that is to come
@@ -45,11 +50,13 @@ public class SmartGridDriver{
 			allAgents.add(consumers.get(i));
 		}
 		smartPrint.println(4,"Building Solar Generators");
+		
 		//Creates all the solar generators and links to all consumers
+		
 		for(int i=0;i<solarCount;i++){
 			t0=(rand.nextInt(2) + 1) + 9;
 			t1=(rand.nextInt(2) + 1) + 16;
-			solar.add(new SolarPower("Solar "+(i+1),t0,t1));
+			solar.add(new SolarPower("Solar "+(i+1)));
 			generators.add(solar.get(i));
 			allAgents.add(solar.get(i));
 		}
@@ -58,14 +65,14 @@ public class SmartGridDriver{
 		for(int i=0;i<windCount;i++){
 			t0=(rand.nextInt(2) + 1) + 9;
 			t1=(rand.nextInt(2) + 1) + 16;
-			wind.add(new WindPower("Wind "+(i+1),t0,t1));
+			wind.add(new WindPower("Wind "+(i+1)));
 			generators.add(wind.get(i));
 			allAgents.add(wind.get(i));
 		}
 		smartPrint.println(4,"Building Grid Stroage's and linking to Consumers, Wind Generators, and Solar Generators.");
 		//Creates all the storage facilities and links to all consumers and power generators
 		for(int i=0;i<storageCount;i++){
-			storage.add(new GridStorage("Storage "+(i+1)));
+			storage.add(new GridStorage("Storage "+(i+1),5,30,.2));
 			allAgents.add(storage.get(i));
 		}
 		ConnectionBuilder connBuild=new ConnectionBuilder(connectivity,generators,consumers,storage,mainGrid);
