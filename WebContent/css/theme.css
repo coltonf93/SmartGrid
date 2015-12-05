@@ -544,3 +544,136 @@ body {
 	top: 0;
 	color: white;
 }
+/* Dark Theme -----------------    */
+html{
+  background:#373431;
+}
+.form-wrapper{
+  background:#373431;
+  font-family:'PT Sans', Arial, sans-serif;
+  font-weight:normal;
+  font-size:1em;
+  line-height:1em;
+  color:#A8A7A8;
+  padding:1em 0;
+}
+/* TEXT & TEXTAREA */
+label.text input, label.text textarea {
+  background:#000;
+  background:rgba(0,0,0,0.16);
+  box-shadow:0 1px 4px rgba(0, 0, 0, 0.3) inset, 0 1px rgba(255, 255, 255, 0.06);
+  border: 0 none;
+  border-radius: 3px;
+  color: #BBBBBB;
+  transition:background .2s;
+}
+/* DROPDOWN & MULTIPLE*/
+label.dropdown select, label.multiple select {
+  background:#000;
+  background:rgba(0,0,0,0.16);
+  box-shadow:0 1px 4px rgba(0, 0, 0, 0.3) inset, 0 1px rgba(255, 255, 255, 0.06);
+  color: #BBBBBB;
+  border: 0 none;
+  border-radius:3px;
+  transition:background .2s;
+}
+label.multiple select {
+  padding-bottom:1.875em;
+}
+label.dropdown select option, label.multiple select option  {
+  margin-bottom:0.625em 1%;
+  cursor:pointer;
+  transition:all .2s;
+}
+label.dropdown select:focus, label.multiple select:focus, label.dropdown select:focus option, label.multiple select:focus option {
+
+}
+/* RADIO & CHECKBOX */
+.radio-check-label label {
+  background:#000;
+  background:rgba(0,0,0,0.16);
+  box-shadow:0 1px rgba(255, 255, 255, 0.06);
+  display:block;
+  border: 0 none;
+  border-radius: 3px;
+  line-height:1em;
+  cursor:pointer;
+  overflow:hidden;
+  margin-bottom:0.5em;
+    
+}
+.radio-check-label label input {
+  opacity:0.01
+}
+.radio-check-label label span {
+  display:block;
+  padding: 0.563em 15% 0.563em 1.875em;
+  transition:all .2s;
+  border-radius:3px;
+}
+.radio-check-label label span:before {
+  content: "";
+  display:block;
+  width:12px;
+  height:12px;
+  background:#000;
+  background:rgba(0,0,0,0.2);
+  position:absolute;
+  left:8px;
+  top:11px;
+  border:1px solid #373431;
+}
+.radio-check-label label.radio span:before {
+  border-radius:8px;
+}
+.radio-check-label label.checkbox span:before {
+  border-radius:2px;
+}
+.radio-check-label input:checked ~ span:before {
+  background:#FFF;
+  border-width:0px;
+
+}
+.radio-check-label input:checked ~ span { 
+    box-shadow:0 1px 4px rgba(0, 0, 0, 0.3) inset, 0 1px rgba(255, 255, 255, 0.06);
+  background:#000;
+  background:rgba(0,0,0,0.1);
+  color:#FFF;
+  
+}
+/* SUBMIT & RESET */
+input[name=submit], input[name=reset] {
+  margin-right:0.563em;
+  margin-top:2.50em;
+  font-size:1em;
+  border: 0 none;
+    background:#000;
+  background:rgba(0,0,0,0.2);
+  color: #BBBBBB;
+  border-radius: 3px;
+  padding: 0.563em 4em;
+  cursor:pointer;
+  box-shadow: 0 1px rgba(255, 255, 255, 0.06);
+  transition:background 0.2s
+}
+input[name=submit] {
+  padding:0.563em 6em;
+}
+input[name=submit]:hover, input[name=reset]:hover {
+  box-shadow:0 1px 4px rgba(0, 0, 0, 0.3) inset, 0 1px rgba(255, 255, 255, 0.06);
+  color:#FFF;
+}
+input[name="reset"]:hover {
+  background:rgba(140,29,4,0.3);
+}
+input[name="submit"]:hover {
+  background:rgba(51,102,77,0.3);
+}
+
+/* FOCUS */
+label.text input:focus, label.text textarea:focus {
+  background:#000;
+  background:rgba(0,0,0,0.25);
+  color:#FFF;
+}
+/* Dark Theme END ----------------- */

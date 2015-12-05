@@ -4,12 +4,7 @@
 <head>
 <title></title>
 <link rel="stylesheet" type="text/css" href="css/theme.css" />
-<script
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script
-	src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
-<script
-	src="js/gridBuilder.js?version=<%out.println((int)(Math.random()*99999));%>"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <meta charset=utf-8 />
 <meta name="viewport"
 	content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
@@ -20,9 +15,15 @@
 		<div id="sideMenu">
 			<div id="sideMenuFixed"></div>
 			<div id="sidecontent">
-				<h1>
-					SMART GRID</br>
-					<%= request.getParameter("first_name")%></h1>
+				
+					<h1>SMART GRID</h1>
+					<%if(request.getParameter("testName")!=null){
+						session.setAttribute( "testName",request.getParameter("testName"));%>
+						<h1><%= session.getAttribute("testName")%></h1>
+					<%} else if(session.getAttribute("testName")!=null){%>
+						<h1><%= session.getAttribute("testName")%></h1>
+					<%} %>
+					
 				<div class="sideCount">
 					<div class="dayCount">
 						<span id="dCount"></span> Days
@@ -35,39 +36,23 @@
 				</div>
 				<ul class="menu">
 					<li>Options</li>
-					<li class="play"><a href="#"><img src="Images/play.png">Play</a></li>
-					<li class="pause"><a href="#"><img src="Images/pause.png" />Pause</a></li>
-					<li><a href="#"><img src="Images/skipHour.png" />Next Hour</a></li>
-					<li><a href="#"><img src="Images/skipDay.png" />Next Day</a></li>
-					<li><a href="#"><img src="Images/refresh.png" />Reset</a></li>
-					<li><img src="Images/skip.png" />Skip to
-						<form class="skipTo">
-							<input type="number" min=0 max=9999 name="day" placeholder="Day" />
-							<input type="number" min=0 max=23 name="hour" placeholder="Hour" /><br />
-							<input type="submit" value="Skip" align="center" />
-						</form></li>
+					<li><a href="index.jsp?page=create">New</a></li>
+					<li><a href="index.jsp?page=load">Load</a></li>
+					<li><a href="index.jsp?page=singleTest">Single</a></li>
+					<li><a href="index.jsp?page=data">Global</a></li>
 				</ul>
 			</div>
 		</div>
 		<div id="content">
-			<div class="mainChart">
-				<div id="cy"></div>
-				<table id="agentData">
-					<thead>
-						<tr>
-							<th>Agent</th>
-							<th>Buy Price</th>
-							<th>Sell Price</th>
-							<th>Daily Net Profit</th>
-							<th>Total Net Profit</th>
-						</tr>
-					</thead>
-					<tbody>
-
-					</tbody>
-				</table>
-			</div>
-
+		<%if(request.getParameter("page")==null || request.getParameter("page").equals("singleTest")){%>
+			<%@include file="Pages/singleTest.jsp"%>
+		<%}else if(request.getParameter("page").equals("create")){%>
+			<%@include file="Pages/create.jsp"%>
+		<%}else if(request.getParameter("page").equals("load")){%>
+			<%@include file="Pages/load.jsp"%>
+		<%}else if(request.getParameter("page").equals("data")){%>
+			<%@include file="Pages/data.jsp"%>
+		<%}%>
 		</div>
 	</div>
 	</div>
