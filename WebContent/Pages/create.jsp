@@ -10,24 +10,25 @@
 		<div class="col-md-6">
 			<div class="box box-warning">
 					<div class="info-box">
-						<span class="info-box-icon bg-yellow"><i
-							class="ion ion-gear-b"></i></span>
+						<span class="info-box-icon bg-yellow">
+						<i class="ion ion-gear-b"></i></span>
 						<div class="info-box-content">
 							<span class="info-box-number"><h3>General Configuration</h3></span>
 						</div>
 					</div>
 					<div class="box-body">
 						<label for="testName">Test Name</label> 
-						<input required class="form-control input-lg" type="text" name="testName" placeholder="Test Name"> 
+						<input required class="form-control input-lg" type="text" name="testName" maxlength="20" placeholder="Test Name"> 
+						<br> 
+						<label for="description">Description</label>
+						<input required class="form-control input-sm" name="description" type="text" placeholder="Describe the test..." maxlength="150">
 						<br>
 					    <label for="days">Days</label>
 						<input required class="form-control" type="number" name="days" step="1" min="0" max="9999" placeholder="50">
 						<br>
 						<label for="connectivity">Connectivity</label>
 						<input required class="form-control" type="number" step="any" name="connectivity" min="0" max="1" value=".3">
-						<br> 
-						<label for="description">Description</label>
-						<input required class="form-control input-sm" name="description" type="text" placeholder="Describe the test..." maxlength="100">
+						
 					</div>
 				</div>
 				<div class="box box-info">
@@ -80,7 +81,7 @@
 						<input class="form-control input-lg" type="number" step="1" name="cCount" min="0" max="100" value="10"> 
 						<br>
 					    <label for="cGen">Consumption/Time[1:24]</label>
-						<input class="form-control" type="text" name="cGen" maxlength="47" value="0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0,1.0,1.0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,2.0,2.0,2.0,2.0,0.25,.25">
+						<input class="form-control" type="text" name="cGen" value="0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0,1.0,1.0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,2.0,2.0,2.0,2.0,0.25,.25">
 						<br> 
 						<label for="cVar">Consumption Variability(+/-)</label>
 						<input class="form-control input-sm" name="cVar" step="any" type="number" value="0" min="0" max="10">
@@ -100,7 +101,7 @@
 						<input required class="form-control input-lg" type="number" step="1" name="sCount" min="0" max="100" value="10"> 
 						<br>
 					    <label for="sGen">Generation/Time[1:24]</label>
-						<input required class="form-control" type="text" name="sGen" maxlength="47" value="0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0">
+						<input required class="form-control" type="text" name="sGen"  value="0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0">
 						<br> 
 						<label for="sVar">Generation Variability(+/-)</label>
 						<input required class="form-control input-sm" name="sVar" step="any" type="number" value="0" min="0" max="10">
@@ -121,7 +122,7 @@
 						<input required class="form-control input-lg" type="number" name="wCount" step="1" min="0" max="100" value="10"> 
 						<br>
 					    <label for="wGen">Generation/Time[1:24]</label>
-						<input required class="form-control" type="text" name="wGen" maxlength="47" value="1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1">
+						<input required class="form-control" type="text" name="wGen"  value="1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1">
 						<br> 
 						<label for="wVar">Wind Variability(+/-)</label>
 						<input required class="form-control input-sm" name="wVar" type="number" step="any" value="0" min="0" max="10">

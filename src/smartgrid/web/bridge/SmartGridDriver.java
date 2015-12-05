@@ -18,12 +18,11 @@ public class SmartGridDriver{
 		SmartPrint smartPrint=SmartPrint.getInstance();
 		AuctionMaster ac = new AuctionMaster();
 		smartPrint.enableTypes(new int[] {0,1,6});//Modify this to show different print statements, recommend to leave 0 and 7 on
-		int solarCount=2;
-		int windCount=1;
-		int consumerCount=5;
-		int storageCount=2;
+		int solarCount=10;
+		int windCount=10;
+		int consumerCount=25;
+		int storageCount=8;
 		double connectivity=0.3;//Computes to about 50%
-		int t0,t1;
 		DecimalFormat df = new DecimalFormat("#####.####");
 		Random rand=new Random();
 		ArrayList<Agent> generators=new ArrayList<Agent>();
@@ -54,8 +53,6 @@ public class SmartGridDriver{
 		//Creates all the solar generators and links to all consumers
 		
 		for(int i=0;i<solarCount;i++){
-			t0=(rand.nextInt(2) + 1) + 9;
-			t1=(rand.nextInt(2) + 1) + 16;
 			solar.add(new SolarPower("Solar "+(i+1)));
 			generators.add(solar.get(i));
 			allAgents.add(solar.get(i));
@@ -63,8 +60,6 @@ public class SmartGridDriver{
 		smartPrint.println(4,"Building Wind Generators and linking to Consumers.");
 		//Creates all the wind generators
 		for(int i=0;i<windCount;i++){
-			t0=(rand.nextInt(2) + 1) + 9;
-			t1=(rand.nextInt(2) + 1) + 16;
 			wind.add(new WindPower("Wind "+(i+1)));
 			generators.add(wind.get(i));
 			allAgents.add(wind.get(i));
