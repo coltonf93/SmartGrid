@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import smartgrid.agents.*;
+import smartgrid.web.bridge.SmartGridDriver;
 
 
 public class AuctionMaster {
@@ -42,6 +43,7 @@ public class AuctionMaster {
 	}
 
 	public void exchange(Buyers buyer, Sellers seller){
+		//System.out.println("STATIC DAY CHECK: "+SmartGridDriver.getDay());
 		double price=0;//agreed upon exchange price
 		if(buyer.getName().equals("MainGrid")|| seller.getName().equals("MainGrid")){
 			if(seller.getName().equals("MainGrid")){//the seller is main grid

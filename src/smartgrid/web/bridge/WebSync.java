@@ -59,8 +59,7 @@ public class WebSync {
 	
 	//Reset and start method
 	public void intializeNodes(){
-		//Runs every time program is reset
-		//intialize all the nodes and connections
+		
 	}
 	
 	

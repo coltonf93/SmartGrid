@@ -13,16 +13,32 @@ import smartgrid.utilities.*;
 import smartgrid.web.bridge.WebSync;
 
 public class SmartGridDriver{
-	private static int days=366;
+	private static int days=10;
+	private static int d=0;
+	private static int t=0;
+	static SmartPrint smartPrint=SmartPrint.getInstance();
 	public static void main(String [] args){
-		SmartPrint smartPrint=SmartPrint.getInstance();
+		
+		int solarCount=10;
+		int windCount=0;
+		int consumerCount=5;
+		int storageCount=0;
+		double connectivity=0.1;//Computes to about 50%
+		double[] consumerConsumption={.5,.45,.4,.4,.4,.42,.43,.48,.55,.72,.85,.9,.92,1,1,1,1,.95,.97,.95,.8,.6,.5,.45};
+		double[] solarGeneration={.01,.01,.01,.01,.01,.05,.2,.3,.38,.38,.7,1,.9,1,.6,.62,.3,.1,.01,.01,.01,.01,.01,.01};
+		double[] windGeneration={.5,.5,.7,.2,.61,.4,.38,.1,.27,.27,.2,.2,.2,.2,.38,.42,.7,.4,.38,.42,.4,.38,.43,.4};
+		Consumer.setStartBuyBid(.01);
+		SolarPower.setStartSellBid(1);
+		WindPower.setStartSellBid(1);
+		GridStorage.setStartBuyBid(.01);
+		GridStorage.setStartSellBid(1);
+		smartPrint.enableTypes(new int[] {0,1,6});//Modify this to show different print statements, recommend to leave 0 and 7 on
+		
+		
+		
 		AuctionMaster ac = new AuctionMaster();
 		smartPrint.enableTypes(new int[] {0,1,6});//Modify this to show different print statements, recommend to leave 0 and 7 on
-		int solarCount=10;
-		int windCount=10;
-		int consumerCount=20;
-		int storageCount=20;
-		double connectivity=0.2;//Computes to about 50%
+
 		DecimalFormat df = new DecimalFormat("#####.####");
 		Random rand=new Random();
 		ArrayList<Agent> generators=new ArrayList<Agent>();
@@ -31,12 +47,10 @@ public class SmartGridDriver{
 		ArrayList<Agent> wind = new ArrayList<Agent>();
 		ArrayList<Agent> storage = new ArrayList<Agent>();
 		ArrayList<Agent> allAgents = new ArrayList<Agent>();
-		double[] consumerConsumption={0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0,1.0,1.0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,2.0,2.0,2.0,2.0,0.25,.25};
-		double[] solarGeneration={0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0};
-		double[] windGeneration={1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1};
-		SolarPower.setGeneration(solarGeneration,.25);
-		WindPower.setGeneration(windGeneration,.25);
-		Consumer.setConsumption(consumerConsumption,.25);
+
+		SolarPower.setGeneration(solarGeneration,0);
+		WindPower.setGeneration(windGeneration,0);
+		Consumer.setConsumption(consumerConsumption,0);
 		WebSync webSync = new WebSync(allAgents);
 		smartPrint.println(4,"Building the Main Grid");
 		//TODO make MainGrid configurable from the web interface that is to come
@@ -89,9 +103,9 @@ public class SmartGridDriver{
 		ac.addBuyers((Collection<? extends Agent>)storage);//adds all the storage units to the list of buyers
 		ac.addBuyer(mainGrid);
 		//PROCESS THE STEP FUNCTIONS FOR ALL AGENTS
-		for(int d=0;d<days;d++){
+		for(d=0;d<days;d++){
 			smartPrint.println(7,"\nBegin Day "+d+": \n=========================================================\n=========================================================\n");
-			for(int t=0;t<24;t++){
+			for(t=0;t<24;t++){
 				smartPrint.println(7,"\nBegin Hour "+t+": \n=========================================================");
 				//Process' all agent begin actions
 				for(int a=0;a<allAgents.size();a++){
@@ -236,6 +250,12 @@ public class SmartGridDriver{
 			e.printStackTrace();
 		}
 	}	
+	public static int getDay(){
+		return d;
+	}
+	public static int getTime(){
+		return t;
+	}
 }
 //TODO Consider: randomize the order of agents with the same price.
 /*

@@ -2,10 +2,13 @@ package smartgrid.agents;
 
 import java.util.Random;
 
+import smartgrid.web.bridge.SmartGridDriver;
+
 public class GridStorage extends Agent implements Buyers, Sellers{
 	double sellPrice, buyPrice, profit, expense, sellPower, buyPower, decayRate, storedPower, capacity, dailyExpense,dailyProfit,hourlyProfit,hourlyExpense;
-	double[] lastSellBids = {1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98}; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
-	double[] lastBuyBids = {.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04};//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
+	static double startSellBid=1,startBuyBid=0;
+	double[] lastSellBids = new double[24]; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
+	double[] lastBuyBids = new double[24];//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
 	Random rand=new Random();
 	public GridStorage(String name, double capacity, double capVar, double decay){
 		super(name);
@@ -21,6 +24,15 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 		this.hourlyExpense=0;
 		smartPrint.println(1,this.name+" was created and has "+.5*this.capacity+" units of power stored and a max capacity of "+this.capacity);
 	}
+	
+	public static void setStartSellBid(double bid){
+		startSellBid=bid;
+	}
+	
+	public static void setStartBuyBid(double bid){
+		startBuyBid=bid;
+	}
+	
 	public double getPowerRating(){//if negative need to buy power, if 0 OK, if positive need to sell power, Regards to main grid
 		if(storedPower>(.8*this.capacity)){
 			return this.storedPower-.8*(this.capacity); 
@@ -167,18 +179,24 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 		}
 		this.hourlyExpense=0;
 		this.hourlyProfit=0;
-		if(Math.abs(this.lastPrices[t]-this.lastPrices2[t])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
-			this.setBuyPrice(this.lastBuyBids[t]+bidRatio*(this.lastPrices[t]-this.lastBuyBids[t]));//modify buyBid according to previous bid, price and bid ratio
-			smartPrint.println(2,this.name+" changed it's buyBid price from "+this.getLastBuyBid(t)+" to "+this.getBuyPrice()+"/unit.");
-			this.setSellPrice(this.lastSellBids[t]+bidRatio*(this.lastPrices[t]-this.lastSellBids[t]));//modify sellBid according to previous bid, price and bid ratio
-			smartPrint.println(2,this.name+" changed it's sellBid price from "+this.getLastSellBid(t)+" to "+this.getSellPrice()+"/unit.");
+		if(SmartGridDriver.getDay()>0){
+			if(Math.abs(this.lastPrices[t]-this.lastPrices2[t])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
+				this.setBuyPrice(this.lastBuyBids[t]+bidRatio*(this.lastPrices[t]-this.lastBuyBids[t]));//modify buyBid according to previous bid, price and bid ratio
+				smartPrint.println(2,this.name+" changed it's buyBid price from "+this.getLastBuyBid(t)+" to "+this.getBuyPrice()+"/unit.");
+				this.setSellPrice(this.lastSellBids[t]+bidRatio*(this.lastPrices[t]-this.lastSellBids[t]));//modify sellBid according to previous bid, price and bid ratio
+				smartPrint.println(2,this.name+" changed it's sellBid price from "+this.getLastSellBid(t)+" to "+this.getSellPrice()+"/unit.");
+			}
+			
+			else{
+				this.setSellPrice(this.lastSellBids[t]);//sellBid the same amount as yesterday at this time	
+				smartPrint.println(2,this.name+" kept its sellBid the same as the last round at "+this.getSellPrice()+"/unit.");
+				this.setBuyPrice(this.lastSellBids[t]);//buyBid the same amount as today at this time
+				smartPrint.println(2,this.name+" kept its buyBid the same as the last round at "+this.getBuyPrice()+"/unit.");
+			}
 		}
-		
 		else{
-			this.setSellPrice(this.lastSellBids[t]);//sellBid the same amount as yesterday at this time	
-			smartPrint.println(2,this.name+" kept its sellBid the same as the last round at "+this.getSellPrice()+"/unit.");
-			this.setBuyPrice(this.lastSellBids[t]);//buyBid the same amount as today at this time
-			smartPrint.println(2,this.name+" kept its buyBid the same as the last round at "+this.getBuyPrice()+"/unit.");
+			this.setBuyPrice(startBuyBid);
+			this.setSellPrice(startSellBid);
 		}
 		
 		
