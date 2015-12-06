@@ -72,7 +72,7 @@ public class AuctionMaster {
 			}
 		}
 		else{//Both the buyer and seller are agents
-			price=(buyer.getBuyPrice()+seller.getSellPrice())/2;// if it's not the main grid the agent pays the average of buyer and selleer bids
+			price=(buyer.getBuyPrice()+seller.getSellPrice())/2;// if it's not the main grid the agent pays the average of buyer and seller bids
 		}
 		//Run actual trade with agreed upon price
 		if(buyer.getBuyPower()>0&&seller.getSellPower()>0){

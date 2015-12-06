@@ -13,19 +13,19 @@ import smartgrid.utilities.*;
 import smartgrid.web.bridge.WebSync;
 
 public class SmartGridDriver{
-	private static int days=10;
+	private static int days=1000;
 	private static int d=0;
 	private static int t=0;
 	static SmartPrint smartPrint=SmartPrint.getInstance();
 	public static void main(String [] args){
 		
-		int solarCount=10;
-		int windCount=0;
-		int consumerCount=5;
-		int storageCount=0;
-		double connectivity=0.1;//Computes to about 50%
+		int solarCount=6;
+		int windCount=6;
+		int consumerCount=10;
+		int storageCount=10;
+		double connectivity=0.2;//Computes to about 50%
 		double[] consumerConsumption={.5,.45,.4,.4,.4,.42,.43,.48,.55,.72,.85,.9,.92,1,1,1,1,.95,.97,.95,.8,.6,.5,.45};
-		double[] solarGeneration={.01,.01,.01,.01,.01,.05,.2,.3,.38,.38,.7,1,.9,1,.6,.62,.3,.1,.01,.01,.01,.01,.01,.01};
+		double[] solarGeneration={.0,.0,.0,.0,.0,.05,.2,.3,.38,.38,.7,1,.9,1,.6,.62,.3,.1,.01,.0,.0,.0,.0,.0};
 		double[] windGeneration={.5,.5,.7,.2,.61,.4,.38,.1,.27,.27,.2,.2,.2,.2,.38,.42,.7,.4,.38,.42,.4,.38,.43,.4};
 		Consumer.setStartBuyBid(.01);
 		SolarPower.setStartSellBid(1);
@@ -109,7 +109,7 @@ public class SmartGridDriver{
 				smartPrint.println(7,"\nBegin Hour "+t+": \n=========================================================");
 				//Process' all agent begin actions
 				for(int a=0;a<allAgents.size();a++){
-					allAgents.get(a).stepBegin(t);
+					allAgents.get(a).stepBegin();
 				}
 				ac.processExchanges();//Runs all of the auction and buy sell exchanges for agents
 		
@@ -168,7 +168,7 @@ public class SmartGridDriver{
 					agent.setPriceSum(0);
 					agent.setExchangeCount(0);
 					//sloppy code end refactor
-					agent.stepEnd(t);
+					agent.stepEnd();
 				}
 				
 			}
@@ -203,41 +203,21 @@ public class SmartGridDriver{
 		for(int i=0;i<consumers.size();i++){
 			Consumer consumerA = (Consumer)consumers.get(i);
 			smartPrint.println(6,consumerA.getName()+" earned a total of -"+df.format(consumerA.getExpense())+" and had a final price array of: ");
-			smartPrint.print(6, "[");
-			for(int p=0;p<24;p++){
-				smartPrint.print(6, "  "+df.format(consumerA.getLastPrice(p)));
-			}
-			smartPrint.print(6, "]\n");
 		}
 		
 		for(int i=0;i<wind.size();i++){
 			WindPower windA = (WindPower)wind.get(i);
 			smartPrint.println(6,windA.getName()+" earned a total of "+df.format(windA.getProfit())+".");
-			smartPrint.print(6, "[");
-			for(int p=0;p<24;p++){
-				smartPrint.print(6, "  "+df.format(windA.getLastPrice(p)));
-			}
-			smartPrint.print(6, "]\n");
 		}
 		
 		for(int i=0;i<solar.size();i++){
 			SolarPower solarA = (SolarPower)solar.get(i);
 			smartPrint.println(6,solarA.getName()+" earned a total of "+df.format(solarA.getProfit())+".");
-			smartPrint.print(6, "[");
-			for(int p=0;p<24;p++){
-				smartPrint.print(6, "  "+df.format(solarA.getLastPrice(p)));
-			}
-			smartPrint.print(6, "]\n");
 		}
 		
 		for(int i=0;i<storage.size();i++){
 			GridStorage storageA = (GridStorage)storage.get(i);
 			smartPrint.println(6,storageA.getName()+" earned a total of "+df.format(storageA.getProfit())+" and spent a total of "+df.format(storageA.getExpense())+" today netting "+df.format(storageA.getNetProfit())+".");
-			smartPrint.print(6, "[");
-			for(int p=0;p<24;p++){
-				smartPrint.print(6, "  "+df.format(storageA.getLastPrice(p)));
-			}
-			smartPrint.print(6, "]\n");
 		}
 		
 		smartPrint.println(6,mainGrid.getName()+" earned a total of "+df.format(mainGrid.getProfit())+" and spent a total of "+df.format(mainGrid.getExpense())+" today netting "+df.format(mainGrid.getNetProfit())+".");
@@ -250,11 +230,18 @@ public class SmartGridDriver{
 			e.printStackTrace();
 		}
 	}	
-	public static int getDay(){
-		return d;
-	}
-	public static int getTime(){
-		return t;
+	public static int getGlobal(char c){
+		if(c=='d'){//return current day
+			return d;
+		}
+		else if(c=='t'){//return current time
+			return t;
+		}
+		else if(c=='D'){//return  the total number of days
+			return days+1;
+		}
+		smartPrint.println(0, "Error: SmartGridDriver.getGlobal('"+c+"'); not found.");
+		return -1;
 	}
 }
 //TODO Consider: randomize the order of agents with the same price.

@@ -4,13 +4,13 @@ public interface Sellers{
 	public double getSellPrice();
 	public double getSellPower();
 	public double getProfit();
+	public double[][] getSellBidMatrix();
 	double getDailyProfit();
 	double getHourlyProfit();
 	public void setSellPrice(double sellPrice);
 	public void sell(double units, double price);
 	public String getName();
-	public double getLastSellBid(int t);
-	public double[] getLastSellBids();
-	public void stepBegin(int t);
-	public void stepEnd(int t);
+	public double getLastSellBid();
+	public void stepBegin();
+	public void stepEnd();
 }

@@ -3,14 +3,14 @@ package smartgrid.agents;
 import java.util.ArrayList;
 
 import smartgrid.utilities.SmartPrint;
+import smartgrid.web.bridge.SmartGridDriver;
 
 public abstract class Agent {
 	protected ArrayList<Agent> buysFrom = new ArrayList<Agent>();
 	protected ArrayList<Agent> sellsTo = new ArrayList<Agent>();
 	int exchanges=0;//how many exchanges this agent made in this instance of time TODO rethink design later
 	double priceSum=0;//accumulation of all prices in this instance of time TODO rethink design later
-	double[] lastPrices = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};//The average price power was exchanged yesterday at this time for this agent
-	double[] lastPrices2 = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};//The average price power was exchanged for two days ago at this time for this agent
+	double[][] avgPrices = new double[24][SmartGridDriver.getGlobal('D')];
 	double avgPrice=0;  
 	double lastPriceDifference=.005; //Must be less than .8 recommended .005
 	double bidRatio = .1; 
@@ -46,28 +46,20 @@ public abstract class Agent {
 		return this.name;
 	}
 	
-	public void stepBegin(int t){
+	public void stepBegin(){
 		smartPrint.println(0,"Warning: Agent superclass does not have a defined action [stepBegin(int t) method].");
 	}
 	
-	public void stepEnd(int t){
+	public void stepEnd(){
 		smartPrint.println(0,"Warning: Agent superclass does not have a defined action [stepEnd(int t) method].");
 	}
 	
-	public double getLastPrice(int t){
-		return this.lastPrices[t];
+	public double[][] getPriceMatrix(){
+		return this.avgPrices;
 	}
 	
-	public double getLastPrice2(int t){
-		return this.lastPrices2[t];
-	}
-	
-	public double[] getLastPrices(){
-		return this.lastPrices;
-	}
-	
-	public double[] getLastPrices2(){
-		return this.lastPrices2;
+	public void setPrice(int time, int day, double avgPrice){
+		this.avgPrices[time][day]=avgPrice;
 	}
 	
 	public int getExchangeCount(){
