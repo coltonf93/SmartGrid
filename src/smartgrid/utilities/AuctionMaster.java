@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import smartgrid.agents.*;
+import smartgrid.web.bridge.SmartGridDriver;
 
 
 public class AuctionMaster {
@@ -42,6 +43,7 @@ public class AuctionMaster {
 	}
 
 	public void exchange(Buyers buyer, Sellers seller){
+		//System.out.println("STATIC DAY CHECK: "+SmartGridDriver.getDay());
 		double price=0;//agreed upon exchange price
 		if(buyer.getName().equals("MainGrid")|| seller.getName().equals("MainGrid")){
 			if(seller.getName().equals("MainGrid")){//the seller is main grid
@@ -86,11 +88,12 @@ public class AuctionMaster {
 	}
 	
 	public void processExchanges(){
-		
+		Collections.shuffle(buyers);//randomizes buyer order to prevent ordering preference
 		Collections.sort(buyers,highBuyer);//Sorts all of the buyers by, buy price, highest first
 		for(int i=0;i<buyers.size();i++){
 			buyer=((Buyers)buyers.get(i));
 			sellers=buyers.get(i).getBuysFrom();//Determines who can sell to the current buyer
+			Collections.shuffle(sellers);//Randomizes  seller order to prevent ordering preference
 			Collections.sort(sellers,lowSeller);//matches the lowest price sellers to the highest price buyer
 			smartPrint.println(3,"\n"+buyer.getName()+" needs "+buyer.getBuyPower()+" units for $"+buyer.getBuyPrice()+"/unit: \n-------------------------------------------------------");
 			for(int j=0;j<sellers.size()&&buyer.getBuyPower()>0;j++){//All connected sellers offer their prices and availability, cheapest first 

@@ -2,12 +2,14 @@ package smartgrid.agents;
 
 import java.util.Random;
 
+import smartgrid.web.bridge.SmartGridDriver;
+
 public class SolarPower extends Agent implements Sellers{
 		int t0,t1;
 		double sellPrice,sellPower,profit,dailyProfit,hourlyProfit;
-		static double genVar;
+		static double genVar=0,startSellBid=1;;
 		static double[] generation;
-		double[] lastSellBids = {1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98,1.98}; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
+		double[] lastSellBids = new double[24]; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
 		String name;
 		Random rand = new Random();
 		
@@ -24,6 +26,10 @@ public class SolarPower extends Agent implements Sellers{
 		public static void setGeneration(double[] generationS, double genVarS){
 			generation=generationS;
 			genVar=genVarS;
+		}
+		
+		public static void setStartSellBid(double bid){
+			startSellBid=bid;
 		}
 	
 		@Override
@@ -101,14 +107,19 @@ public class SolarPower extends Agent implements Sellers{
 			}
 			smartPrint.println(2,this.name+" generated "+this.sellPower+" units of power.");
 			//Calculates the buy price for this round at this specific time
-			if(Math.abs(this.lastPrices[t]-this.lastPrices2[t])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
-				this.setSellPrice(this.lastSellBids[t]+bidRatio*(this.lastPrices[t]-this.lastSellBids[t]));//modify bid price according to previous bid, price and bid ratio
-				smartPrint.println(2,this.name+" changed it's sellBid price from "+this.getLastSellBid(t)+" to "+this.getSellPrice()+"/unit. An addition of "+(bidRatio*(this.lastPrices[t]-this.lastSellBids[t])));
+			if(SmartGridDriver.getDay()>0){
+				if(Math.abs(this.lastPrices[t]-this.lastPrices2[t])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
+					this.setSellPrice(this.lastSellBids[t]+bidRatio*(this.lastPrices[t]-this.lastSellBids[t]));//modify bid price according to previous bid, price and bid ratio
+					smartPrint.println(2,this.name+" changed it's sellBid price from "+this.getLastSellBid(t)+" to "+this.getSellPrice()+"/unit. An addition of "+(bidRatio*(this.lastPrices[t]-this.lastSellBids[t])));
+				}
+				
+				else{
+					this.setSellPrice(this.lastSellBids[t]);//bid the same amount you did last round
+					smartPrint.println(2,this.name+" kept its sellBid the same as the last round at "+this.getSellPrice()+"/unit.");
+				}
 			}
-			
 			else{
-				this.setSellPrice(this.lastSellBids[t]);//bid the same amount you did last round
-				smartPrint.println(2,this.name+" kept its sellBid the same as the last round at "+this.getSellPrice()+"/unit.");
+				this.sellPrice=startSellBid;
 			}
 		}
 		

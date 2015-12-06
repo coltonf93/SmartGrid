@@ -22,7 +22,7 @@ public class WebSync {
 		String docReady="";
 		String edges="";
 		int st=0,gen=0,cons=0;
-		writer.println("document.addEventListener('DOMContentLoaded', function(){ var cy = cytoscape({ container: document.querySelector('#cy'), boxSelectionEnabled: false, zoomingEnabled: false, panningEnabled: true, autounselectify: true, style: cytoscape.stylesheet() .selector('node') .css({ 'content': 'data(id)', width: '60px', height: '60px', 'text-valign': 'center', 'color': '#333', 'text-outline-width': 2, 'text-outline-color': 'white', 'pie-size': '80%', 'pie-1-background-color': '#E8747C', 'pie-1-background-size': 'mapData(red, 0, 10, 0, 100)', 'pie-2-background-color': '#74E883', 'pie-2-background-size': 'mapData(green, 0, 10, 0, 100)' }) .selector('edge') .css({ 'target-arrow-shape': 'triangle' }) .selector(':selected') .css({ 'background-color': 'black', 'line-color': 'black', 'target-arrow-color': 'green', 'source-arrow-color': 'green' }) .selector('.faded') .css({ 'opacity': 0.15, 'text-opacity': 0 }),");
+		writer.println("document.addEventListener('DOMContentLoaded', function(){ var cy = cytoscape({ container: document.querySelector('#cy'), boxSelectionEnabled: false, zoomingEnabled: false, panningEnabled: true, autounselectify: true, style: cytoscape.stylesheet() .selector('node') .css({ 'content': 'data(id)', width: '60px', height: '60px', 'text-valign': 'center', 'color': '#333', 'text-outline-width': 2, 'text-outline-color': 'white', 'pie-size': '80%', 'pie-1-background-color': '#E8747C', 'pie-1-background-size': 'mapData(red, 0, 10, 0, 100)', 'pie-2-background-color': '#74E883', 'pie-2-background-size': 'mapData(green, 0, 10, 0, 100)' }) .selector('edge') .css({ 'target-arrow-shape': 'triangle' }) .selector(':selected') .css({ 'background-color': 'black', 'line-color': 'black', 'target-arrow-color': 'green', 'source-arrow-color': 'green' }) .selector('.faded') .css({ 'opacity': 0.08, 'text-opacity': 0 }),");
 		for(int i=0;i<this.agents.size();i++){
 			Agent agent = this.agents.get(i);
 			connAgents=agent.getBuysFrom();
@@ -48,7 +48,7 @@ public class WebSync {
 				edges+="{ data: { id: 'link"+i+""+j+"', weight: 1, source: '"+connAgents.get(j).getName()+"', target: '"+agent.getName()+"' } },\n";
 			}
 		}
-		docReady+="$('#cCount').text('"+cons+"');$('#gCount').text('"+gen+"');$('#sCount').text('"+st+"');$('#dCount').text('"+day+"');";
+		docReady+="$('#cCount').text('"+cons+"');$('#gCount').text('"+gen+"');$('#sCount').text('"+(st-1)+"');$('#dCount').text('"+day+"');";
 		writer.println("elements: {nodes:["+nodes+"],");
 		writer.println("edges:["+edges+"]},");
 		writer.println("layout: { /*ring, grid and*/ name: 'grid', padding: 10 } }); cy.on('tap', 'node', function(e){ var node = e.cyTarget; var neighborhood = node.neighborhood().add(node); cy.elements().addClass('faded'); neighborhood.removeClass('faded'); }); cy.on('tap', function(e){ if( e.cyTarget === cy ){ cy.elements().removeClass('faded'); } }); });");
@@ -59,8 +59,7 @@ public class WebSync {
 	
 	//Reset and start method
 	public void intializeNodes(){
-		//Runs every time program is reset
-		//intialize all the nodes and connections
+		
 	}
 	
 	

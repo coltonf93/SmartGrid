@@ -2,11 +2,13 @@ package smartgrid.agents;
 
 import java.util.Random;
 
+import smartgrid.web.bridge.SmartGridDriver;
+
 public class Consumer extends Agent implements Buyers{
 	static double[] consumption;
 	double buyPrice, expense, buyPower, dailyExpense, hourlyExpense;
-	static double consVar;
-	double[] lastBuyBids = {.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04,.04};//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
+	static double consVar=0,startBuyBid=0;
+	double[] lastBuyBids = new double[24];//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
 	String name;
 	Random rand = new Random();
 	
@@ -17,6 +19,10 @@ public class Consumer extends Agent implements Buyers{
 		this.dailyExpense=0;
 		this.hourlyExpense=0;
 		smartPrint.println(1, this.name+" was created with a variable class defined consumption rate.");
+	}
+	
+	public static void setStartBuyBid(double bid){
+		startBuyBid=bid;
 	}
 	
 	public static void setConsumption(double[] consumptionS, double consVarS){
@@ -97,15 +103,19 @@ public class Consumer extends Agent implements Buyers{
 		this.buyPower=consumption[t]+rand.nextDouble()*(this.consVar+1)*Math.random() < 0.5 ? -1 : 1;//Base consumption +/- the variability
 		smartPrint.println(2,this.name+" consumed and requires "+this.buyPower+" units of power");
 		
-		
 		//Calculates the buy price for this round at this specific time
-		if(Math.abs(this.lastPrices[t]-this.lastPrices2[t])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
-			this.setBuyPrice(this.lastBuyBids[t]+bidRatio*(this.lastPrices[t]-this.lastBuyBids[t]));//modify bid price according to previous bid, price and bid ratio
-			smartPrint.println(2,this.name+" changed it's buyBid price from "+this.getLastBuyBid(t)+" to "+this.getBuyPrice()+"/unit.");
+		if(SmartGridDriver.getDay()>0){
+			if(Math.abs(this.lastPrices[t]-this.lastPrices2[t])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
+				this.setBuyPrice(this.lastBuyBids[t]+bidRatio*(this.lastPrices[t]-this.lastBuyBids[t]));//modify bid price according to previous bid, price and bid ratio
+				smartPrint.println(2,this.name+" changed it's buyBid price from "+this.getLastBuyBid(t)+" to "+this.getBuyPrice()+"/unit.");
+			}
+			else{
+				this.setBuyPrice(this.lastBuyBids[t]);//bid the same amount you did last round		
+				smartPrint.println(2,this.name+" did not change its buyBid and is set at "+this.getBuyPrice()+"/unit.");
+			}
 		}
 		else{
-			this.setBuyPrice(this.lastBuyBids[t]);//bid the same amount you did last round		
-			smartPrint.println(2,this.name+" did not change its buyBid and is set at "+this.getBuyPrice()+"/unit.");
+			this.buyPrice=startBuyBid;
 		}
 	}
 	
