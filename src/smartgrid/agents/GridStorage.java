@@ -7,8 +7,8 @@ import smartgrid.web.bridge.SmartGridDriver;
 public class GridStorage extends Agent implements Buyers, Sellers{
 	double sellPrice, buyPrice, profit, expense, sellPower, buyPower, decayRate, storedPower, capacity, dailyExpense,dailyProfit,hourlyProfit,hourlyExpense;
 	static double startSellBid=1,startBuyBid=0;
-	double[] lastSellBids = new double[24]; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
-	double[] lastBuyBids = new double[24];//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
+	double[][] sellBids = new double[24][SmartGridDriver.getGlobal('D')]; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
+	double[][] buyBids = new double[24][SmartGridDriver.getGlobal('D')];//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
 	Random rand=new Random();
 	public GridStorage(String name, double capacity, double capVar, double decay){
 		super(name);
@@ -143,6 +143,16 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 	}
 	
 	@Override
+	public double[][] getBuyBidMatrix(){
+		return this.buyBids;
+	}
+	
+	@Override
+	public double[][] getSellBidMatrix(){
+		return this.sellBids;
+	}
+	
+	@Override
 	public double getHourlyExpense(){
 		return this.hourlyExpense;
 	}
@@ -152,45 +162,34 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 	}
 	
 	@Override
-	public double getLastSellBid(int t) {
-		return this.lastSellBids[t];
+	public double getLastSellBid() {
+		return this.sellBids[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)];
 	}
 
 	@Override
-	public double[] getLastSellBids() {
-		return this.lastSellBids;
-	}
-
-	@Override
-	public double getLastBuyBid(int t) {
-		return this.lastBuyBids[t];
-	}
-
-	@Override
-	public double[] getLastBuyBids() {
-		return this.lastBuyBids;
+	public double getLastBuyBid() {
+		return this.buyBids[(SmartGridDriver.getGlobal('t'))][SmartGridDriver.getGlobal('d')-1];
 	}
 	
 	@Override
-	public void stepBegin(int t){
-		if(t==0){
+	public void stepBegin(){
+		if(SmartGridDriver.getGlobal('t')==0){
 			dailyProfit=0;
 			dailyExpense=0;
 		}
 		this.hourlyExpense=0;
 		this.hourlyProfit=0;
-		if(SmartGridDriver.getDay()>0){
-			if(Math.abs(this.lastPrices[t]-this.lastPrices2[t])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
-				this.setBuyPrice(this.lastBuyBids[t]+bidRatio*(this.lastPrices[t]-this.lastBuyBids[t]));//modify buyBid according to previous bid, price and bid ratio
-				smartPrint.println(2,this.name+" changed it's buyBid price from "+this.getLastBuyBid(t)+" to "+this.getBuyPrice()+"/unit.");
-				this.setSellPrice(this.lastSellBids[t]+bidRatio*(this.lastPrices[t]-this.lastSellBids[t]));//modify sellBid according to previous bid, price and bid ratio
-				smartPrint.println(2,this.name+" changed it's sellBid price from "+this.getLastSellBid(t)+" to "+this.getSellPrice()+"/unit.");
-			}
-			
+		if(SmartGridDriver.getGlobal('d')>0){
+			if(SmartGridDriver.getGlobal('d')>1&&Math.abs(avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)]-avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
+				this.setBuyPrice(this.getLastBuyBid()+bidRatio*(this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)]-this.getLastBuyBid()));//modify buyBid according to previous bid, price and bid ratio
+				smartPrint.println(2,this.name+" changed it's buyBid price from "+this.getLastBuyBid()+" to "+this.getBuyPrice()+"/unit.");
+				this.setSellPrice(this.getLastSellBid()+bidRatio*(this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)]-this.getLastBuyBid()));//modify sellBid according to previous bid, price and bid ratio
+				smartPrint.println(2,this.name+" changed it's sellBid price from "+this.getLastSellBid()+" to "+this.getSellPrice()+"/unit.");
+			}		
 			else{
-				this.setSellPrice(this.lastSellBids[t]);//sellBid the same amount as yesterday at this time	
+				this.setSellPrice(this.getLastSellBid());//sellBid the same amount as yesterday at this time	
 				smartPrint.println(2,this.name+" kept its sellBid the same as the last round at "+this.getSellPrice()+"/unit.");
-				this.setBuyPrice(this.lastSellBids[t]);//buyBid the same amount as today at this time
+				this.setBuyPrice(this.getLastBuyBid());//buyBid the same amount as today at this time
 				smartPrint.println(2,this.name+" kept its buyBid the same as the last round at "+this.getBuyPrice()+"/unit.");
 			}
 		}
@@ -220,20 +219,18 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 		}
 	}
 	
-	public void stepEnd(int t){
+	public void stepEnd(){
 		//Daily totals print statements should go here.
 		//Put print statements for tic totals here
 		if(this.buyPower>0){
 			smartPrint.println(0, "Warning: "+this.name+" did not buy as much as it allocated.");
-			
 		}
 		if(this.sellPower>0){
 			smartPrint.println(0, "Warning: "+this.name+" did not sell as much as it wanted.");
 		}
-		this.lastBuyBids[t]=this.getBuyPrice();
-		this.lastSellBids[t]=this.getSellPrice();
-		this.lastPrices2[t]=this.lastPrices[t];
-		this.lastPrices[t]=this.getAvgPrice();
+		this.buyBids[SmartGridDriver.getGlobal('t')][SmartGridDriver.getGlobal('d')]=this.getBuyPrice();
+		this.sellBids[SmartGridDriver.getGlobal('t')][SmartGridDriver.getGlobal('d')]=this.getSellPrice();
+		this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d'))]=this.getAvgPrice();
 		
-	} 
+	}
 }

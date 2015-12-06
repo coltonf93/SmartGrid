@@ -8,7 +8,7 @@ public class Consumer extends Agent implements Buyers{
 	static double[] consumption;
 	double buyPrice, expense, buyPower, dailyExpense, hourlyExpense;
 	static double consVar=0,startBuyBid=0;
-	double[] lastBuyBids = new double[24];//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
+	double[][] buyBids = new double[24][SmartGridDriver.getGlobal('D')];//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
 	String name;
 	Random rand = new Random();
 	
@@ -57,6 +57,11 @@ public class Consumer extends Agent implements Buyers{
 			//TODO throw exception if true
 		}
 	}
+	
+	@Override
+	public double[][] getBuyBidMatrix(){
+		return this.buyBids;
+	}
 
 	@Override
 	public double getExpense() {
@@ -79,13 +84,8 @@ public class Consumer extends Agent implements Buyers{
 	}
 	
 	@Override
-	public double getLastBuyBid(int t){
-		return this.lastBuyBids[t];
-	}
-	
-	@Override
-	public double[] getLastBuyBids(){
-		return this.lastBuyBids;
+	public double getLastBuyBid(){
+		return this.buyBids[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)];
 	}
 	
 	@Override
@@ -94,23 +94,23 @@ public class Consumer extends Agent implements Buyers{
 	}
 		
 	@Override
-	public void stepBegin(int t){
-		if(t==0){
+	public void stepBegin(){
+		if(SmartGridDriver.getGlobal('t')==0){
 			this.dailyExpense=0;
 		}
 		//TODO modify consumption scalar
 		//this.buyPower=4*this.consumptionRate[t]*(1+rand.nextDouble());//randomScalar between -1cR to 1cR simulating consumption of user
-		this.buyPower=consumption[t]+rand.nextDouble()*(this.consVar+1)*Math.random() < 0.5 ? -1 : 1;//Base consumption +/- the variability
+		this.buyPower=consumption[SmartGridDriver.getGlobal('t')]+rand.nextDouble()*(this.consVar+1)*Math.random() < 0.5 ? -1 : 1;//Base consumption +/- the variability
 		smartPrint.println(2,this.name+" consumed and requires "+this.buyPower+" units of power");
 		
 		//Calculates the buy price for this round at this specific time
-		if(SmartGridDriver.getDay()>0){
-			if(Math.abs(this.lastPrices[t]-this.lastPrices2[t])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
-				this.setBuyPrice(this.lastBuyBids[t]+bidRatio*(this.lastPrices[t]-this.lastBuyBids[t]));//modify bid price according to previous bid, price and bid ratio
-				smartPrint.println(2,this.name+" changed it's buyBid price from "+this.getLastBuyBid(t)+" to "+this.getBuyPrice()+"/unit.");
+		if(SmartGridDriver.getGlobal('d')>0){
+			if(SmartGridDriver.getGlobal('d')>1&&Math.abs(avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)]-avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-2)])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
+				this.setBuyPrice(this.buyBids[(SmartGridDriver.getGlobal('t'))][(SmartGridDriver.getGlobal('d')-1)]+bidRatio*(this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)]-this.buyBids[(SmartGridDriver.getGlobal('t'))][SmartGridDriver.getGlobal('d')-1]));//modify bid price according to previous bid, price and bid ratio
+				smartPrint.println(2,this.name+" changed it's buyBid price from "+this.getLastBuyBid()+" to "+this.getBuyPrice()+"/unit.");
 			}
 			else{
-				this.setBuyPrice(this.lastBuyBids[t]);//bid the same amount you did last round		
+				this.setBuyPrice(this.buyBids[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)]);//bid the same amount you did last round		
 				smartPrint.println(2,this.name+" did not change its buyBid and is set at "+this.getBuyPrice()+"/unit.");
 			}
 		}
@@ -119,16 +119,15 @@ public class Consumer extends Agent implements Buyers{
 		}
 	}
 	
-	public void stepEnd(int t){
+	public void stepEnd(){
 		this.hourlyExpense=0;
 		
 		if(buyPower>0){
 			smartPrint.println(0, "Error: Consumer did not get enough power.");
 		}
 		
-	//TODO put print statements for tic totals here
-		this.lastBuyBids[t]=this.buyPrice;
-		this.lastPrices2[t]=this.lastPrices[t];
-		this.lastPrices[t]=this.getAvgPrice();
+		this.buyBids[SmartGridDriver.getGlobal('t')][SmartGridDriver.getGlobal('d')]=this.buyPrice;
+		this.avgPrices[SmartGridDriver.getGlobal('t')][SmartGridDriver.getGlobal('d')]=this.getAvgPrice();
+
 	}
 }

@@ -9,7 +9,7 @@ public class SolarPower extends Agent implements Sellers{
 		double sellPrice,sellPower,profit,dailyProfit,hourlyProfit;
 		static double genVar=0,startSellBid=1;;
 		static double[] generation;
-		double[] lastSellBids = new double[24]; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
+		double[][] sellBids = new double[24][SmartGridDriver.getGlobal('D')]; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
 		String name;
 		Random rand = new Random();
 		
@@ -81,13 +81,8 @@ public class SolarPower extends Agent implements Sellers{
 		}
 		
 		@Override
-		public double[] getLastSellBids(){
-			return this.lastSellBids;
-		}
-		
-		@Override
-		public double getLastSellBid(int t){
-			return this.lastSellBids[t];
+		public double getLastSellBid(){
+			return this.sellBids[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)];
 		}
 		
 		@Override
@@ -96,25 +91,29 @@ public class SolarPower extends Agent implements Sellers{
 		}
 		
 		@Override
-		public void stepBegin(int t){
-			if(t==0){
+		public double[][] getSellBidMatrix(){
+			return this.sellBids;
+		}
+		
+		@Override
+		public void stepBegin(){
+			if(SmartGridDriver.getGlobal('t')==0){
 				this.dailyProfit=0;
 			}
 			this.hourlyProfit=0;
-			this.sellPower=generation[t]+rand.nextDouble()*(this.genVar+1)*Math.random() < 0.5 ? -1 : 1;//Base generation +/- the variability
+			this.sellPower=generation[SmartGridDriver.getGlobal('t')]+rand.nextDouble()*(this.genVar+1)*Math.random() < 0.5 ? -1 : 1;//Base generation +/- the variability
 			if(this.sellPower<0){
 				this.sellPower=0;
 			}
 			smartPrint.println(2,this.name+" generated "+this.sellPower+" units of power.");
 			//Calculates the buy price for this round at this specific time
-			if(SmartGridDriver.getDay()>0){
-				if(Math.abs(this.lastPrices[t]-this.lastPrices2[t])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
-					this.setSellPrice(this.lastSellBids[t]+bidRatio*(this.lastPrices[t]-this.lastSellBids[t]));//modify bid price according to previous bid, price and bid ratio
-					smartPrint.println(2,this.name+" changed it's sellBid price from "+this.getLastSellBid(t)+" to "+this.getSellPrice()+"/unit. An addition of "+(bidRatio*(this.lastPrices[t]-this.lastSellBids[t])));
-				}
-				
+			if(SmartGridDriver.getGlobal('d')>0){
+				if(SmartGridDriver.getGlobal('d')>1&&Math.abs(this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)]-this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-2)])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
+					this.setSellPrice(this.getLastSellBid()+bidRatio*(this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)]-this.getLastSellBid()));//modify bid price according to previous bid, price and bid ratio
+					smartPrint.println(2,this.name+" changed it's sellBid price from "+this.getLastSellBid()+" to "+this.getSellPrice()+"/unit. An addition of "+(bidRatio*(this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)]-this.getLastSellBid())));
+				}	
 				else{
-					this.setSellPrice(this.lastSellBids[t]);//bid the same amount you did last round
+					this.setSellPrice(this.getLastSellBid());//bid the same amount you did last round
 					smartPrint.println(2,this.name+" kept its sellBid the same as the last round at "+this.getSellPrice()+"/unit.");
 				}
 			}
@@ -123,13 +122,21 @@ public class SolarPower extends Agent implements Sellers{
 			}
 		}
 		
-		public void stepEnd(int t){
+		public void stepEnd(){
 			if(sellPower>0){
 				smartPrint.println(0, "Error: Consumer did not get enough power.");
 			}
-			this.lastSellBids[t]=this.sellPrice;
-			this.lastPrices2[t]=this.lastPrices[t];
-			this.lastPrices[t]=this.getAvgPrice();
+			if(this.dailyProfit>0){
+				this.sellBids[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d'))]=this.sellPrice;
+				this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d'))]=this.getAvgPrice();
+			}
+			else if(SmartGridDriver.getGlobal('d')>0){
+				this.sellBids[SmartGridDriver.getGlobal('t')][SmartGridDriver.getGlobal('d')]=this.sellBids[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)];
+				this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d'))]=this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)];
+			}
+			else{
+				this.sellBids[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d'))]=this.sellPrice;
+				this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d'))]=.5;
+			}
 		}
-
 }

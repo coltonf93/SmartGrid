@@ -1,9 +1,11 @@
 package smartgrid.agents;
 
+import smartgrid.web.bridge.SmartGridDriver;
+
 public class MainGrid extends Agent implements Buyers,Sellers{
 	double buyPrice,sellPrice,expense,profit,dailyProfit,dailyExpense,hourlyProfit,hourlyExpense;
-	double[] lastSellBids = new double[24];//array that can be returned to keep it uniform with others
-	double[] lastBuyBids = new double[24];//array that can be returned to keep it uniform with others
+	double[][] sellBids = new double[24][SmartGridDriver.getGlobal('D')];//array that can be returned to keep it uniform with others
+	double[][] buyBids = new double[24][SmartGridDriver.getGlobal('D')];//array that can be returned to keep it uniform with others
 	public MainGrid(double buyPrice,double sellPrice){
 		super("MainGrid");
 		this.buyPrice=buyPrice;
@@ -12,18 +14,7 @@ public class MainGrid extends Agent implements Buyers,Sellers{
 		this.profit=0;
 		this.dailyExpense=0;
 		this.expense=0;
-		this.init();
 		smartPrint.println(1,this.name+" was created and has a fixed [buy:sell] price of ["+this.buyPrice+","+this.sellPrice+"] and has unlimited buy and sell power");
-	}
-	
-	//TODO think of a cleaner way to do this since array's can't be specified in construcctor
-	public void init(){
-		for(int i=0;i<lastSellBids.length;i++){
-			this.lastSellBids[i]=this.sellPrice;
-		}
-		for(int i=0;i<lastBuyBids.length;i++){
-			this.lastBuyBids[i]=this.buyPrice;
-		}
 	}
 	
 	@Override
@@ -127,28 +118,28 @@ public class MainGrid extends Agent implements Buyers,Sellers{
 	}
 	
 	@Override
-	public double getLastSellBid(int t) {
-		return this.lastSellBids[t];
-	}
-
-	@Override
-	public double[] getLastSellBids() {
-		return this.lastSellBids;
-	}
-
-	@Override
-	public double getLastBuyBid(int t) {
-		return this.lastSellBids[t];
-	}
-
-	@Override
-	public double[] getLastBuyBids() {
-		return this.lastBuyBids;
+	public double getLastSellBid() {
+		return this.sellPrice;
 	}
 	
 	@Override
-	public void stepBegin(int t) {
-		if(t==0){
+	public double[][] getBuyBidMatrix(){
+		return this.buyBids;
+	}
+	
+	@Override
+	public double[][] getSellBidMatrix(){
+		return this.sellBids;
+	}
+
+	@Override
+	public double getLastBuyBid() {
+		return this.buyPrice;
+	}
+	
+	@Override
+	public void stepBegin() {
+		if(SmartGridDriver.getGlobal('t')==0){
 			this.dailyExpense=0;
 			this.dailyProfit=0;
 		}
@@ -158,8 +149,11 @@ public class MainGrid extends Agent implements Buyers,Sellers{
 		smartPrint.println(2,this.name+" never changes its sellBid and kept it set at "+this.getSellPrice()+"/unit.");
 	}
 	
-	public void stepEnd(int t) {
-		//TODO move print statements for daily profit here
+	public void stepEnd() {
+		//the below declartaions should be array's with all the same value other than avgPrices which is the ratio between the grids buy and sell.
+		this.buyBids[SmartGridDriver.getGlobal('t')][SmartGridDriver.getGlobal('d')]=this.getBuyPrice();
+		this.sellBids[SmartGridDriver.getGlobal('t')][SmartGridDriver.getGlobal('d')]=this.getSellPrice();
+		this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d'))]=this.getAvgPrice();
 
 	}
 }

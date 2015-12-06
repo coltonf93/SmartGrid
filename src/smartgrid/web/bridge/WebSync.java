@@ -48,7 +48,7 @@ public class WebSync {
 				edges+="{ data: { id: 'link"+i+""+j+"', weight: 1, source: '"+connAgents.get(j).getName()+"', target: '"+agent.getName()+"' } },\n";
 			}
 		}
-		docReady+="$('#cCount').text('"+cons+"');$('#gCount').text('"+gen+"');$('#sCount').text('"+(st-1)+"');$('#dCount').text('"+day+"');";
+		docReady+="$('#cCount').text('"+cons+"');$('#gCount').text('"+gen+"');$('#sCount').text('"+(st-1)+"');$('#dCount').text('"+(day+1)+"');";
 		writer.println("elements: {nodes:["+nodes+"],");
 		writer.println("edges:["+edges+"]},");
 		writer.println("layout: { /*ring, grid and*/ name: 'grid', padding: 10 } }); cy.on('tap', 'node', function(e){ var node = e.cyTarget; var neighborhood = node.neighborhood().add(node); cy.elements().addClass('faded'); neighborhood.removeClass('faded'); }); cy.on('tap', function(e){ if( e.cyTarget === cy ){ cy.elements().removeClass('faded'); } }); });");
