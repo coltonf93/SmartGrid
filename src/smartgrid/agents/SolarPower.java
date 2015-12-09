@@ -95,7 +95,7 @@ public class SolarPower extends Agent implements Sellers{
 				this.dailyProfit=0;
 			}
 			this.hourlyProfit=0;
-			this.sellPower=generation[SmartGridDriver.getGlobal('t')]+rand.nextDouble()*(this.genVar+1)*Math.random() < 0.5 ? -1 : 1;//Base generation +/- the variability
+			this.sellPower=generation[SmartGridDriver.getGlobal('t')]+rand.nextDouble()*(this.genVar+1)*Math.random();//Base generation + the variability
 			if(this.sellPower<0){
 				this.sellPower=0;
 			}

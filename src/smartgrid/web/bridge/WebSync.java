@@ -27,9 +27,11 @@ public class WebSync {
 	}
 	DecimalFormat df = new DecimalFormat("#####.##");
 	public void writeJS() throws FileNotFoundException, UnsupportedEncodingException{
+		System.out.println("write js start");
 		ArrayList<Agent> connAgents=new ArrayList<Agent>();
 		SmartPrint smartPrint = SmartPrint.getInstance();
-		PrintWriter writer = new PrintWriter("WebContent\\js\\gridBuilder.js", "UTF-8");
+		File f = new File(getServletContext().getRealPath("js/gridBuilder.js"));
+		PrintWriter writer = new PrintWriter(getServletContext().getRealPath("js/gridBuilder.js"));
 		String nodes="";
 		String docReady="";
 		String edges="";
@@ -75,6 +77,7 @@ public class WebSync {
 	
 	public void saveTest(String testName, String description, int cCount, int wCount, int sCount, int stCount, double connectivity) throws IOException{
 		smartPrint.println(8,"Saving Test to json file.");
+		System.out.println("save test start");
 		//Hackish workaround to solve the cyclic serilization issue
 		ArrayList<String[]>links = new ArrayList<String[]>();
 		for(int i=0;i<agents.size();i++){

@@ -35,8 +35,8 @@
 		<%
 			}
 		%>
-		Dashboard <small>Data and Analytics</small>
-	</h1>
+		Dashboard <small>Data and Analytics</small></h1>
+	
 </section>
 
 <section class="content">

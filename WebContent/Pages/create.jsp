@@ -62,8 +62,11 @@
 						<label for="stCap">Capacity</label> 
 						<input required class="form-control input-lg" type="number" name="stCap" step="1" min="0" max="500" value="30"> 
 						<br>
-						<label for="stCapVar">Capacity Variability(+/-)</label> 
+						<label for="stCapVar">Capacity Variability(+)</label> 
 						<input required class="form-control input-lg" type="number" name="stCapVar" step="any" min="0" max="10" value="2"> 
+					    <br>
+						<label for="stDecay">Storage Decay Rate</label> 
+						<input required class="form-control input-lg" type="number" name="stDecay" step="any" min="0" max="10" value="2"> 
 					</div>
 				</div>
 		</div>
@@ -83,7 +86,7 @@
 					    <label for="cGen">Consumption/Time[1:24]</label>
 						<input class="form-control" type="text" name="cGen" value="0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0,1.0,1.0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,2.0,2.0,2.0,2.0,0.25,.25">
 						<br> 
-						<label for="cVar">Consumption Variability(+/-)</label>
+						<label for="cVar">Consumption Variability(+)</label>
 						<input class="form-control input-sm" name="cVar" step="any" type="number" value="0" min="0" max="10">
 					</div>
 				</div>
@@ -103,7 +106,7 @@
 					    <label for="sGen">Generation/Time[1:24]</label>
 						<input required class="form-control" type="text" name="sGen"  value="0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0">
 						<br> 
-						<label for="sVar">Generation Variability(+/-)</label>
+						<label for="sVar">Generation Variability(+)</label>
 						<input required class="form-control input-sm" name="sVar" step="any" type="number" value="0" min="0" max="10">
 					</div>
 				</div>
@@ -114,7 +117,7 @@
 						<span class="info-box-icon bg-green"><i
 							class="ion ion-cloud"></i></span>
 						<div class="info-box-content">
-							<span class="info-box-number"><h3>Wind Generatiors</h3></span>
+							<span class="info-box-number"><h3>Wind Generators</h3></span>
 						</div>
 					</div>
 					<div class="box-body">
@@ -124,7 +127,7 @@
 					    <label for="wGen">Generation/Time[1:24]</label>
 						<input required class="form-control" type="text" name="wGen"  value="1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1">
 						<br> 
-						<label for="wVar">Wind Variability(+/-)</label>
+						<label for="wVar">Wind Variability(+)</label>
 						<input required class="form-control input-sm" name="wVar" type="number" step="any" value="0" min="0" max="10">
 					</div>
 				</div>

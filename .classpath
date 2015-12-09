@@ -4,7 +4,7 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/SmartGridServer"/>
-	<classpathentry kind="lib" path="C:/Users/Colton/Downloads/gson-2.5.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/SmartGridServer"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gson-2.5.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

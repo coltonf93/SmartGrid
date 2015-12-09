@@ -12,7 +12,7 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 	Random rand=new Random();
 	public GridStorage(String name, double capacity, double capVar, double decay){
 		super(name);
-		this.capacity=capacity+rand.nextDouble()*(capVar+1)*Math.random() < 0.5 ? -1 : 1;
+		this.capacity=capacity +rand.nextDouble()*(capVar+1)*Math.random() ;
 		this.decayRate=decay;
 		this.profit=0;
 		this.dailyProfit=0;

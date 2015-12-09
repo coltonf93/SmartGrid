@@ -14,21 +14,56 @@ import smartgrid.utilities.*;
 import smartgrid.web.bridge.WebSync;
 
 public class SmartGridDriver{
-	private static int days=150;
+	private static int days;
 	private static int d=0;
 	private static int t=0;
+	String testName;
+	String testDescription;
+	int solarCount;
+	int windCount;
+	int consumerCount;
+	int storageCount;
+	double[] consumerConsumption;
+	double[] solarGeneration;
+	double[] windGeneration;
+	double stCap;
+	double stDecay;
+	double stCapVar;
+	double connectivity;//Computes to about 50%
 	static SmartPrint smartPrint=SmartPrint.getInstance();
-	public static void main(String [] args){
-		String testName="BiggerTest";
-		String testDescription="100 Days Graph stress test.";
-		int solarCount=4;
-		int windCount=5;
-		int consumerCount=5;
-		int storageCount=3;
-		double connectivity=0.3;//Computes to about 50%
-		double[] consumerConsumption={.5,.45,.4,.4,.4,.42,.43,.48,.55,.72,.85,.9,.92,1,1,1,1,.95,.97,.95,.8,.6,.5,.45};
-		double[] solarGeneration={.0,.0,.0,.0,.0,.05,.2,.3,.38,.38,.7,1,.9,1,.6,.62,.3,.1,.01,.0,.0,.0,.0,.0};
-		double[] windGeneration={.5,.5,.7,.2,.61,.4,.38,.1,.27,.27,.2,.2,.2,.2,.38,.42,.7,.4,.38,.42,.4,.38,.43,.4};
+	public SmartGridDriver(String testName, String description, int daysS, double connectivity, double mainBuy, double mainSell, int storageCount, double stCap, double stDecay, double stCapVar, int consumerCount, String cConsumption, double cConsVar, int solarCount, String sGeneration, double sGenVar, int windCount, String wGeneration, double wGenVar){
+		//initialize test paramaters
+		this.days=daysS;
+		this.stCap=stCap;
+		this.stDecay=stDecay;
+		this.stCapVar=stCapVar;
+		this.testName=testName;
+		this.testDescription=description;
+		this.solarCount=solarCount;
+		this.windCount=windCount;
+		this.consumerCount=consumerCount;
+		this.storageCount=storageCount;
+		this.connectivity=connectivity;
+		System.out.println("Storage: "+stCap+","+stCapVar+","+stDecay);
+		String[] cCons = cConsumption.split(",");
+		this.consumerConsumption = new double[cCons.length];
+		for(int i = 0; i < cCons.length; i++) {
+		   this.consumerConsumption[i] =  Double.parseDouble(cCons[i]);
+		}
+		
+		String[] wGen = wGeneration.split(",");
+		this.windGeneration = new double[wGen.length];
+		for(int i = 0; i < wGen.length; i++) {
+		   this.windGeneration[i] =  Double.parseDouble(wGen[i]);
+		}
+		
+		String[] sGen = sGeneration.split(",");
+		this.solarGeneration = new double[cCons.length];
+		for(int i = 0; i < cCons.length; i++) {
+		   this.consumerConsumption[i] =  Double.parseDouble(cCons[i]);
+		}
+		
+		//set starting bid for different agent types
 		Consumer.setStartBuyBid(.01);
 		SolarPower.setStartSellBid(1);
 		WindPower.setStartSellBid(1);
@@ -44,11 +79,11 @@ public class SmartGridDriver{
 		ArrayList<Agent> wind = new ArrayList<Agent>();
 		ArrayList<Agent> storage = new ArrayList<Agent>();
 		ArrayList<Agent> allAgents = new ArrayList<Agent>();
-
-		SolarPower.setGeneration(solarGeneration,0);
-		WindPower.setGeneration(windGeneration,0);
-		Consumer.setConsumption(consumerConsumption,0);
-		WebSync webSync = new WebSync(allAgents);
+		
+		SolarPower.setGeneration(solarGeneration,sGenVar);
+		WindPower.setGeneration(windGeneration,wGenVar);
+		Consumer.setConsumption(consumerConsumption,cConsVar);
+		WebSync webSync = new WebSync(allAgents);//TODO Remove this once fully migrated to auto testing
 		smartPrint.println(4,"Building the Main Grid");
 		//TODO make MainGrid configurable from the web interface that is to come
 		MainGrid mainGrid = new MainGrid(.01,1.0);
@@ -78,7 +113,7 @@ public class SmartGridDriver{
 		smartPrint.println(4,"Building Grid Stroage's and linking to Consumers, Wind Generators, and Solar Generators.");
 		//Creates all the storage facilities and links to all consumers and power generators
 		for(int i=0;i<storageCount;i++){
-			storage.add(new GridStorage("Storage "+(i+1),5,30,.2));
+			storage.add(new GridStorage("Storage "+(i+1),this.stCap,this.stCapVar,this.stDecay));
 			allAgents.add(storage.get(i));
 		}
 		ConnectionBuilder connBuild=new ConnectionBuilder(connectivity,generators,consumers,storage,mainGrid);
@@ -186,14 +221,12 @@ public class SmartGridDriver{
 		smartPrint.println(6,mainGrid.getName()+" earned a total of "+df.format(mainGrid.getProfit())+" and spent a total of "+df.format(mainGrid.getExpense())+" today netting "+df.format(mainGrid.getNetProfit())+".");
 	    //Writes a js file for graphics rendering
 		try {
-			ws.writeJS();
+			//ws.writeJS();
+			ws.saveTest(testName,testDescription,consumerCount,solarCount,windCount,storageCount,connectivity);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-		}
-		try {
-			ws.saveTest(testName,testDescription,consumerCount,solarCount,windCount,storageCount,connectivity);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
