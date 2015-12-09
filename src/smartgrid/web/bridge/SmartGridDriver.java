@@ -83,7 +83,7 @@ public class SmartGridDriver{
 		SolarPower.setGeneration(solarGeneration,sGenVar);
 		WindPower.setGeneration(windGeneration,wGenVar);
 		Consumer.setConsumption(consumerConsumption,cConsVar);
-		WebSync webSync = new WebSync(allAgents);//TODO Remove this once fully migrated to auto testing
+		//WebSync webSync = new WebSync(allAgents);//TODO Remove this once fully migrated to auto testing
 		smartPrint.println(4,"Building the Main Grid");
 		//TODO make MainGrid configurable from the web interface that is to come
 		MainGrid mainGrid = new MainGrid(.01,1.0);
@@ -222,7 +222,10 @@ public class SmartGridDriver{
 	    //Writes a js file for graphics rendering
 		try {
 			//ws.writeJS();
-			ws.saveTest(testName,testDescription,consumerCount,solarCount,windCount,storageCount,connectivity);
+			double[] consumerConsumption;
+			double[] solarGeneration;
+			double[] windGeneration;
+			ws.saveTest(this.testName,this.testDescription,this.consumerCount,this.solarCount,this.windCount,this.storageCount,this.connectivity,this.consumerConsumption,this.solarGeneration,this.windGeneration);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {

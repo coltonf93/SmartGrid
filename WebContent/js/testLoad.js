@@ -1,18 +1,89 @@
 var agents;
 
-function gridConnection(data){
+function basicData(testData){
 	/*Updates the primary numbers*/
-	$('#cCount').text(data.cCount);
-	$('#gCount').text((data.wCount+data.sCount));$
-	('#sCount').text(data.stCount);
-	$('#dCount').text(data.days);
+	$('#cCount').text(testData.cCount);
+	$('#gCount').text((testData.wCount+testData.sCount));
+	$('#sCount').text(testData.stCount);
+	$('#dCount').text(testData.days);
+}
+
+function gridConnection(testData){	
 	/*Creates the nodes*/
-	for (i = 0; i < data.agents.length; i++) { 
+	var agentNodes=[];
+	for (agent = 0; agent < testData.agents.length; agent++) { 
+		if(testData.agents[agent].name.indexOf("So") > -1 || testData.agents[agent].name.indexOf("Wi") > -1){
+			agentNodes.push({data:{id:testData.agents[agent].name,red:0,green:10}});
+		}
+		else if(testData.agents[agent].name.indexOf("St") > -1 || testData.agents[agent].name.indexOf("Ma") > -1){
+			agentNodes.push({data:{id:testData.agents[agent].name,red:5,green:5}});
+		}
+		else if(testData.agents[agent].name.indexOf("Co") > -1){
+			agentNodes.push({data:{id:testData.agents[agent].name,red:10,green:0}});
+		}
+		else{
+			console.log('error: '+testData.agents[agent].name+" not found.")
+		}
 	    
 	}
+	
 	/*Creates the edges*/
+	var agentEdges=[];
+	for (link = 0; link < testData.links.length; link++) { 
+		agentEdges.push({ data: { id: "link"+link, weight: 1, source: testData.links[link][0], target: testData.links[link][1] } });
+	}
 	
 	
+		var cy = cytoscape({ 
+			container: document.querySelector('#cy'), 
+			boxSelectionEnabled: false, zoomingEnabled: false, 
+			panningEnabled: true, 
+			autounselectify: true,
+			style: cytoscape.stylesheet().selector('node').css({ 
+				'content': 'data(id)', 
+				width: '60px',
+				height: '60px', 
+				'text-valign':'center',
+				'color': '#333', 
+				'text-outline-width': 2, 
+				'text-outline-color': 'white',
+				'pie-size': '80%',
+				'pie-1-background-color': '#E8747C',
+				'pie-1-background-size': 'mapData(red, 0, 10, 0, 100)',
+				'pie-2-background-color': '#74E883',
+				'pie-2-background-size': 'mapData(green, 0, 10, 0, 100)' 
+				}) .selector('edge') .css({ 
+					'target-arrow-shape': 'triangle' 
+				}) .selector(':selected') .css({ 
+					'background-color': 'black', 
+					'line-color': 'black', 
+					'target-arrow-color': 'green',
+					'source-arrow-color': 'green' 
+				}) .selector('.faded') .css({ 
+					'opacity': 0.08,
+					'text-opacity': 0 
+				}),
+				elements: {
+					nodes:agentNodes,
+					edges:agentEdges
+				},
+		        layout: { 
+		        	/*ring, grid and*/ 
+		        	name: 'grid', padding: 10 
+		        }
+			}); 
+			//ON node click hide other edges and nodes 
+			cy.on('tap', 'node', function(e){
+				var node = e.cyTarget; 
+				var neighborhood = node.neighborhood().add(node); 
+				cy.elements().addClass('faded'); 
+				neighborhood.removeClass('faded'); 
+			}); 
+			cy.on('tap', function(e){
+				if( e.cyTarget === cy ){
+					cy.elements().removeClass('faded'); 
+				} 
+			}); 
 }
 
 function avgGraph(testData){
@@ -72,17 +143,24 @@ function updateAvgHourPrice(hour){
 		  data: graphData2,
 		  xkey: 't',
 		  ykeys: ['sop','wip','cop','stp'],
-		  labels: ['Solar','Wind','Consumer','Storage'],
+		  labels: ['Storage','Consumer','Wind','Solar'],
 		  parseTime: false
 		});
 }
 
+//populates the on page table with data of agents
+function tableData(testData){
+	
+}
+
+
 function loadJson(jsonString) {
 	    testData=jQuery.parseJSON(jsonString); 
 	    console.log(testData);
-	    $( document ).ready(function() {
+	    document.addEventListener('DOMContentLoaded', function(){ 
 	    	gridConnection(testData);	
 	 	    avgGraph(testData);
+	 	    basicData(testData);
 	 	    updateAvgHourPrice(0);
 	    });
 	   

@@ -15,7 +15,7 @@ public class Test {
 	String description;
 	ArrayList<Agent> agents;
 	ArrayList<String[]> links;
-	public Test(String testName, String description, ArrayList<Agent> agents, int days, int cCount, int wCount, int sCount, int stCount, double connectivity, ArrayList<String[]> links ){
+	public Test(String testName, String description, ArrayList<Agent> agents, int days, int cCount, int wCount, int sCount, int stCount, double connectivity, ArrayList<String[]> links, double[] cCons, double[] wGen, double[] sGen ){
 		this.days=days;
 		this.cCount=cCount;
 		this.wCount=wCount;

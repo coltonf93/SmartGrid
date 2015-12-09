@@ -77,7 +77,7 @@ public class WebSync {
 		
 	}
 	
-	public void saveTest(String testName, String description, int cCount, int wCount, int sCount, int stCount, double connectivity) throws IOException{
+	public void saveTest(String testName, String description, int cCount, int wCount, int sCount, int stCount, double connectivity, double[] cCons, double[] sGen, double[] wGen) throws IOException{
 		smartPrint.println(8,"Saving Test to json file.");
 		System.out.println("save test start");
 		//Hackish workaround to solve the cyclic serilization issue
@@ -107,7 +107,7 @@ public class WebSync {
 			    }
 			    testName=testName+"("+i+")";
 			}
-			Test test = new Test(testName, description, agents, SmartGridDriver.getGlobal('D'), cCount, wCount, sCount, stCount, connectivity, links );
+			Test test = new Test(testName, description, agents, SmartGridDriver.getGlobal('D'), cCount, wCount, sCount, stCount, connectivity, links, cCons, sGen, wGen );
 			String json =gson.toJson(test);// gson.toJson(agents);
 			FileWriter writer = new FileWriter("C:/tests/"+testName+".json");
 			writer.write(json);
