@@ -1,6 +1,6 @@
 var agents;
 
-function basicData(testData){
+function basicData(){
 	/*Updates the primary numbers*/
 	$('#cCount').text(testData.cCount);
 	$('#gCount').text((testData.wCount+testData.sCount));
@@ -8,7 +8,7 @@ function basicData(testData){
 	$('#dCount').text(testData.days);
 }
 
-function gridConnection(testData){	
+function gridConnection(){	
 	/*Creates the nodes*/
 	var agentNodes=[];
 	for (agent = 0; agent < testData.agents.length; agent++) { 
@@ -32,8 +32,6 @@ function gridConnection(testData){
 	for (link = 0; link < testData.links.length; link++) { 
 		agentEdges.push({ data: { id: "link"+link, weight: 1, source: testData.links[link][0], target: testData.links[link][1] } });
 	}
-	
-	
 		var cy = cytoscape({ 
 			container: document.querySelector('#cy'), 
 			boxSelectionEnabled: false, zoomingEnabled: false, 
@@ -86,74 +84,184 @@ function gridConnection(testData){
 			}); 
 }
 
-function avgGraph(testData){
-	var graphData=[];
-	for(dy=0;dy<testData.agents[0].avgPrices[0].length;dy++){
-		var priceSum=0;
-		for(hour=0;hour<testData.agents[0].avgPrices.length;hour++){
-			for(agent=0;agent<testData.agents.length;agent++){
-				priceSum+=testData.agents[agent].avgPrices[hour][dy];
-			}
-		}
-		graphData.push({t:dy,price:(priceSum/(testData.agents.length*24))});
-	}
-	
-new Morris.Area({
-	  element: 'avgBidPrices',
-	  data: graphData,
-	  xkey: 't',
-	  ykeys: ['price'],
-	  labels: ['price'],
-      parseTime: false
-	});	
+function avgGraph(){
+
 }
 
-function updateAvgHourPrice(hour){
-	$('#avgHourPrice').text("");
-	var graphData2=[];
-	for(dy=0;dy<testData.agents[0].avgPrices[0].length;dy++){
-		var solarPriceSum=0;
-		var windPriceSum=0;
-		var consumerPriceSum=0;
-		var storagePriceSum=0;
-		var mainPriceSum=0;
-		for(agent=0;agent<testData.agents.length;agent++){
-			if(testData.agents[agent].name.indexOf("So") > -1){
-				solarPriceSum+=testData.agents[agent].avgPrices[hour][dy];
-			}
-			else if(testData.agents[agent].name.indexOf("Wi") > -1){
-				windPriceSum+=testData.agents[agent].avgPrices[hour][dy];
-			}
-			else if(testData.agents[agent].name.indexOf("St") > -1){
-				storagePriceSum+=testData.agents[agent].avgPrices[hour][dy];
-			}
-			else if(testData.agents[agent].name.indexOf("Co") > -1){
-				consumerPriceSum+=testData.agents[agent].avgPrices[hour][dy];
-			}
-			else if(testData.agents[agent].name.indexOf("Ma") > -1){
-				mainPriceSum+=testData.agents[agent].avgPrices[hour][dy];
-			}
-			else{
-				console.log('error: '+testData.agents[agent].name+" not found.")
-			}
-		}
-		graphData2.push({t:dy,sop:(solarPriceSum/(testData.agents.length)),stp:(storagePriceSum/(testData.agents.length)),wip:(windPriceSum/(testData.agents.length)),cop:(consumerPriceSum/(testData.agents.length)),main:(mainPriceSum/testData.agents.length)});
-	}	
+function updateAvgPrice(hour){
+	$('#avgPrice').text("");
 	
-	$('.pagination li').removeClass('active');
-	$('.pagination li').eq(hour).addClass('active');
-	new Morris.Area({
-		  element: 'avgHourPrice',
-		  data: graphData2,
-		  xkey: 't',
-		  ykeys: ['sop','wip','cop','stp','main'],
-		  labels: ['Solar','Wind','Consumer','Storage','main'],
-		  parseTime: false
-		});
+		var graphData2=[];
+		for(dy=0;dy<testData.agents[0].avgPrices[0].length;dy++){
+			var solarPriceSum=0;
+			var windPriceSum=0;
+			var consumerPriceSum=0;
+			var storagePriceSum=0;
+			var mainPriceSum=0;
+			var solarCount=0;
+			var windCount=0;
+			var storageCount=0
+			var consumerCount=0;
+			var mainCount=0;
+			for(agent=0;agent<testData.agents.length;agent++){
+				if(hour<24){//average by hour
+					if(testData.agents[agent].name.indexOf("So") > -1){
+						solarPriceSum+=testData.agents[agent].avgPrices[hour][dy];
+						solarCount++;
+					}
+					else if(testData.agents[agent].name.indexOf("Wi") > -1){
+						windPriceSum+=testData.agents[agent].avgPrices[hour][dy];
+						windCount++;
+					}
+					else if(testData.agents[agent].name.indexOf("St") > -1){
+						storagePriceSum+=testData.agents[agent].avgPrices[hour][dy];
+						storageCount++;
+					}
+					else if(testData.agents[agent].name.indexOf("Co") > -1){
+						consumerPriceSum+=testData.agents[agent].avgPrices[hour][dy];
+						consumerCount++;
+					}
+					else if(testData.agents[agent].name.indexOf("Ma") > -1){
+						mainPriceSum+=testData.agents[agent].avgPrices[hour][dy];
+						mainCount++;
+					}
+				}else{//average for day
+					for(hour=0;hour<testData.agents[0].avgPrices.length;hour++){
+						if(testData.agents[agent].name.indexOf("So") > -1){
+							solarPriceSum+=testData.agents[agent].avgPrices[hour][dy];
+							solarCount++;
+						}
+						else if(testData.agents[agent].name.indexOf("Wi") > -1){
+							windPriceSum+=testData.agents[agent].avgPrices[hour][dy];
+							windCount++;
+						}
+						else if(testData.agents[agent].name.indexOf("St") > -1){
+							storagePriceSum+=testData.agents[agent].avgPrices[hour][dy];
+							storageCount++;
+						}
+						else if(testData.agents[agent].name.indexOf("Co") > -1){
+							consumerPriceSum+=testData.agents[agent].avgPrices[hour][dy];
+							consumerCount++;
+						}
+						else if(testData.agents[agent].name.indexOf("Ma") > -1){
+							mainPriceSum+=testData.agents[agent].avgPrices[hour][dy];
+							mainCount++;
+						}
+					}	
+				}
+			}
+			solarPriceSum/=solarCount;
+			windPriceSum/=windCount;
+			consumerPriceSum/=consumerCount;
+			storagePriceSum/=storageCount;
+			mainPriceSum/=mainCount;
+			
+			graphData2.push({t:dy,sop:(solarPriceSum),wip:(windPriceSum),cop:(consumerPriceSum),stp:(storagePriceSum),main:(mainPriceSum)});
+		}
+		
+		new Morris.Line({
+			  element: 'avgPrice',
+			  data: graphData2,
+			  xkey: 't',
+			  ykeys: ['sop','wip','cop','stp','main'],
+			  labels: ['Solar','Wind','Consumer','Storage','Main'],
+			  parseTime: false
+			});
+		$('.pagination.avgPrice li').removeClass('active');
+		$('.pagination.avgPrice li').eq(hour).addClass('active');
+}
+
+function updateAvgBid(hour){
+	$('#avgBid').text("");
+		var graphData=[];
+		for(dy=0;dy<testData.agents[0].avgPrices[0].length;dy++){
+			var solarBidSum=0;
+			var windBidSum=0;
+			var consumerBidSum=0;
+			var storageBuyBidSum=0;
+			var mainBuyBidSum=0;
+			var storageSellBidSum=0;
+			var mainSellBidSum=0;
+			var solarCount=0;
+			var windCount=0;
+			var storageCount=0
+			var consumerCount=0;
+			var mainCount=0;
+			for(agent=0;agent<testData.agents.length;agent++){
+				if(hour<24){//average by hour
+					if(testData.agents[agent].name.indexOf("So") > -1){
+						solarBidSum+=testData.agents[agent].sellBids[hour][dy];
+						solarCount++;
+					}
+					else if(testData.agents[agent].name.indexOf("Wi") > -1){
+						windBidSum+=testData.agents[agent].sellBids[hour][dy];
+						windCount++;
+					}
+					else if(testData.agents[agent].name.indexOf("St") > -1){
+						storageBuyBidSum+=testData.agents[agent].buyBids[hour][dy];
+						storageSellBidSum+=testData.agents[agent].sellBids[hour][dy];
+						storageCount++;
+					}
+					else if(testData.agents[agent].name.indexOf("Co") > -1){
+						consumerBidSum+=testData.agents[agent].buyBids[hour][dy];
+						consumerCount++;
+					}
+					else if(testData.agents[agent].name.indexOf("Ma") > -1){
+						mainBuyBidSum+=testData.agents[agent].buyBids[hour][dy];
+						mainSellBidSum+=testData.agents[agent].sellBids[hour][dy];
+						mainCount++;
+					}
+				}else{//average for day
+					for(hour=0;hour<testData.agents[0].avgPrices.length;hour++){
+						if(testData.agents[agent].name.indexOf("So") > -1){
+							solarBidSum+=testData.agents[agent].sellBids[hour][dy];
+							solarCount++;
+						}
+						else if(testData.agents[agent].name.indexOf("Wi") > -1){
+							windBidSum+=testData.agents[agent].sellBids[hour][dy];
+							windCount++;
+						}
+						else if(testData.agents[agent].name.indexOf("St") > -1){
+							storageBuyBidSum+=testData.agents[agent].buyBids[hour][dy];
+							storageSellBidSum+=testData.agents[agent].sellBids[hour][dy];
+							storageCount++;
+						}
+						else if(testData.agents[agent].name.indexOf("Co") > -1){
+							consumerBidSum+=testData.agents[agent].buyBids[hour][dy];
+							consumerCount++;
+						}
+						else if(testData.agents[agent].name.indexOf("Ma") > -1){
+							mainBuyBidSum+=testData.agents[agent].buyBids[hour][dy];
+							mainSellBidSum+=testData.agents[agent].sellBids[hour][dy];
+							mainCount++;
+						}
+					}	
+				}
+			}
+			solarBidSum/=solarCount;
+			windBidSum/=windCount;
+			consumerBidSum/=consumerCount;
+			storageBuyBidSum/=storageCount;
+			storageSellBidSum/=storageCount;
+			mainBuyBidSum/=mainCount;
+			mainSellBidSum/=mainCount;
+			graphData.push({t:dy,sob:(solarBidSum),wib:(windBidSum),cob:(consumerBidSum), stbb:(storageBuyBidSum),stsb:(storageSellBidSum),mains:(mainSellBidSum),mainb:(mainBuyBidSum)});
+		}
+		
+		new Morris.Line({
+			  element: 'avgBid',
+			  data: graphData,
+			  xkey: 't',
+			  ykeys: ['sob','wib','cob','stsb','stbb','mains','mainb'],
+			  labels: ['Solar Sell','Wind Sell','Consumer Buy','Storage Sell','Storage Buy','Main Sell','Main Buy'],
+			  parseTime: false
+			});
+		$('.pagination.avgBid li').removeClass('active');
+		$('.pagination.avgBid li').eq(hour).addClass('active');
 }
 
 //populates the on page table with data of agents
-function updateTableData(testData){
+function updateTableData(){
 	for (agent = 0; agent < testData.agents.length; agent++) { 
 		var avgFinalBuyBid=0;
 		var avgFinalSellBid=0;
@@ -182,7 +290,7 @@ function updateTableData(testData){
 			expense=testData.agents[agent].expense;
 			finalDailyExpense=testData.agents[agent].dailyExpense;
 		}
-		$('#agentData tbody').append('<tr id="tid'+agent+'"><td>'+testData.agents[agent].name+'</td><td>$'+parseFloat(avgFinalSellBid).toFixed(3)+'</td><td>$'+parseFloat(avgFinalBuyBid).toFixed(3)+'</td><td>$'+parseFloat(finalDailyProfit-finalDailyExpense).toFixed(3)+'</td><td>$'+parseFloat(profit-expense).toFixed(3)+'</td></tr>');
+		$('#agentData tbody').append('<tr id="tid'+agent+'"><td>'+testData.agents[agent].name+'</td><td>$'+parseFloat(avgFinalBuyBid).toFixed(3)+'</td><td>$'+parseFloat(avgFinalSellBid).toFixed(3)+'</td><td>$'+parseFloat(finalDailyProfit-finalDailyExpense).toFixed(3)+'</td><td>$'+parseFloat(profit-expense).toFixed(3)+'</td></tr>');
 	}
 	$('#agentData').DataTable();
 }
@@ -192,11 +300,12 @@ function loadJson(jsonString) {
 	    testData=jQuery.parseJSON(jsonString); 
 	    console.log(testData);
 	    document.addEventListener('DOMContentLoaded', function(){ 
-	    	gridConnection(testData);	
-	 	    avgGraph(testData);
-	 	    basicData(testData);
-	 	    updateTableData(testData);
-	 	    updateAvgHourPrice(0);
+	    	gridConnection();	
+	 	    avgGraph();
+	 	    basicData();
+	 	    updateTableData();
+	 	    updateAvgPrice(24);
+	 	    updateAvgBid(24);
 	    });
 	   
 }
