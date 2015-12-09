@@ -35,9 +35,9 @@ public class ConnectionBuilder {
 					}while(((double)conCount/(double)consumers.size())<p);
 				}
 				//Storage buys/sells to main grid 
-				s.setSellTo(mainGrid);
+				//s.setSellTo(mainGrid);
 				s.setBuyFrom(mainGrid);
-				mainGrid.setSellTo(s);
+				//mainGrid.setSellTo(s);
 				mainGrid.setBuyFrom(s);
 				smartPrint.println(1,s.getName()+" connected to MainGrid");
 			}
@@ -66,7 +66,7 @@ public class ConnectionBuilder {
 						conCount++;
 					}while(((double)conCount/(double)consumers.size())<p);
 				}
-				g.setSellTo(mainGrid);
+				g.setSellTo(mainGrid);//TODO this causes cyclic error in json serialization, though it's not directly needed in this implementation this being removed could cause problems later.
 				mainGrid.setBuyFrom(g);
 				
 			}

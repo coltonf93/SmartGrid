@@ -9,12 +9,10 @@ public class Consumer extends Agent implements Buyers{
 	double buyPrice, expense, buyPower, dailyExpense, hourlyExpense;
 	static double consVar=0,startBuyBid=0;
 	double[][] buyBids = new double[24][SmartGridDriver.getGlobal('D')];//How much the agent bid to buy for yesterday at this time recommended slightly above main grid buy price
-	String name;
 	Random rand = new Random();
 	
 	public Consumer(String name){
 		super(name);
-		this.name=name;
 		this.expense=0;
 		this.dailyExpense=0;
 		this.hourlyExpense=0;

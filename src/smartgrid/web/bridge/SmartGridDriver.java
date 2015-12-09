@@ -1,6 +1,7 @@
 package smartgrid.web.bridge;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -13,17 +14,18 @@ import smartgrid.utilities.*;
 import smartgrid.web.bridge.WebSync;
 
 public class SmartGridDriver{
-	private static int days=1000;
+	private static int days=150;
 	private static int d=0;
 	private static int t=0;
 	static SmartPrint smartPrint=SmartPrint.getInstance();
 	public static void main(String [] args){
-		
-		int solarCount=6;
-		int windCount=6;
-		int consumerCount=10;
-		int storageCount=10;
-		double connectivity=0.2;//Computes to about 50%
+		String testName="BiggerTest";
+		String testDescription="100 Days Graph stress test.";
+		int solarCount=4;
+		int windCount=5;
+		int consumerCount=5;
+		int storageCount=3;
+		double connectivity=0.3;//Computes to about 50%
 		double[] consumerConsumption={.5,.45,.4,.4,.4,.42,.43,.48,.55,.72,.85,.9,.92,1,1,1,1,.95,.97,.95,.8,.6,.5,.45};
 		double[] solarGeneration={.0,.0,.0,.0,.0,.05,.2,.3,.38,.38,.7,1,.9,1,.6,.62,.3,.1,.01,.0,.0,.0,.0,.0};
 		double[] windGeneration={.5,.5,.7,.2,.61,.4,.38,.1,.27,.27,.2,.2,.2,.2,.38,.42,.7,.4,.38,.42,.4,.38,.43,.4};
@@ -32,13 +34,8 @@ public class SmartGridDriver{
 		WindPower.setStartSellBid(1);
 		GridStorage.setStartBuyBid(.01);
 		GridStorage.setStartSellBid(1);
-		smartPrint.enableTypes(new int[] {0,1,6});//Modify this to show different print statements, recommend to leave 0 and 7 on
-		
-		
-		
 		AuctionMaster ac = new AuctionMaster();
-		smartPrint.enableTypes(new int[] {0,1,6});//Modify this to show different print statements, recommend to leave 0 and 7 on
-
+		smartPrint.enableTypes(new int[] {0,1,6,8});//Modify this to show different print statements, recommend to leave 0 and 7 on
 		DecimalFormat df = new DecimalFormat("#####.####");
 		Random rand=new Random();
 		ArrayList<Agent> generators=new ArrayList<Agent>();
@@ -85,18 +82,6 @@ public class SmartGridDriver{
 			allAgents.add(storage.get(i));
 		}
 		ConnectionBuilder connBuild=new ConnectionBuilder(connectivity,generators,consumers,storage,mainGrid);
-		//EXPERIMENTAL FEATURE
-		//smartPrint.println(4,"Linking all storage units to eachother.");
-		/*for(int i=0;i<storageCount;i++){
-			for(int j=0;j<storageCount;j++){
-				if(i!=j){
-					storage.get(i).setBuyFrom(storage.get(j));
-					storage.get(j).setBuyFrom(storage.get(i));
-					storage.get(i).setSellTo(storage.get(j));
-					storage.get(j).setSellTo(storage.get(i));
-				}
-			}
-		}*/
 		WebSync ws = new WebSync(allAgents);
 		//Adds all buy capable agents to buy list
 		ac.addBuyers((Collection<? extends Agent>)consumers);//adds all the consumers to the list of buyers
@@ -112,26 +97,6 @@ public class SmartGridDriver{
 					allAgents.get(a).stepBegin();
 				}
 				ac.processExchanges();//Runs all of the auction and buy sell exchanges for agents
-		
-				//TODO remove if statement and nested loops when done with analysis
-				/*
-				if(d==days-1&&t==23 || d==0 && t==23){
-					System.out.print("Buyers[Day:"+d+", Hour:"+t+"]:\n==========================================================");
-					for(int i=0;i<buyers.size();i++){
-						buyer=((Buyers)buyers.get(i));
-						System.out.println("\n"+buyer.getName()+"($"+df.format(buyer.getBuyPrice())+") Possible Sellers:\n--------------------------------");
-						for(int j=0;j<sellers.size();j++){
-							seller=(Sellers)sellers.get(j);
-							if(seller.getSellPower()>0){
-								System.out.println(seller.getName()+"($"+df.format(seller.getSellPrice())+")");
-							}
-						}	
-					}
-				}*/
-				
-				
-				
-				
 				
 				smartPrint.println(4,"\nHour("+t+") Hourly Totals\n----------------------------------------");
 				for(int i=0;i<consumers.size();i++){
@@ -196,8 +161,6 @@ public class SmartGridDriver{
 			smartPrint.println(5,mainGrid.getName()+" earned a daily total of "+mainGrid.getDailyProfit()+" and spent a daily total of "+mainGrid.getDailyExpense()+" today netting "+mainGrid.getDailyNetProfit()+".");
 	
 		}
-		
-		
 		//GlobalPrint Totals
 		smartPrint.println(6,"\nGlobal Totals over "+days+" days\n========================================");
 		for(int i=0;i<consumers.size();i++){
@@ -223,10 +186,15 @@ public class SmartGridDriver{
 		smartPrint.println(6,mainGrid.getName()+" earned a total of "+df.format(mainGrid.getProfit())+" and spent a total of "+df.format(mainGrid.getExpense())+" today netting "+df.format(mainGrid.getNetProfit())+".");
 	    //Writes a js file for graphics rendering
 		try {
-			ws.writeJS((days-1),23);
+			ws.writeJS();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		try {
+			ws.saveTest(testName,testDescription,consumerCount,solarCount,windCount,storageCount,connectivity);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}	
@@ -238,7 +206,7 @@ public class SmartGridDriver{
 			return t;
 		}
 		else if(c=='D'){//return  the total number of days
-			return days+1;
+			return days;
 		}
 		smartPrint.println(0, "Error: SmartGridDriver.getGlobal('"+c+"'); not found.");
 		return -1;

@@ -10,7 +10,6 @@ public class SolarPower extends Agent implements Sellers{
 		static double genVar=0,startSellBid=1;;
 		static double[] generation;
 		double[][] sellBids = new double[24][SmartGridDriver.getGlobal('D')]; //How much the agent bided to sell the power yesterday at this time recommended slightly under the sell price of main grid
-		String name;
 		Random rand = new Random();
 		
 		public SolarPower(String name){
@@ -19,9 +18,9 @@ public class SolarPower extends Agent implements Sellers{
 			this.dailyProfit=0;
 			this.sellPrice=0.1;
 			this.sellPower=0;
-			this.name=name;
 			smartPrint.println(1, this.name+" was created.");
 		}
+		
 		
 		public static void setGeneration(double[] generationS, double genVarS){
 			generation=generationS;
@@ -73,11 +72,6 @@ public class SolarPower extends Agent implements Sellers{
 		@Override
 		public double getDailyProfit(){
 			return this.dailyProfit;
-		}
-		
-		@Override
-		public String getName(){
-			return this.name;
 		}
 		
 		@Override
