@@ -3,7 +3,7 @@ package smartgrid.utilities;
 import java.util.ArrayList;
 
 public class SmartPrint {
-	private static volatile SmartPrint instance;//singleton method
+	private transient static volatile SmartPrint instance;//singleton method
 	/*List of SmartPrint categories and their numbers
 	 * ------------------------------------------------
 	 * 0) Error messages and Warning's Enabled by default
@@ -14,8 +14,9 @@ public class SmartPrint {
 	 * 5) Daily Totals (Daily Metrics)
 	 * 6) Global Totals (Final Metrics on program completion)
 	 * 7) Hour and daily text dividers 
+	 * 8) Web and connectivity logs
 	 */
-	Boolean[] types={true,false,false,false,false,false,false,false};
+	Boolean[] types={true,false,false,false,false,false,false,false,false};
 	private SmartPrint(){}
 	
 	public static SmartPrint getInstance(){//singleton implementation

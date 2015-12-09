@@ -6,8 +6,8 @@ import smartgrid.utilities.SmartPrint;
 import smartgrid.web.bridge.SmartGridDriver;
 
 public abstract class Agent {
-	protected ArrayList<Agent> buysFrom = new ArrayList<Agent>();
-	protected ArrayList<Agent> sellsTo = new ArrayList<Agent>();
+	private transient ArrayList<Agent> buysFrom = new ArrayList<Agent>();
+	private transient ArrayList<Agent> sellsTo = new ArrayList<Agent>();
 	int exchanges=0;//how many exchanges this agent made in this instance of time TODO rethink design later
 	double priceSum=0;//accumulation of all prices in this instance of time TODO rethink design later
 	double[][] avgPrices = new double[24][SmartGridDriver.getGlobal('D')];

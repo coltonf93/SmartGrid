@@ -10,14 +10,12 @@ public class WindPower extends Agent implements Sellers{
 	static double genVar=0, startSellBid=1;
 	static double generation[];
 	double[][] sellBids = new double[24][SmartGridDriver.getGlobal('D')];
-	String name;
 	Random rand = new Random();
 	
 	public WindPower(String name){
 		super(name);
 		this.sellPrice=0.1;
 		this.sellPower=0;
-		this.name=name;
 		this.profit=0;
 		this.dailyProfit=0;
 		this.hourlyProfit=0;
@@ -76,11 +74,6 @@ public class WindPower extends Agent implements Sellers{
 		return this.dailyProfit;
 	}
 	
-	@Override
-	public String getName(){
-		return this.name;
-	}
-	
 	public double getLastSellBid(){
 		return this.sellBids[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)];
 	}
@@ -101,7 +94,7 @@ public class WindPower extends Agent implements Sellers{
 			dailyProfit=0;
 		}
 		this.hourlyProfit=0;
-		this.sellPower=generation[SmartGridDriver.getGlobal('t')]+rand.nextDouble()*(genVar+1)*Math.random() < 0.5 ? -1 : 1;//Base generation +/- the variability
+		this.sellPower=generation[SmartGridDriver.getGlobal('t')]+rand.nextDouble()*(genVar+1)*Math.random();//Base generation + the variability
 		if(this.sellPower<0){
 			this.sellPower=0;
 		}
