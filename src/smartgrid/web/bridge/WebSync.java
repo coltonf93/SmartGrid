@@ -10,6 +10,9 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import javax.servlet.ServletContext;
+
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -30,8 +33,7 @@ public class WebSync {
 		System.out.println("write js start");
 		ArrayList<Agent> connAgents=new ArrayList<Agent>();
 		SmartPrint smartPrint = SmartPrint.getInstance();
-		File f = new File(getServletContext().getRealPath("js/gridBuilder.js"));
-		PrintWriter writer = new PrintWriter(getServletContext().getRealPath("js/gridBuilder.js"));
+		PrintWriter writer = new PrintWriter("C:/js/gridBuilder.js");
 		String nodes="";
 		String docReady="";
 		String edges="";
@@ -95,19 +97,19 @@ public class WebSync {
 		try {
 			//TODO prevent files from being overwritten because config file will still show them
 			testName=testName.replace(" ", "_");
-			File f = new File("WebContent\\tests\\"+testName+".json");
+			File f = new File("C:/tests/"+testName+".json");
 			if(f.exists() && !f.isDirectory()) { 
 			    int i=-1;
 			    while(f.exists() && !f.isDirectory())
 			    {
 			    	i++;
-			    	f=new File("WebContent\\tests\\"+testName+"("+i+").json");	
+			    	f=new File("C:/tests/"+testName+"("+i+").json");	
 			    }
 			    testName=testName+"("+i+")";
 			}
 			Test test = new Test(testName, description, agents, SmartGridDriver.getGlobal('D'), cCount, wCount, sCount, stCount, connectivity, links );
 			String json =gson.toJson(test);// gson.toJson(agents);
-			FileWriter writer = new FileWriter("WebContent\\tests\\"+testName+".json");
+			FileWriter writer = new FileWriter("C:/tests/"+testName+".json");
 			writer.write(json);
 			writer.close();
 		} catch (IOException e) {
@@ -116,7 +118,7 @@ public class WebSync {
 		}
 		//Updates the test.config file so tests can be loaded dynamically
 		String testConfigString=testName+","+description+","+cCount+","+sCount+","+wCount+","+stCount+","+SmartGridDriver.getGlobal('D');
-		File testConfig = new File("WebContent\\tests\\tests.config");
+		File testConfig = new File("C:/tests/tests.config");
 	    BufferedWriter configwriter = new BufferedWriter(new FileWriter(testConfig,true));
 	    configwriter.write(testConfigString);
 	    configwriter.newLine();

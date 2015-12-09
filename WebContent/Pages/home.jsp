@@ -22,7 +22,7 @@
 		<%
 		/*This is to override the browser security setting for refrencing local files*/
 			String jsonString="";
-			BufferedReader reader = new BufferedReader(new FileReader(getServletContext().getRealPath("/") + "tests/"+session.getAttribute("testName")+".json"));
+			BufferedReader reader = new BufferedReader(new FileReader("C:/tests/"+session.getAttribute("testName")+".json"));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				jsonString+=line;

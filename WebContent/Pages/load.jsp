@@ -24,7 +24,7 @@
 					</thead>
 					<tbody>
 						<%
-							BufferedReader reader = new BufferedReader(new FileReader(getServletContext().getRealPath("/") + "tests/tests.config"));
+							BufferedReader reader = new BufferedReader(new FileReader("C:/tests/tests.config"));
 							String line;
 						%>
 						<%
