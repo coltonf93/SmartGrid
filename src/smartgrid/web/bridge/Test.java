@@ -10,13 +10,25 @@ public class Test {
 	int wCount;
 	int sCount;
 	int stCount;
+	double[] sGen;
+	double[] cCons;
+	double[] wGen;
 	double connectivity;
 	String testName;
 	String description;
 	ArrayList<Agent> agents;
 	ArrayList<String[]> links;
-	public Test(String testName, String description, ArrayList<Agent> agents, int days, int cCount, int wCount, int sCount, int stCount, double connectivity, ArrayList<String[]> links ){
+	public Test(String testName, String description, ArrayList<Agent> agents, int days, int cCount, int wCount, int sCount, int stCount, double connectivity, ArrayList<String[]> links, double[] cCons, double[] wGen, double[] sGen ){
 		this.days=days;
+		System.out.println("Test Data Check Days: "+days);
+		System.out.println("Test Data Check Days: "+cCount);
+		System.out.println("Test Data Check Days: "+wCount);
+		System.out.println("Test Data Check Days: "+sCount);
+		System.out.println("Test Data Check Days: "+stCount);
+		System.out.println("Test Data Check Days: "+connectivity);
+		this.wGen=wGen;
+		this.cCons=cCons;
+		this.sGen=sGen;
 		this.cCount=cCount;
 		this.wCount=wCount;
 		this.sCount=sCount;

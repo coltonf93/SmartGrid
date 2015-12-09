@@ -46,9 +46,8 @@ public class Consumer extends Agent implements Buyers{
 			this.dailyExpense+=units*price;
 			this.hourlyExpense+=units*price;
 			this.buyPower-=units;
-			//TODO next 2 lines sloppy code please refactor
-			this.setExchangeCount(this.getExchangeCount()+1);
-			this.setPriceSum(this.getPriceSum()+price);
+			this.addExchange(units, price);
+			
 		}
 		else{
 			smartPrint.println(0,"ERROR "+this.name+" tried to buy "+(this.buyPower-units)+" more power than it needs.");
@@ -96,7 +95,7 @@ public class Consumer extends Agent implements Buyers{
 		if(SmartGridDriver.getGlobal('t')==0){
 			this.dailyExpense=0;
 		}
-		//TODO modify consumption scalar
+		this.resetExchange();
 		//this.buyPower=4*this.consumptionRate[t]*(1+rand.nextDouble());//randomScalar between -1cR to 1cR simulating consumption of user
 		this.buyPower=consumption[SmartGridDriver.getGlobal('t')]+rand.nextDouble()*(this.consVar+1)*Math.random();//Base consumption + the variability
 		smartPrint.println(2,this.name+" consumed and requires "+this.buyPower+" units of power");

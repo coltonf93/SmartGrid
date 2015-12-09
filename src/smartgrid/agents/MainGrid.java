@@ -24,7 +24,7 @@ public class MainGrid extends Agent implements Buyers,Sellers{
 
 	@Override
 	public double getSellPower() {
-		return  Double.POSITIVE_INFINITY;
+		return  999999999.99;
 	}
 
 	@Override
@@ -49,8 +49,7 @@ public class MainGrid extends Agent implements Buyers,Sellers{
 		this.dailyProfit+=units*price;
 		this.hourlyProfit+=units*price;
 		//TODO next 2 lines sloppy code please refactor
-		this.setExchangeCount(this.getExchangeCount()+1);
-		this.setPriceSum(this.getPriceSum()+price);
+		this.addExchange(units, price);
 	}
 
 	@Override
@@ -70,14 +69,12 @@ public class MainGrid extends Agent implements Buyers,Sellers{
 		this.expense+=units*price;
 		this.dailyExpense+=units*price;
 		this.hourlyExpense+=units*price;
-		//TODO next 2 lines sloppy code please refactor
-		this.setExchangeCount(this.getExchangeCount()+1);
-		this.setPriceSum(this.getPriceSum()+price);
+		this.addExchange(units, price);
 	}
 
 	@Override
 	public double getBuyPower() {
-		return  Double.POSITIVE_INFINITY;
+		return  999999999.99;
 	}
 
 	@Override
@@ -143,6 +140,7 @@ public class MainGrid extends Agent implements Buyers,Sellers{
 			this.dailyExpense=0;
 			this.dailyProfit=0;
 		}
+		this.resetExchange();
 		this.hourlyExpense=0;
 		this.hourlyProfit=0;
 		smartPrint.println(2,this.name+" never changes its buyBid and kept it set at "+this.getBuyPrice()+"/unit.");

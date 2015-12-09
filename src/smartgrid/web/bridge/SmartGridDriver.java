@@ -49,18 +49,27 @@ public class SmartGridDriver{
 		this.consumerConsumption = new double[cCons.length];
 		for(int i = 0; i < cCons.length; i++) {
 		   this.consumerConsumption[i] =  Double.parseDouble(cCons[i]);
+		   if(this.consumerConsumption[i]==0){
+			   this.consumerConsumption[i]=.001;
+		   }
 		}
 		
 		String[] wGen = wGeneration.split(",");
 		this.windGeneration = new double[wGen.length];
 		for(int i = 0; i < wGen.length; i++) {
 		   this.windGeneration[i] =  Double.parseDouble(wGen[i]);
+		   if(this.windGeneration[i]==0){
+			   this.windGeneration[i]=.001;
+		   }
 		}
 		
 		String[] sGen = sGeneration.split(",");
 		this.solarGeneration = new double[cCons.length];
 		for(int i = 0; i < cCons.length; i++) {
-		   this.consumerConsumption[i] =  Double.parseDouble(cCons[i]);
+		   this.solarGeneration[i] =  Double.parseDouble(cCons[i]);
+		   if(this.solarGeneration[i]==0){
+			   this.solarGeneration[i]=.001;
+		   }
 		}
 		
 		//set starting bid for different agent types
@@ -83,7 +92,7 @@ public class SmartGridDriver{
 		SolarPower.setGeneration(solarGeneration,sGenVar);
 		WindPower.setGeneration(windGeneration,wGenVar);
 		Consumer.setConsumption(consumerConsumption,cConsVar);
-		WebSync webSync = new WebSync(allAgents);//TODO Remove this once fully migrated to auto testing
+		//WebSync webSync = new WebSync(allAgents);//TODO Remove this once fully migrated to auto testing
 		smartPrint.println(4,"Building the Main Grid");
 		//TODO make MainGrid configurable from the web interface that is to come
 		MainGrid mainGrid = new MainGrid(.01,1.0);
@@ -156,19 +165,7 @@ public class SmartGridDriver{
 				smartPrint.println(4,mainGrid.getName()+" earned an hourly total of "+mainGrid.getHourlyProfit()+" and spent an hourly total of "+mainGrid.getHourlyExpense()+" netting "+mainGrid.getHourlyNetProfit()+".");
 				
 				for(int a=0;a<allAgents.size();a++){
-					Agent agent=allAgents.get(a);
-					if(agent.getExchangeCount()>=1){
-						agent.setAvgPrice((double)(agent.getPriceSum()/agent.getExchangeCount()));
-					}
-					else{
-						agent.setAvgPrice(0);
-					}
-					//TODO sloppy code start refactor resets the exchange counter and summation
-					//System.out.println(agent.getName()+" exchanged with "+agent.getExchangeCount()+" other's with a price sum of "+agent.getPriceSum());
-					agent.setPriceSum(0);
-					agent.setExchangeCount(0);
-					//sloppy code end refactor
-					agent.stepEnd();
+					allAgents.get(a).stepEnd();
 				}
 				
 			}
@@ -222,7 +219,10 @@ public class SmartGridDriver{
 	    //Writes a js file for graphics rendering
 		try {
 			//ws.writeJS();
-			ws.saveTest(testName,testDescription,consumerCount,solarCount,windCount,storageCount,connectivity);
+			double[] consumerConsumption;
+			double[] solarGeneration;
+			double[] windGeneration;
+			ws.saveTest(this.testName,this.testDescription,this.consumerCount,this.solarCount,this.windCount,this.storageCount,this.connectivity,this.consumerConsumption,this.solarGeneration,this.windGeneration);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {

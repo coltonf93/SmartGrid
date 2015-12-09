@@ -76,9 +76,7 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 			this.profit+=units*price;
 			this.dailyProfit+=units*price;
 			this.hourlyProfit+=units*price;
-			//TODO next 2 lines sloppy code please refactor
-			this.setExchangeCount(this.getExchangeCount()+1);
-			this.setPriceSum(this.getPriceSum()+price);
+			this.addExchange(units, price);
 		}
 		else{
 			smartPrint.println(0,"ERROR: "+this.getName()+" tried to sell "+units+" units, but only has "+sellPower+" available.");
@@ -102,9 +100,7 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 			this.expense+=units*price;
 			this.dailyExpense+=units*price;
 			this.hourlyExpense+=units*price;
-			//TODO next 2 lines sloppy code please refactor
-			this.setExchangeCount(this.getExchangeCount()+1);
-			this.setPriceSum(this.getPriceSum()+price);
+			this.addExchange(units, price);
 		}
 		else{
 			smartPrint.println(0,"ERROR: "+this.name+" tried to buy more units than it needs.");
@@ -176,6 +172,7 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 			dailyProfit=0;
 			dailyExpense=0;
 		}
+		this.resetExchange();
 		this.hourlyExpense=0;
 		this.hourlyProfit=0;
 		if(SmartGridDriver.getGlobal('d')>0){

@@ -106,55 +106,85 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class='col-md-7'>
+		<div class='col-md-8'>
 			<div class="box box-default color-palette-box">
 				<div class="box-header with-border">
 					<h3 class="box-title">
-						<i class="ion ion-cash"></i> Average Price by Hour
+						<i class="ion ion-cash"></i> Average Prices
 					</h3>
 				</div>
-				<ul class="pagination dayavg">
-					<li class='active'><a  onclick='updateAvgHourPrice(0)'>1</a></li>
-					<li><a onclick='updateAvgHourPrice(1)'>2</a></li>
-					<li><a onclick='updateAvgHourPrice(2)'>3</a></li>
-					<li><a onclick='updateAvgHourPrice(3)'>4</a></li>
-					<li><a onclick='updateAvgHourPrice(4)'>5</a></li>
-					<li><a onclick='updateAvgHourPrice(5)'>6</a></li>
-					<li><a onclick='updateAvgHourPrice(6)'>7</a></li>
-					<li><a onclick='updateAvgHourPrice(7)'>8</a></li>
-					<li><a onclick='updateAvgHourPrice(8)'>9</a></li>
-					<li><a onclick='updateAvgHourPrice(9)'>10</a></li>
-					<li><a onclick='updateAvgHourPrice(10)'>11</a></li>
-					<li><a onclick='updateAvgHourPrice(11)'>12</a></li>
-					<li><a onclick='updateAvgHourPrice(12)'>13</a></li>
-					<li><a onclick='updateAvgHourPrice(13)'>14</a></li>
-					<li><a onclick='updateAvgHourPrice(14)'>15</a></li>
-					<li><a onclick='updateAvgHourPrice(15)'>16</a></li>
-					<li><a onclick='updateAvgHourPrice(16)'>17</a></li>
-					<li><a onclick='updateAvgHourPrice(17)'>18</a></li>
-					<li><a onclick='updateAvgHourPrice(18)'>19</a></li>
-					<li><a onclick='updateAvgHourPrice(19)'>20</a></li>
-					<li><a onclick='updateAvgHourPrice(20)'>21</a></li>
-					<li><a onclick='updateAvgHourPrice(21)'>22</a></li>
-					<li><a onclick='updateAvgHourPrice(22)'>23</a></li>
-					<li><a onclick='updateAvgHourPrice(23)'>24</a></li>
+				<ul class="pagination avgPrice">
+					<li><a  onclick='updateAvgPrice(0)'>1</a></li>
+					<li><a onclick='updateAvgPrice(1)'>2</a></li>
+					<li><a onclick='updateAvgPrice(2)'>3</a></li>
+					<li><a onclick='updateAvgPrice(3)'>4</a></li>
+					<li><a onclick='updateAvgPrice(4)'>5</a></li>
+					<li><a onclick='updateAvgPrice(5)'>6</a></li>
+					<li><a onclick='updateAvgPrice(6)'>7</a></li>
+					<li><a onclick='updateAvgPrice(7)'>8</a></li>
+					<li><a onclick='updateAvgPrice(8)'>9</a></li>
+					<li><a onclick='updateAvgPrice(9)'>10</a></li>
+					<li><a onclick='updateAvgPrice(10)'>11</a></li>
+					<li><a onclick='updateAvgPrice(11)'>12</a></li>
+					<li><a onclick='updateAvgPrice(12)'>13</a></li>
+					<li><a onclick='updateAvgPrice(13)'>14</a></li>
+					<li><a onclick='updateAvgPrice(14)'>15</a></li>
+					<li><a onclick='updateAvgPrice(15)'>16</a></li>
+					<li><a onclick='updateAvgPrice(16)'>17</a></li>
+					<li><a onclick='updateAvgPrice(17)'>18</a></li>
+					<li><a onclick='updateAvgPrice(18)'>19</a></li>
+					<li><a onclick='updateAvgPrice(19)'>20</a></li>
+					<li><a onclick='updateAvgPrice(20)'>21</a></li>
+					<li><a onclick='updateAvgPrice(21)'>22</a></li>
+					<li><a onclick='updateAvgPrice(22)'>23</a></li>
+					<li><a onclick='updateAvgPrice(23)'>24</a></li>
+					<li class='active'><a onclick='updateAvgPrice(24)'>Day</a></li>
 				</ul>
-				<div id="avgHourPrice" style="height: 250px;"></div>
+				<div id="avgPrice" style="height: 250px;"></div>
 			</div>
 		</div>
-		<div class='col-md-5'>
+		</div>
+		<div class="row">
+		<div class='col-md-8'>
 			<div class="box box-default color-palette-box">
 				<div class="box-header with-border">
 					<h3 class="box-title">
-						<i class="ion ion-cash"></i> Average Price by Day
+						<i class="ion ion-pricetags"></i> Average Bid
 					</h3>
 				</div>
-				<div id="avgBidPrices" style="height: 250px;"></div>
+				<ul class="pagination avgBid">
+					<li><a  onclick='updateAvgBid(0)'>1</a></li>
+					<li><a onclick='updateAvgBid(1)'>2</a></li>
+					<li><a onclick='updateAvgBid(2)'>3</a></li>
+					<li><a onclick='updateAvgBid(3)'>4</a></li>
+					<li><a onclick='updateAvgBid(4)'>5</a></li>
+					<li><a onclick='updateAvgBid(5)'>6</a></li>
+					<li><a onclick='updateAvgBid(6)'>7</a></li>
+					<li><a onclick='updateAvgBid(7)'>8</a></li>
+					<li><a onclick='updateAvgBid(8)'>9</a></li>
+					<li><a onclick='updateAvgBid(9)'>10</a></li>
+					<li><a onclick='updateAvgBid(10)'>11</a></li>
+					<li><a onclick='updateAvgBid(11)'>12</a></li>
+					<li><a onclick='updateAvgBid(12)'>13</a></li>
+					<li><a onclick='updateAvgBid(13)'>14</a></li>
+					<li><a onclick='updateAvgBid(14)'>15</a></li>
+					<li><a onclick='updateAvgBid(15)'>16</a></li>
+					<li><a onclick='updateAvgBid(16)'>17</a></li>
+					<li><a onclick='updateAvgBid(17)'>18</a></li>
+					<li><a onclick='updateAvgBid(18)'>19</a></li>
+					<li><a onclick='updateAvgBid(19)'>20</a></li>
+					<li><a onclick='updateAvgBid(20)'>21</a></li>
+					<li><a onclick='updateAvgBid(21)'>22</a></li>
+					<li><a onclick='updateAvgBid(22)'>23</a></li>
+					<li><a onclick='updateAvgBid(23)'>24</a></li>
+					<li class='active'><a onclick='updateAvgBid(24)'>Day</a></li>
+				</ul>
+				<div id="avgBid" style="height: 250px;"></div>
 			</div>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-7">
+		<div class="col-md-8">
 			<div class="box box-default color-palette-box">
 				<div class="box-header with-border">
 					<h3 class="box-title">
@@ -168,7 +198,7 @@
 							<th>Agent</th>
 							<th>Buy Price</th>
 							<th>Sell Price</th>
-							<th>Daily Net Profit</th>
+							<th>Final Daily Net Profit</th>
 							<th>Total Net Profit</th>
 						</tr>
 					</thead>
@@ -190,10 +220,5 @@
 		src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
 	<script
 		src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
-	<script>
-	$(document).ready(function() {
-	    $('#agentData').DataTable();
-	} );
-	</script>
 	</div>
 </section>

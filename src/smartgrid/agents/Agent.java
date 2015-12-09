@@ -8,14 +8,15 @@ import smartgrid.web.bridge.SmartGridDriver;
 public abstract class Agent {
 	private transient ArrayList<Agent> buysFrom = new ArrayList<Agent>();
 	private transient ArrayList<Agent> sellsTo = new ArrayList<Agent>();
-	int exchanges=0;//how many exchanges this agent made in this instance of time TODO rethink design later
+	double quantity=0;
 	double priceSum=0;//accumulation of all prices in this instance of time TODO rethink design later
 	double[][] avgPrices = new double[24][SmartGridDriver.getGlobal('D')];
 	double avgPrice=0;  
 	double lastPriceDifference=.005; //Must be less than .8 recommended .005
-	double bidRatio = .1; 
+	double bidRatio = .1;
 	protected String name;
 	SmartPrint smartPrint;
+	
 	
 	public Agent(String name){
 		this.buysFrom=new ArrayList<Agent>();
@@ -62,29 +63,20 @@ public abstract class Agent {
 		this.avgPrices[time][day]=avgPrice;
 	}
 	
-	public int getExchangeCount(){
-		return exchanges;
-	}
-	
-	//BEGIN OF SLOPPY CODE RETHINK DESIGN
-	public void setExchangeCount(int count){
-		this.exchanges=count;
-	}
-	
-	public double getPriceSum(){
-		return this.priceSum;
-	}
-	
-	public void setPriceSum(double price){
-		this.priceSum=price;
-	}
-	
-	public void setAvgPrice(double avgPrice){
-		this.avgPrice=avgPrice;
+	public void addExchange( double quantity, double price){
+		System.out.println(this.name+": ");
+		this.priceSum+=(price*quantity);
+		this.quantity+=quantity;
 	}
 	
 	public double getAvgPrice(){
-		return avgPrice;
+		System.out.println("AvgPrice:"+((this.priceSum)/(this.quantity))+", Quantity:"+(double)this.quantity+", priceSum:"+this.priceSum);
+		return (this.priceSum)/(this.quantity);
+	}
+	
+	public void resetExchange(){
+		this.priceSum=0;
+		this.quantity=0;
 	}
 	
 	public boolean isConnected(Agent agent){//TODO inefficient consider a refactor.
