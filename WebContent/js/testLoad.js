@@ -116,6 +116,7 @@ function updateAvgHourPrice(hour){
 		var windPriceSum=0;
 		var consumerPriceSum=0;
 		var storagePriceSum=0;
+		var mainPriceSum=0;
 		for(agent=0;agent<testData.agents.length;agent++){
 			if(testData.agents[agent].name.indexOf("So") > -1){
 				solarPriceSum+=testData.agents[agent].avgPrices[hour][dy];
@@ -129,11 +130,14 @@ function updateAvgHourPrice(hour){
 			else if(testData.agents[agent].name.indexOf("Co") > -1){
 				consumerPriceSum+=testData.agents[agent].avgPrices[hour][dy];
 			}
+			else if(testData.agents[agent].name.indexOf("Ma") > -1){
+				mainPriceSum+=testData.agents[agent].avgPrices[hour][dy];
+			}
 			else{
 				console.log('error: '+testData.agents[agent].name+" not found.")
 			}
 		}
-		graphData2.push({t:dy,sop:(solarPriceSum/(testData.agents.length)),stp:(storagePriceSum/(testData.agents.length)),wip:(windPriceSum/(testData.agents.length)),cop:(consumerPriceSum/(testData.agents.length))});
+		graphData2.push({t:dy,sop:(solarPriceSum/(testData.agents.length)),stp:(storagePriceSum/(testData.agents.length)),wip:(windPriceSum/(testData.agents.length)),cop:(consumerPriceSum/(testData.agents.length)),main:(mainPriceSum/testData.agents.length)});
 	}	
 	
 	$('.pagination li').removeClass('active');
@@ -142,15 +146,45 @@ function updateAvgHourPrice(hour){
 		  element: 'avgHourPrice',
 		  data: graphData2,
 		  xkey: 't',
-		  ykeys: ['sop','wip','cop','stp'],
-		  labels: ['Storage','Consumer','Wind','Solar'],
+		  ykeys: ['sop','wip','cop','stp','main'],
+		  labels: ['Solar','Wind','Consumer','Storage','main'],
 		  parseTime: false
 		});
 }
 
 //populates the on page table with data of agents
-function tableData(testData){
-	
+function updateTableData(testData){
+	for (agent = 0; agent < testData.agents.length; agent++) { 
+		var avgFinalBuyBid=0;
+		var avgFinalSellBid=0;
+		var expense=0;
+		var profit=0;
+		var finalDailyProfit=0;
+		var finalDailyExpense=0;
+		//Sellers
+		if(testData.agents[agent].name.indexOf("So") > -1 || testData.agents[agent].name.indexOf("Wi") > -1 || testData.agents[agent].name.indexOf("St") > -1 || testData.agents[agent].name.indexOf("Ma") > -1){
+			//finds the avgFinalSellBid for sell agents
+			for(i=0;i<testData.agents[agent].sellBids[23].length;i++){
+				avgFinalSellBid+=testData.agents[agent].sellBids[23][i];
+			}
+			avgFinalSellBid=avgFinalSellBid/testData.agents[agent].sellBids[23].length;
+			profit=testData.agents[agent].profit;
+			finalDailyProfit=testData.agents[agent].dailyProfit;
+			
+		}
+		//Buyers
+		else if(testData.agents[agent].name.indexOf("Co") > -1 || testData.agents[agent].name.indexOf("St") > -1 || testData.agents[agent].name.indexOf("Ma") > -1){
+			//finds the avgFinalBuyBid for buy agents
+			for(i=0;i<testData.agents[agent].buyBids[23].length;i++){
+				avgFinalBuyBid+=testData.agents[agent].buyBids[23][i];
+			}
+			avgFinalBuyBid=avgFinalBuyBid/testData.agents[agent].buyBids[23].length;
+			expense=testData.agents[agent].expense;
+			finalDailyExpense=testData.agents[agent].dailyExpense;
+		}
+		$('#agentData tbody').append('<tr id="tid'+agent+'"><td>'+testData.agents[agent].name+'</td><td>$'+parseFloat(avgFinalSellBid).toFixed(3)+'</td><td>$'+parseFloat(avgFinalBuyBid).toFixed(3)+'</td><td>$'+parseFloat(finalDailyProfit-finalDailyExpense).toFixed(3)+'</td><td>$'+parseFloat(profit-expense).toFixed(3)+'</td></tr>');
+	}
+	$('#agentData').DataTable();
 }
 
 
@@ -161,6 +195,7 @@ function loadJson(jsonString) {
 	    	gridConnection(testData);	
 	 	    avgGraph(testData);
 	 	    basicData(testData);
+	 	    updateTableData(testData);
 	 	    updateAvgHourPrice(0);
 	    });
 	   

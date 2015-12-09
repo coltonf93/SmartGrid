@@ -55,8 +55,7 @@ public class WindPower extends Agent implements Sellers{
 			this.dailyProfit+=units*price;
 			this.hourlyProfit+=units*price;
 			//TODO next 2 lines sloppy code please refactor
-			this.setExchangeCount(this.getExchangeCount()+1);
-			this.setPriceSum(this.getPriceSum()+price);
+			this.addExchange(units, price);
 		}
 		else{
 			smartPrint.println(0,"ERROR: "+this.getName()+" tried to sell "+units+" units, but only has "+sellPower+" available.");
@@ -93,6 +92,7 @@ public class WindPower extends Agent implements Sellers{
 		if(SmartGridDriver.getGlobal('t')==0){
 			dailyProfit=0;
 		}
+		this.resetExchange();
 		this.hourlyProfit=0;
 		this.sellPower=generation[SmartGridDriver.getGlobal('t')]+rand.nextDouble()*(genVar+1)*Math.random();//Base generation + the variability
 		if(this.sellPower<0){
@@ -120,17 +120,7 @@ public class WindPower extends Agent implements Sellers{
 		if(sellPower>0){
 			smartPrint.println(0, "Error: Consumer did not get enough power.");
 		}
-		if(this.dailyProfit>0){
-			this.sellBids[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d'))]=this.sellPrice;
-			this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d'))]=this.getAvgPrice();
-		}
-		else if(SmartGridDriver.getGlobal('d')>0){
-			this.sellBids[SmartGridDriver.getGlobal('t')][SmartGridDriver.getGlobal('d')]=this.sellBids[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)];
-			this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d'))]=this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)];
-		}
-		else{
-			this.sellBids[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d'))]=this.sellPrice;
-			this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d'))]=.5;
-		}		
+		this.sellBids[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d'))]=this.sellPrice;
+		this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d'))]=this.getAvgPrice();	
 	}
 }

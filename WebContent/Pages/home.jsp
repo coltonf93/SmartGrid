@@ -168,7 +168,7 @@
 							<th>Agent</th>
 							<th>Buy Price</th>
 							<th>Sell Price</th>
-							<th>Daily Net Profit</th>
+							<th>Final Daily Net Profit</th>
 							<th>Total Net Profit</th>
 						</tr>
 					</thead>
@@ -190,10 +190,5 @@
 		src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
 	<script
 		src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
-	<script>
-	$(document).ready(function() {
-	    $('#agentData').DataTable();
-	} );
-	</script>
 	</div>
 </section>
