@@ -57,7 +57,7 @@
 					</div>
 					<div class="box-body">
 						<label for="stCount">Number of Storage Units</label> 
-						<input required class="form-control input-lg" type="number" name="stCount" step="1"  min="0" max="100" value="10"> 
+						<input required class="form-control input-lg" type="number" name="stCount" step="1"  min="0" max="100" value="5"> 
 						<br>
 						<label for="stCap">Capacity</label> 
 						<input required class="form-control input-lg" type="number" name="stCap" step="1" min="0" max="500" value="30"> 
@@ -66,7 +66,7 @@
 						<input required class="form-control input-lg" type="number" name="stCapVar" step="any" min="0" max="10" value="2"> 
 					    <br>
 						<label for="stDecay">Storage Decay Rate</label> 
-						<input required class="form-control input-lg" type="number" name="stDecay" step="any" min="0" max="1" value="2"> 
+						<input required class="form-control input-lg" type="number" name="stDecay" step="any" min="0" max="1" value=".1"> 
 					</div>
 				</div>
 		</div>
@@ -81,13 +81,13 @@
 					</div>
 					<div class="box-body">
 						<label for="cCount">Number of Consumers</label> 
-						<input class="form-control input-lg" type="number" step="1" name="cCount" min="0" max="100" value="10"> 
+						<input class="form-control input-lg" type="number" step="1" name="cCount" min="0" max="100" value="15"> 
 						<br>
 					    <label for="cGen">Consumption/Time[1:24]</label>
-						<input class="form-control" type="text" name="cGen" value="0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0,1.0,1.0,0.5,0.5,0.5,0.5,0.5,0.5,0.5,2.0,2.0,2.0,2.0,0.25,.25">
+						<input class="form-control" type="text" name="cGen" value=".5,.45,.4,.4,.4,.4,.43,.48,.55,.72,.85,.9,.93,1,1,1,1,.95,.97,.95,.8,.6,.5,.4">
 						<br> 
 						<label for="cVar">Consumption Variability(+)</label>
-						<input class="form-control input-sm" name="cVar" step="any" type="number" value="0" min="0" max="10">
+						<input class="form-control input-sm" name="cVar" step="any" type="number" value=".1" min="0" max="1">
 					</div>
 				</div>
 				
@@ -101,13 +101,13 @@
 					</div>
 					<div class="box-body">
 						<label for="sCount">Number of Solar Generators</label> 
-						<input required class="form-control input-lg" type="number" step="1" name="sCount" min="0" max="100" value="10"> 
+						<input required class="form-control input-lg" type="number" step="1" name="sCount" min="0" max="100" value="7"> 
 						<br>
 					    <label for="sGen">Generation/Time[1:24]</label>
-						<input required class="form-control" type="text" name="sGen"  value="0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0">
+						<input required class="form-control" type="text" name="sGen"  value="0,0,0,0,0,.05,.2,.3,.38,.38,.7,1,.9,1,.6,.62,.3,.1,.01,0,0,0,0,0">
 						<br> 
 						<label for="sVar">Generation Variability(+)</label>
-						<input required class="form-control input-sm" name="sVar" step="any" type="number" value="0" min="0" max="10">
+						<input required class="form-control input-sm" name="sVar" step="any" type="number" value=".1" min="0" max="1">
 					</div>
 				</div>
 				
@@ -122,13 +122,13 @@
 					</div>
 					<div class="box-body">
 						<label for="wCount">Number of Wind Generators</label> 
-						<input required class="form-control input-lg" type="number" name="wCount" step="1" min="0" max="100" value="10"> 
+						<input required class="form-control input-lg" type="number" name="wCount" step="1" min="0" max="100" value="7"> 
 						<br>
 					    <label for="wGen">Generation/Time[1:24]</label>
-						<input required class="form-control" type="text" name="wGen"  value="1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1">
+						<input required class="form-control" type="text" name="wGen"  value=".5,.5,.7,.2,.61,.4,.38,.1,.27,.27,.2,.2,.2,.2,.38,.42,.7,.4,.38,.42,.4,.38,.43,.4">
 						<br> 
 						<label for="wVar">Wind Variability(+)</label>
-						<input required class="form-control input-sm" name="wVar" type="number" step="any" value="0" min="0" max="10">
+						<input required class="form-control input-sm" name="wVar" type="number" step="any" value=".1" min="0" max="1">
 					</div>
 				</div>
 			</div>

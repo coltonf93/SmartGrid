@@ -291,9 +291,94 @@ function updateTableData(){
 			expense=testData.agents[agent].expense;
 			finalDailyExpense=testData.agents[agent].dailyExpense;
 		}
-		$('#agentData tbody').append('<tr id="tid'+agent+'"><td>'+testData.agents[agent].name+'</td><td>$'+parseFloat(avgFinalBuyBid).toFixed(3)+'</td><td>$'+parseFloat(avgFinalSellBid).toFixed(3)+'</td><td>$'+parseFloat(profit).toFixed(3)+'</td><td>$'+parseFloat(expense).toFixed(3)+'</td><td>$'+parseFloat(finalDailyProfit-finalDailyExpense).toFixed(3)+'</td><td>$'+parseFloat(profit-expense).toFixed(3)+'</td></tr>');
+		$('#agentData tbody').append('<tr id="tid'+agent+'"><td><a href="#" onclick="agentDetails('+agent+')">'+testData.agents[agent].name+'</a></td><td>$'+parseFloat(avgFinalBuyBid).toFixed(3)+'</td><td>$'+parseFloat(avgFinalSellBid).toFixed(3)+'</td><td>$'+parseFloat(profit).toFixed(3)+'</td><td>$'+parseFloat(expense).toFixed(3)+'</td><td>$'+parseFloat(finalDailyProfit-finalDailyExpense).toFixed(3)+'</td><td>$'+parseFloat(profit-expense).toFixed(3)+'</td></tr>');
 	}
 	$('#agentData').DataTable();
+}
+
+function agentDetails(a){
+	var agent=testData.agents[a];
+	$('#singleAgent').modal('show');
+	$('#capacity, consGen, priceDay, bidDay').text(" ");
+	$('#myModalLabel').text(agent.name+" details");
+	var consGen=[];
+	var priceDay=[];
+	var bidDay=[];
+	var agentBuyBidAvg=0;
+	var agentSellBidAvg=0;
+	var agentPriceAvg=0;
+	if(agent.name.indexOf("So") > -1 || agent.name.indexOf("Wi") > -1){
+		for(day=0;day<testData.configs.daysS;day+=sRate){
+			for(hour=0;hour<24;hour++){
+				agentSellBidAvg+=agent.sellBids[hour][day];
+				agentPriceAvg+=agent.avgPrices[hour][day];
+			}
+			agentSellBidAvg/=24;
+			agentPriceAvg/=24;
+			priceDay.push({t:day,price:agentPriceAvg});
+			bidDay.push({t:day,bid:agentSellBidAvg});
+		}
+		for(hour=0;hour<24;hour++){
+			if(agent.name.indexOf("So")>-1){
+			var cmax=testData.configs.sGeneration[hour]+testData.configs.sGenVar;
+			consGen.push({t:hour,c:testData.configs.sGeneration[hour],cm:cmax});
+			}
+		if(agent.name.indexOf("So")>-1){
+			var cmax=testData.configs.wGeneration[hour]+testData.configs.wGenVar;
+			consGen.push({t:hour,c:testData.configs.wGeneration[hour],cm:cmax});
+		}
+		}
+	}
+	else if(agent.name.indexOf("St") > -1 || agent.name.indexOf("Ma") > -1){
+		/*Todo*/
+	}
+	else if(agent.name.indexOf("Co") > -1){
+		for(day=0;day<testData.configs.daysS;day+=sRate){
+			for(hour=0;hour<24;hour++){
+				agentBuyBidAvg+=agent.buyBids[hour][day];
+				agentPriceAvg+=agent.avgPrices[hour][day];
+			}
+			agentBuyBidAvg/=24;
+			agentPriceAvg/=24;
+			priceDay.push({t:day,price:agentPriceAvg})
+			bidDay.push({t:day,bid:agentBuyBidAvg})
+		}
+		for(hour=0;hour<24;hour++){
+			var cmax=testData.configs.cConsumption[hour]+testData.configs.cConsVar;
+			consGen.push({t:hour,c:testData.configs.cConsumption[hour],cm:cmax});
+		}
+	}
+	if(agent.name.indexOf("So") > -1 || agent.name.indexOf("Wi") > -1 || agent.name.indexOf("Co") > -1){
+		alert("agent: "+agent.name);
+		new Morris.Bar({
+			  element: 'consGen',
+			  data: consGen,
+			  xkey: 't',
+			  ykeys: ['c','cm'],
+			  labels: ['Consumption/Generation Min','Consumption/Generation Max'],
+			  parseTime: false
+			});
+		new Morris.Area({
+			  element: 'bidDay',
+			  data: bidDay,
+			  xkey: 't',
+			  ykeys: ['bid'],
+			  labels: ['Agent Buy/Sell Bid Average'],
+			  parseTime: false
+			});
+		new Morris.Area({
+			  element: 'priceDay',
+			  data: priceDay,
+			  xkey: 't',
+			  ykeys: ['price'],
+			  labels: ['Agent Daily Price Average'],
+			  parseTime: false
+			});
+	}
+	else{
+		
+	}
+	
 }
 
 
@@ -302,8 +387,8 @@ function loadJson(jsonString) {
 	    console.log(testData);
 	    $( document ).ready(function() {
 	        sRate=1;
-			if(testData.configs.days>100){
-				sRate=Math.round(testData.configs.days/maxSamples);
+			if(testData.configs.daysS>100){
+				sRate=Math.round(testData.configs.daysS/maxSamples);
 			}
 	    	gridConnection();	
 	 	    avgGraph();
