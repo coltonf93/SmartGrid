@@ -75,10 +75,10 @@ public class SmartGridDriver{
 		Consumer.setStartBuyBid(.01);
 		SolarPower.setStartSellBid(1);
 		WindPower.setStartSellBid(1);
-		GridStorage.setStartBuyBid(.01);
-		GridStorage.setStartSellBid(1);
+		GridStorage.setStartBuyBid(.05);
+		GridStorage.setStartSellBid(.95);
 		AuctionMaster ac = new AuctionMaster();
-		smartPrint.enableTypes(new int[] {0,1,6,8});//Modify this to show different print statements, recommend to leave 0 and 7 on
+		smartPrint.enableTypes(new int[] {0,6,8});//Modify this to show different print statements, recommend to leave 0 and 7 on
 		DecimalFormat df = new DecimalFormat("#####.####");
 		Random rand=new Random();
 		ArrayList<Agent> generators=new ArrayList<Agent>();
@@ -211,10 +211,10 @@ public class SmartGridDriver{
 		
 		for(int i=0;i<storage.size();i++){
 			GridStorage storageA = (GridStorage)storage.get(i);
-			smartPrint.println(6,storageA.getName()+" earned a total of "+df.format(storageA.getProfit())+" and spent a total of "+df.format(storageA.getExpense())+" today netting "+df.format(storageA.getNetProfit())+".");
+			smartPrint.println(6,storageA.getName()+" earned a total of "+df.format(storageA.getProfit())+" and spent a total of "+df.format(storageA.getExpense())+" netting "+df.format(storageA.getNetProfit())+".");
 		}
 		
-		smartPrint.println(6,mainGrid.getName()+" earned a total of "+df.format(mainGrid.getProfit())+" and spent a total of "+df.format(mainGrid.getExpense())+" today netting "+df.format(mainGrid.getNetProfit())+".");
+		smartPrint.println(6,mainGrid.getName()+" earned a total of "+df.format(mainGrid.getProfit())+" and spent a total of "+df.format(mainGrid.getExpense())+" netting "+df.format(mainGrid.getNetProfit())+".");
 	    //Writes a js file for graphics rendering
 		try {
 			//ws.writeJS();

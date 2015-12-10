@@ -70,6 +70,7 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 	@Override
 	public void sell(double units, double price) {
 		if(sellPower>=units){
+			System.out.println("It sold "+units+" units for "+price+" each.");
 			smartPrint.println(3,this.name+" sold "+units+"/"+this.sellPower+" and has "+(this.sellPower-units)+" remaining at "+price+"/unit.");
 			this.sellPower-=units;
 			this.storedPower-=units;
@@ -176,10 +177,10 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 		this.hourlyExpense=0;
 		this.hourlyProfit=0;
 		if(SmartGridDriver.getGlobal('d')>0){
-			if(SmartGridDriver.getGlobal('d')>1&&Math.abs(avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)]-avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
+			if(SmartGridDriver.getGlobal('d')>1&&Math.abs(avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)]-avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-2)])>=lastPriceDifference){//Check if the difference between the pricing in the last two rounds at this time is greater than timeDiffence don't change price if it is
 				this.setBuyPrice(this.getLastBuyBid()+bidRatio*(this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)]-this.getLastBuyBid()));//modify buyBid according to previous bid, price and bid ratio
 				smartPrint.println(2,this.name+" changed it's buyBid price from "+this.getLastBuyBid()+" to "+this.getBuyPrice()+"/unit.");
-				this.setSellPrice(this.getLastSellBid()+bidRatio*(this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)]-this.getLastBuyBid()));//modify sellBid according to previous bid, price and bid ratio
+				this.setSellPrice(this.getLastSellBid()+bidRatio*(this.avgPrices[SmartGridDriver.getGlobal('t')][(SmartGridDriver.getGlobal('d')-1)]-this.getLastSellBid()));//modify sellBid according to previous bid, price and bid ratio
 				smartPrint.println(2,this.name+" changed it's sellBid price from "+this.getLastSellBid()+" to "+this.getSellPrice()+"/unit.");
 			}		
 			else{
@@ -209,8 +210,8 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 			smartPrint.println(2,this.name+" has "+this.storedPower+" and is under it's threshold, only buying "+this.buyPower+"units.");
 		}
 		else{
-			this.buyPower=.9*this.capacity-this.storedPower;//Will buy up to slightly above the max threshold
-			this.sellPower=this.storedPower-(.1*this.capacity);//Will sell up to the slightly below the min threshold
+			this.buyPower=.79*this.capacity-this.storedPower;//Will buy up to slightly above the max threshold
+			this.sellPower=this.storedPower-(.21*this.capacity);//Will sell up to the slightly below the min threshold
 			smartPrint.println(2,this.name+" has "+this.storedPower+" and is buying "+this.buyPower+" units, and is selling "+this.sellPower+" units.");
 		}
 	}
