@@ -6,14 +6,12 @@ import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Random;
 import smartgrid.agents.*;
 import smartgrid.utilities.*;
 import smartgrid.web.bridge.WebSync;
 
 public class SmartGridDriver{
+	private Configuration configs;
 	private static int days;
 	private static int d=0;
 	private static int t=0;
@@ -31,45 +29,22 @@ public class SmartGridDriver{
 	double stCapVar;
 	double connectivity;//Computes to about 50%
 	static SmartPrint smartPrint=SmartPrint.getInstance();
-	public SmartGridDriver(String testName, String description, int daysS, double connectivity, double mainBuy, double mainSell, int storageCount, double stCap, double stDecay, double stCapVar, int consumerCount, String cConsumption, double cConsVar, int solarCount, String sGeneration, double sGenVar, int windCount, String wGeneration, double wGenVar){
-		//initialize test paramaters
-		this.days=daysS;
-		this.stCap=stCap;
-		this.stDecay=stDecay;
-		this.stCapVar=stCapVar;
-		this.testName=testName;
-		this.testDescription=description;
-		this.solarCount=solarCount;
-		this.windCount=windCount;
-		this.consumerCount=consumerCount;
-		this.storageCount=storageCount;
-		this.connectivity=connectivity;
-		String[] cCons = cConsumption.split(",");
-		this.consumerConsumption = new double[cCons.length];
-		for(int i = 0; i < cCons.length; i++) {
-		   this.consumerConsumption[i] =  Double.parseDouble(cCons[i]);
-		   if(this.consumerConsumption[i]==0){
-			   this.consumerConsumption[i]=.001;
-		   }
-		}
-		
-		String[] wGen = wGeneration.split(",");
-		this.windGeneration = new double[wGen.length];
-		for(int i = 0; i < wGen.length; i++) {
-		   this.windGeneration[i] =  Double.parseDouble(wGen[i]);
-		   if(this.windGeneration[i]==0){
-			   this.windGeneration[i]=.001;
-		   }
-		}
-		
-		String[] sGen = sGeneration.split(",");
-		this.solarGeneration = new double[cCons.length];
-		for(int i = 0; i < cCons.length; i++) {
-		   this.solarGeneration[i] =  Double.parseDouble(cCons[i]);
-		   if(this.solarGeneration[i]==0){
-			   this.solarGeneration[i]=.001;
-		   }
-		}
+	public SmartGridDriver(Configuration configs){
+		days=configs.getDaysS();
+		this.configs=configs;
+		this.stCap=configs.getStCap();
+		this.stDecay=configs.getStDecay();
+		this.stCapVar=configs.getStCapVar();
+		this.testName=configs.getTestName();
+		this.testDescription=configs.getDescription();
+		this.solarCount=configs.getSolarCount();
+		this.windCount=configs.getWindCount();
+		this.consumerCount=configs.getConsumerCount();
+		this.storageCount=configs.getStorageCount();
+		this.connectivity=configs.getConnectivity();
+		this.consumerConsumption=configs.getcConsumption();
+		this.windGeneration=configs.getwGeneration();
+		this.solarGeneration=configs.getsGeneration();
 		
 		//set starting bid for different agent types
 		Consumer.setStartBuyBid(.01);
@@ -80,7 +55,6 @@ public class SmartGridDriver{
 		AuctionMaster ac = new AuctionMaster();
 		smartPrint.enableTypes(new int[] {0,6,8});//Modify this to show different print statements, recommend to leave 0 and 7 on
 		DecimalFormat df = new DecimalFormat("#####.####");
-		Random rand=new Random();
 		ArrayList<Agent> generators=new ArrayList<Agent>();
 		ArrayList<Agent> consumers = new ArrayList<Agent>();
 		ArrayList<Agent> solar = new ArrayList<Agent>();
@@ -88,9 +62,9 @@ public class SmartGridDriver{
 		ArrayList<Agent> storage = new ArrayList<Agent>();
 		ArrayList<Agent> allAgents = new ArrayList<Agent>();
 		
-		SolarPower.setGeneration(solarGeneration,sGenVar);
-		WindPower.setGeneration(windGeneration,wGenVar);
-		Consumer.setConsumption(consumerConsumption,cConsVar);
+		SolarPower.setGeneration(this.solarGeneration,configs.getsGenVar());
+		WindPower.setGeneration(this.windGeneration,configs.getwGenVar());
+		Consumer.setConsumption(this.consumerConsumption,configs.getcConsVar());
 		//WebSync webSync = new WebSync(allAgents);//TODO Remove this once fully migrated to auto testing
 		smartPrint.println(4,"Building the Main Grid");
 		//TODO make MainGrid configurable from the web interface that is to come
@@ -124,7 +98,7 @@ public class SmartGridDriver{
 			storage.add(new GridStorage("Storage "+(i+1),this.stCap,this.stCapVar,this.stDecay));
 			allAgents.add(storage.get(i));
 		}
-		ConnectionBuilder connBuild=new ConnectionBuilder(connectivity,generators,consumers,storage,mainGrid);
+		new ConnectionBuilder(connectivity,generators,consumers,storage,mainGrid);
 		WebSync ws = new WebSync(allAgents);
 		//Adds all buy capable agents to buy list
 		ac.addBuyers((Collection<? extends Agent>)consumers);//adds all the consumers to the list of buyers
@@ -217,11 +191,7 @@ public class SmartGridDriver{
 		smartPrint.println(6,mainGrid.getName()+" earned a total of "+df.format(mainGrid.getProfit())+" and spent a total of "+df.format(mainGrid.getExpense())+" netting "+df.format(mainGrid.getNetProfit())+".");
 	    //Writes a js file for graphics rendering
 		try {
-			//ws.writeJS();
-			double[] consumerConsumption;
-			double[] solarGeneration;
-			double[] windGeneration;
-			ws.saveTest(this.testName,this.testDescription,this.consumerCount,this.solarCount,this.windCount,this.storageCount,this.connectivity,this.consumerConsumption,this.solarGeneration,this.windGeneration);
+			ws.saveTest(this.configs);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {

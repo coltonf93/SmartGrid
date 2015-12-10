@@ -1,7 +1,6 @@
 package smartgrid.agents;
 
 import java.util.Random;
-
 import smartgrid.web.bridge.SmartGridDriver;
 
 public class Consumer extends Agent implements Buyers{
@@ -97,7 +96,7 @@ public class Consumer extends Agent implements Buyers{
 		}
 		this.resetExchange();
 		//this.buyPower=4*this.consumptionRate[t]*(1+rand.nextDouble());//randomScalar between -1cR to 1cR simulating consumption of user
-		this.buyPower=consumption[SmartGridDriver.getGlobal('t')]+rand.nextDouble()*(this.consVar+1)*Math.random();//Base consumption + the variability
+		this.buyPower=consumption[SmartGridDriver.getGlobal('t')]+rand.nextDouble()*(consVar+1)*Math.random();//Base consumption + the variability
 		smartPrint.println(2,this.name+" consumed and requires "+this.buyPower+" units of power");
 		
 		//Calculates the buy price for this round at this specific time

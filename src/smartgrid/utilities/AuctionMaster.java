@@ -1,11 +1,9 @@
 package smartgrid.utilities;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import smartgrid.agents.*;
-import smartgrid.web.bridge.SmartGridDriver;
 
 
 public class AuctionMaster {
@@ -36,45 +34,15 @@ public class AuctionMaster {
 	}
 	
 	public void addBuyers(Collection<? extends Agent> buyers){
-		this.buyers.addAll(buyers);
+		AuctionMaster.buyers.addAll(buyers);
 	}
 	
 	public void addBuyer(Agent buyer){
-		this.buyers.add(buyer);
+		AuctionMaster.buyers.add(buyer);
 	}
 
 	public void exchange(Buyers buyer, Sellers seller){	
-		if(seller.getName().contains("stor")){
-			System.out.println("Storage was a seller WTF happened?");
-		}
 		double price=0;//agreed upon exchange price
-		/*if(buyer.getName().equals("MainGrid")|| seller.getName().equals("MainGrid")){
-			if(seller.getName().equals("MainGrid")){//the seller is main grid
-				price=seller.getSellPrice();//price is main-grid sell price
-				if(buyer.getClass()==smartgrid.agents.GridStorage.class){//TODO find a better implementation for this to break cohesion
-					if(((GridStorage)buyer).getPowerRating() < 0.0){
-						((GridStorage)buyer).setBuyPower(-1*((GridStorage)buyer).getPowerRating());//buy up to min threshold
-					}
-					else{
-						smartPrint.println(3,buyer.getName()+" refused to buy from MainGrid but still wanted to buy "+buyer.getBuyPower()+" more units.");
-						((GridStorage)buyer).setBuyPower(0.0);//refuse to buy from main grid
-					}
-				}
-			}
-			else{//the buyer is main grid
-				price=buyer.getBuyPrice();//price is main grid buy price
-				if(seller.getClass()==smartgrid.agents.GridStorage.class && seller.getSellPower()>0){//TODO find a better implementation for this to break cohesion
-					if(((GridStorage)seller).getPowerRating() > 0.0){
-						((GridStorage)seller).setSellPower(((GridStorage)seller).getPowerRating());//sell down to max threshold
-					}
-					else{
-						smartPrint.println(3,seller.getName()+" refused to sell to MainGrid but still wanted to sell "+seller.getSellPower()+" more units.");
-						((GridStorage)seller).setSellPower(0);
-					}
-				}
-			}
-		}
-		else{//Both the buyer and seller are agents*/
 		if(seller.getName().equals("MainGrid")){
 			price=seller.getSellPrice();
 		}
@@ -85,8 +53,6 @@ public class AuctionMaster {
 			price=(buyer.getBuyPrice()+seller.getSellPrice())/2;// if it's not the main grid the agent pays the average of buyer and seller bids
 		}
 			
-		//}
-		//Run actual trade with agreed upon price
 		if(buyer.getBuyPower()>0&&seller.getSellPower()>0){
 			if(buyer.getBuyPower()>=seller.getSellPower()){
 				buyer.buy(seller.getSellPower(), price);
@@ -111,11 +77,6 @@ public class AuctionMaster {
 			for(int j=0;j<sellers.size()&&buyer.getBuyPower()>0;j++){//All connected sellers offer their prices and availability, cheapest first 
 				seller=(Sellers)sellers.get(j);//TODO Sellers is a higher level than storage so storage has issues I think
 				this.exchange(buyer, seller);
-					for(int e=0;e<sellers.size();e++){
-						if(sellers.get(e).getName().contains("Sto")&& ((Sellers)sellers.get(e)).getSellPower()>0){
-							System.out.println(sellers.get(e).getName()+" should have sold to "+buyer.getName()+" for p*"+((Sellers)sellers.get(e)).getSellPower());
-						}
-					}
 			}
 		}
 	}

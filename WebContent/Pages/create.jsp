@@ -66,7 +66,7 @@
 						<input required class="form-control input-lg" type="number" name="stCapVar" step="any" min="0" max="10" value="2"> 
 					    <br>
 						<label for="stDecay">Storage Decay Rate</label> 
-						<input required class="form-control input-lg" type="number" name="stDecay" step="any" min="0" max="10" value="2"> 
+						<input required class="form-control input-lg" type="number" name="stDecay" step="any" min="0" max="1" value="2"> 
 					</div>
 				</div>
 		</div>

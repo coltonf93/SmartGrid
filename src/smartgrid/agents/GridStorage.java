@@ -32,17 +32,6 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 		startBuyBid=bid;
 	}
 	
-	public double getPowerRating(){//if negative need to buy power, if 0 OK, if positive need to sell power, Regards to main grid
-		if(storedPower>(.8*this.capacity)){
-			return this.storedPower-.8*(this.capacity); 
-		}
-		else if(storedPower<.2*this.capacity){
-			return storedPower-.2*(this.capacity);//need to buy power
-		}
-		else{
-			return 0.0;//Don't need to buy or sell power
-		}
-	}
 	public double getSellPower(){
 		return this.sellPower;
 	}
@@ -70,7 +59,6 @@ public class GridStorage extends Agent implements Buyers, Sellers{
 	@Override
 	public void sell(double units, double price) {
 		if(sellPower>=units){
-			System.out.println("It sold "+units+" units for "+price+" each.");
 			smartPrint.println(3,this.name+" sold "+units+"/"+this.sellPower+" and has "+(this.sellPower-units)+" remaining at "+price+"/unit.");
 			this.sellPower-=units;
 			this.storedPower-=units;

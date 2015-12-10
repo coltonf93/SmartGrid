@@ -15,14 +15,13 @@ public abstract class Agent {
 	double lastPriceDifference=.005; //Must be less than .8 recommended .005
 	double bidRatio = .1;
 	protected String name;
-	SmartPrint smartPrint;
+	transient SmartPrint smartPrint = SmartPrint.getInstance();
 	
 	
 	public Agent(String name){
 		this.buysFrom=new ArrayList<Agent>();
 		this.sellsTo=new ArrayList<Agent>();
 		this.name=name;
-		smartPrint=smartPrint.getInstance();
 	}
 	
 	public ArrayList<Agent> getBuysFrom(){

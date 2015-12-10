@@ -3,10 +3,10 @@ var agents;
 var sRate=1;
 function basicData(){
 	/*Updates the primary numbers*/
-	$('#cCount').text(testData.cCount);
-	$('#gCount').text((testData.wCount+testData.sCount));
-	$('#sCount').text(testData.stCount);
-	$('#dCount').text(testData.days);
+	$('#cCount').text(testData.configs.cCount);
+	$('#gCount').text((testData.configs.wCount+testData.configs.sCount));
+	$('#sCount').text(testData.configs.stCount);
+	$('#dCount').text(testData.configs.days);//check this
 }
 
 function gridConnection(){	
@@ -302,8 +302,8 @@ function loadJson(jsonString) {
 	    console.log(testData);
 	    $( document ).ready(function() {
 	        sRate=1;
-			if(testData.days>100){
-				sRate=Math.round(testData.days/maxSamples);
+			if(testData.configs.days>100){
+				sRate=Math.round(testData.configs.days/maxSamples);
 			}
 	    	gridConnection();	
 	 	    avgGraph();
