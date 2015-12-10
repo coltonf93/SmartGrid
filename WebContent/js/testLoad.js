@@ -31,7 +31,7 @@ function gridConnection(){
 	/*Creates the edges*/
 	var agentEdges=[];
 	for (link = 0; link < testData.links.length; link++) { 
-		agentEdges.push({ data: { id: "link"+link, weight: 1, source: testData.links[link][0], target: testData.links[link][1] } });
+		agentEdges.push({ data: { id: "link"+link, weight: 1, source: testData.links[link][1], target: testData.links[link][0] } });
 	}
 		var cy = cytoscape({ 
 			container: document.querySelector('#cy'), 
@@ -291,9 +291,141 @@ function updateTableData(){
 			expense=testData.agents[agent].expense;
 			finalDailyExpense=testData.agents[agent].dailyExpense;
 		}
-		$('#agentData tbody').append('<tr id="tid'+agent+'"><td>'+testData.agents[agent].name+'</td><td>$'+parseFloat(avgFinalBuyBid).toFixed(3)+'</td><td>$'+parseFloat(avgFinalSellBid).toFixed(3)+'</td><td>$'+parseFloat(profit).toFixed(3)+'</td><td>$'+parseFloat(expense).toFixed(3)+'</td><td>$'+parseFloat(finalDailyProfit-finalDailyExpense).toFixed(3)+'</td><td>$'+parseFloat(profit-expense).toFixed(3)+'</td></tr>');
+		$('#agentData tbody').append('<tr id="tid'+agent+'"><td><a href="#" onclick="agentDetails('+agent+')">'+testData.agents[agent].name+'</a></td><td>$'+parseFloat(profit).toFixed(3)+'</td><td>$'+parseFloat(expense).toFixed(3)+'</td><td>$'+parseFloat(finalDailyProfit-finalDailyExpense).toFixed(3)+'</td><td>$'+parseFloat(profit-expense).toFixed(3)+'</td></tr>');
 	}
 	$('#agentData').DataTable();
+}
+
+function agentDetails(a){
+	var agent=testData.agents[a];
+	$('#singleAgent').modal('show');
+
+	$('#singleAgent').on('shown.bs.modal', function (e) {
+		$('#capacity, #consGen, #priceDay, #bidDay, .singlecgenlabel, .singlebidlabel, .singlepricelabel ').text(" ");
+		$('#myModalLabel').text(agent.name+" details");
+	var consGenData=[];
+	var priceDayData=[];
+	var bidDayData=[];
+	var agentBuyBidAvg=0;
+	var agentSellBidAvg=0;
+	var agentPriceAvg=0;
+	if(agent.name.indexOf("So") > -1 || agent.name.indexOf("Wi") > -1){
+		for(day=0;day<testData.configs.daysS;day+=sRate){
+			for(hour=0;hour<24;hour++){
+				agentSellBidAvg+=agent.sellBids[hour][day];
+				agentPriceAvg+=agent.avgPrices[hour][day];
+			}
+			agentSellBidAvg/=24;
+			agentPriceAvg/=24;
+			priceDayData.push({t:day,price:agentPriceAvg});
+			bidDayData.push({t:day,bid:agentSellBidAvg});
+		}
+		for(hour=0;hour<24;hour++){
+			if(agent.name.indexOf("So")>-1){
+				var cmax=testData.configs.sGeneration[hour]+testData.configs.sGenVar;
+				consGenData.push({t:hour,c:testData.configs.sGeneration[hour],cm:cmax});
+				$(".singlecgenlabel").text("Solar Generation");
+				$(".singlebidlabel").text("Solar Average Sell Bids");
+				$(".singlepricelabel").text("Solar Average Prices");
+			}
+			if(agent.name.indexOf("Wi")>-1){
+				var cmax=testData.configs.wGeneration[hour]+testData.configs.wGenVar;
+				consGenData.push({t:hour,c:testData.configs.wGeneration[hour],cm:cmax});
+				$(".singlecgenlabel").text("Wind Generation");
+				$(".singlebidlabel").text("Wind Average Sell Bids");
+				$(".singlepricelabel").text("Wind Average Prices");
+			}
+		}
+	}
+	else if(agent.name.indexOf("St") > -1 || agent.name.indexOf("Ma") > -1){
+		for(day=0;day<testData.configs.daysS;day+=sRate){
+			for(hour=0;hour<24;hour++){
+				agentSellBidAvg+=agent.sellBids[hour][day];
+				agentBuyBidAvg+=agent.buyBids[hour][day];
+				agentPriceAvg+=agent.avgPrices[hour][day];
+			}
+			agentSellBidAvg/=24;
+			agentBuyBidAvg/=24;
+			agentPriceAvg/=24;
+			priceDayData.push({t:day,price:agentPriceAvg});
+			bidDayData.push({t:day,buybid:agentBuyBidAvg,sellBid:agentSellBidAvg});
+		}
+		$(".singlebidlabel").text(agent.name+" Average Buy/ Sell Bids");
+		$(".singlepricelabel").text(agent.name+" Average Prices");
+	}
+	else if(agent.name.indexOf("Co") > -1){
+		for(day=0;day<testData.configs.daysS;day+=sRate){
+			for(hour=0;hour<24;hour++){
+				agentBuyBidAvg+=agent.buyBids[hour][day];
+				agentPriceAvg+=agent.avgPrices[hour][day];
+			}
+			agentBuyBidAvg/=24;
+			agentPriceAvg/=24;
+			priceDayData.push({t:day,price:agentPriceAvg})
+			bidDayData.push({t:day,bid:agentBuyBidAvg})
+		}
+		for(hour=0;hour<24;hour++){
+			consGenData.push({t:hour,c:(testData.configs.cConsumption[hour]),cm:(testData.configs.cConsumption[hour]+testData.configs.cConsVar)});
+		}
+		$(".singlecgenlabel").text("Consumer Consumption");
+		$(".singlebidlabel").text("Consumer Average Buy Bids");
+		$(".singlepricelabel").text("Consumer Average Prices");
+	}
+	if(agent.name.indexOf("So") > -1 || agent.name.indexOf("Wi") > -1 || agent.name.indexOf("Co") > -1){
+		$('#consGen').css('display','initial');
+		new Morris.Bar({
+			  element: 'consGen',
+			  data: consGenData,
+			  xkey: 't',
+			  ykeys: ['c','cm'],
+			  labels: ['Consumption/Generation Min','Consumption/Generation Max'],
+			  parseTime: false
+			});
+		new Morris.Line({
+			  element: 'bidDay',
+			  data: bidDayData,
+			  xkey: 't',
+			  ykeys: ['bid'],
+			  labels: ['Agent Buy/Sell Bid Average'],
+			  parseTime: false
+			});
+		new Morris.Line({
+			  element: 'priceDay',
+			  data: priceDayData,
+			  xkey: 't',
+			  ykeys: ['price'],
+			  labels: ['Agent Daily Price Average'],
+			  parseTime: false
+			});
+		
+	}
+	else{
+		if(agent.name.indexOf("Ma")>-1){
+			$('#capacity').text("Capacity: INFINITE");
+		}
+		else{
+			$('#capacity').text("Capacity: "+testData.configs.stCap+"(+"+testData.configs.stCapVar+")");
+		}
+		console.log("StCapVar: "+testData.configs.stCapVar)
+		$('#consGen').css('display','none');
+		new Morris.Line({
+			  element: 'bidDay',
+			  data: bidDayData,
+			  xkey: 't',
+			  ykeys: ['buybid','sellbid'],
+			  labels: ['Agent Buy/Sell Bid Average'],
+			  parseTime: false
+			});
+		new Morris.Line({
+			  element: 'priceDay',
+			  data: priceDayData,
+			  xkey: 't',
+			  ykeys: ['price'],
+			  labels: ['Agent Daily Price Average'],
+			  parseTime: false
+			});
+	}	
+	});
 }
 
 
@@ -302,8 +434,8 @@ function loadJson(jsonString) {
 	    console.log(testData);
 	    $( document ).ready(function() {
 	        sRate=1;
-			if(testData.configs.days>100){
-				sRate=Math.round(testData.configs.days/maxSamples);
+			if(testData.configs.daysS>100){
+				sRate=Math.round(testData.configs.daysS/maxSamples);
 			}
 	    	gridConnection();	
 	 	    avgGraph();

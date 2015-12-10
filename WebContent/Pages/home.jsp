@@ -106,7 +106,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class='col-md-8'>
+		<div class='col-md-7'>
 			<div class="box box-default color-palette-box">
 				<div class="box-header with-border">
 					<h3 class="box-title">
@@ -143,9 +143,36 @@
 				<div id="avgPrice" style="height: 250px;"></div>
 			</div>
 		</div>
+		
+		<div class="col-md-5">
+			<div class="box box-default color-palette-box">
+				<div class="box-header with-border">
+					<h3 class="box-title">
+						<i class="ion ion-ios-eye"></i> Agent Details
+					</h3>
+				</div>
+				<table id="agentData" class="table table-striped table-bordered"
+					cellspacing="0" width="100%">
+					<thead>
+						<tr>
+							<th>Agent</th>
+							<th>Total Profit</th>
+							<th>Total Expense</th>
+							<th>Daily Net</th>
+							<th>Total Net </th>
+						</tr>
+					</thead>
+					<tbody>
+
+					</tbody>
+				</table>
+			</div>
+
 		</div>
-		<div class="row">
-		<div class='col-md-8'>
+		
+		
+		
+		<div class='col-md-7'>
 			<div class="box box-default color-palette-box">
 				<div class="box-header with-border">
 					<h3 class="box-title">
@@ -184,43 +211,37 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-8">
-			<div class="box box-default color-palette-box">
-				<div class="box-header with-border">
-					<h3 class="box-title">
-						<i class="ion ion-ios-eye"></i> Agent Details
-					</h3>
-				</div>
-				<table id="agentData" class="table table-striped table-bordered"
-					cellspacing="0" width="100%">
-					<thead>
-						<tr>
-							<th>Agent</th>
-							<th>Average Buy Price</th>
-							<th>Average Sell Price</th>
-							<th>Total Profit</th>
-							<th>Total Expense</th>
-							<th>Daily Net</th>
-							<th>Total Net </th>
-						</tr>
-					</thead>
-					<tbody>
-
-					</tbody>
-				</table>
-			</div>
-
-		</div>
-
+		
 	</div>
+<div id="singleAgent" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Agent Details</h4>
+      </div>
+      <div class="modal-body">
+      	<div id="capacity"></div>
+      	<h2 class="singlecgenlabel"></h2>
+        <div id="consGen" style="height: 250px;"></div>
+       	<h2 class="singlepricelabel"></h2>
+        <div id="priceDay" style="height: 250px;"></div>
+        <h2 class="singlebidlabel"></h2>
+        <div id="bidDay" style="height: 250px;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 	<script
 		src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script>
 	<script
-		src="js/gridBuilder.js?version=<%out.println((int) (Math.random() * 99999));%>"></script>
-	<script
 		src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
 	<script
 		src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 	</div>
 </section>
