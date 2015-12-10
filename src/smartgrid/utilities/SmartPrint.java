@@ -1,7 +1,5 @@
 package smartgrid.utilities;
 
-import java.util.ArrayList;
-
 public class SmartPrint {
 	private transient static volatile SmartPrint instance;//singleton method
 	/*List of SmartPrint categories and their numbers

@@ -1,5 +1,6 @@
-<%@ page import = "java.util.Map" %>
 <%@ page import = "smartgrid.web.bridge.SmartGridDriver" %>
+<%@ page import = "smartgrid.web.bridge.Configuration" %>
+
 <%
 String testName=request.getParameter("testName");
 String description=request.getParameter("description");
@@ -68,7 +69,35 @@ if(request.getParameter("wVar")!="0"){
 else{
 	wGenVar=0.0;
 }
-SmartGridDriver sg= new SmartGridDriver(testName, description, daysS, connectivity, mainBuy, mainSell, storageCount, stCap, stDecay,stCapVar, consumerCount, cConsumption, cConsVar, solarCount, sGeneration, sGenVar, windCount, wGeneration, wGenVar);
+String[] cCons = cConsumption.split(",");
+double[] consumerConsumption = new double[cCons.length];
+for(int i = 0; i < cCons.length; i++) {
+   consumerConsumption[i] =  Double.parseDouble(cCons[i]);
+   if(consumerConsumption[i]==0){
+	   consumerConsumption[i]=.001;
+   }
+}
+
+String[] wGen = wGeneration.split(",");
+double[] windGeneration = new double[wGen.length];
+for(int i = 0; i < wGen.length; i++) {
+   windGeneration[i] =  Double.parseDouble(wGen[i]);
+   if(windGeneration[i]==0){
+	   windGeneration[i]=.001;
+   }
+}
+
+String[] sGen = sGeneration.split(",");
+double[] solarGeneration = new double[sGen.length];
+for(int i = 0; i < sGen.length; i++) {
+   solarGeneration[i] =  Double.parseDouble(sGen[i]);
+   if(solarGeneration[i]==0){
+	  solarGeneration[i]=.001;
+   }
+}
+
+Configuration configs = new Configuration(testName, description, daysS, connectivity, mainBuy, mainSell, storageCount, stCap, stDecay,stCapVar, consumerCount, consumerConsumption, cConsVar, solarCount, solarGeneration, sGenVar, windCount, windGeneration, wGenVar);
+SmartGridDriver sg= new SmartGridDriver(configs);
 %>
 <script type="text/javascript">
 window.location.href = "/SmartGrid/index.jsp?page=home";
