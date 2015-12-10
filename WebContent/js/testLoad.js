@@ -3,10 +3,10 @@ var agents;
 var sRate=1;
 function basicData(){
 	/*Updates the primary numbers*/
-	$('#cCount').text(testData.configs.cCount);
-	$('#gCount').text((testData.configs.wCount+testData.configs.sCount));
-	$('#sCount').text(testData.configs.stCount);
-	$('#dCount').text(testData.configs.days);//check this
+	$('#cCount').text(testData.configs.consumerCount);
+	$('#gCount').text((testData.configs.windCount+testData.configs.solarCount));
+	$('#sCount').text(testData.configs.storageCount);
+	$('#dCount').text(testData.configs.daysS);//check this
 }
 
 function gridConnection(){	

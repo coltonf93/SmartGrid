@@ -59,7 +59,7 @@ public class WebSync {
 			e.printStackTrace();
 		}
 		//Updates the test.config file so tests can be loaded dynamically
-		String testConfigString=configs.getTestName()+","+configs.getDescription()+","+configs.getConsumerCount()+","+configs.getSolarCount()+","+configs.getWindCount()+","+configs.getDaysS();
+		String testConfigString=configs.getTestName()+","+configs.getDescription()+","+configs.getConsumerCount()+","+configs.getSolarCount()+","+configs.getWindCount()+","+configs.getStorageCount()+","+configs.getDaysS();
 		File testConfig = new File("C:/tests/tests.config");
 	    BufferedWriter configwriter = new BufferedWriter(new FileWriter(testConfig,true));
 	    configwriter.write(testConfigString);
