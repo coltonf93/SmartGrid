@@ -222,11 +222,12 @@
       </div>
       <div class="modal-body">
       	<div id="capacity"></div>
-        <div id="consGen"></div>
-        <div id="priceDay"></div>
-        <div id="bidDay"></div>
-        
-        
+      	<h2 class="singlecgenlabel"></h2>
+        <div id="consGen" style="height: 250px;"></div>
+       	<h2 class="singlepricelabel"></h2>
+        <div id="priceDay" style="height: 250px;"></div>
+        <h2 class="singlebidlabel"></h2>
+        <div id="bidDay" style="height: 250px;"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
