@@ -1,5 +1,6 @@
 package smartgrid.utilities;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,12 +43,12 @@ public class AuctionMaster {
 		this.buyers.add(buyer);
 	}
 
-	public void exchange(Buyers buyer, Sellers seller){
-		
-		//System.out.println("STATIC DAY CHECK: "+SmartGridDriver.getDay());
-		
+	public void exchange(Buyers buyer, Sellers seller){	
+		if(seller.getName().contains("stor")){
+			System.out.println("Storage was a seller WTF happened?");
+		}
 		double price=0;//agreed upon exchange price
-		if(buyer.getName().equals("MainGrid")|| seller.getName().equals("MainGrid")){
+		/*if(buyer.getName().equals("MainGrid")|| seller.getName().equals("MainGrid")){
 			if(seller.getName().equals("MainGrid")){//the seller is main grid
 				price=seller.getSellPrice();//price is main-grid sell price
 				if(buyer.getClass()==smartgrid.agents.GridStorage.class){//TODO find a better implementation for this to break cohesion
@@ -73,9 +74,18 @@ public class AuctionMaster {
 				}
 			}
 		}
-		else{//Both the buyer and seller are agents
+		else{//Both the buyer and seller are agents*/
+		if(seller.getName().equals("MainGrid")){
+			price=seller.getSellPrice();
+		}
+		else if(buyer.getName().equals("MainGrid")){
+			price=buyer.getBuyPrice();
+		}
+		else{
 			price=(buyer.getBuyPrice()+seller.getSellPrice())/2;// if it's not the main grid the agent pays the average of buyer and seller bids
 		}
+			
+		//}
 		//Run actual trade with agreed upon price
 		if(buyer.getBuyPower()>0&&seller.getSellPower()>0){
 			if(buyer.getBuyPower()>=seller.getSellPower()){
@@ -94,14 +104,18 @@ public class AuctionMaster {
 		Collections.sort(buyers,highBuyer);//Sorts all of the buyers by, buy price, highest first
 		for(int i=0;i<buyers.size();i++){
 			buyer=((Buyers)buyers.get(i));
-			sellers=buyers.get(i).getBuysFrom();//Determines who can sell to the current buyer
+			sellers=buyers.get(i).getBuysFrom();//Determines who can sell to the current buyer			
 			Collections.shuffle(sellers);//Randomizes  seller order to prevent ordering preference
 			Collections.sort(sellers,lowSeller);//matches the lowest price sellers to the highest price buyer
 			smartPrint.println(3,"\n"+buyer.getName()+" needs "+buyer.getBuyPower()+" units for $"+buyer.getBuyPrice()+"/unit: \n-------------------------------------------------------");
 			for(int j=0;j<sellers.size()&&buyer.getBuyPower()>0;j++){//All connected sellers offer their prices and availability, cheapest first 
 				seller=(Sellers)sellers.get(j);//TODO Sellers is a higher level than storage so storage has issues I think
 				this.exchange(buyer, seller);
-				//System.out.println("Seller("+seller.getName()+") bid at "+seller.getSellPrice()+"\\unit and Buyer("+buyer.getName()+") bit at "+buyer.getBuyPrice()+"\\unit agreeing at "+price+"\\unit.");
+					for(int e=0;e<sellers.size();e++){
+						if(sellers.get(e).getName().contains("Sto")&& ((Sellers)sellers.get(e)).getSellPower()>0){
+							System.out.println(sellers.get(e).getName()+" should have sold to "+buyer.getName()+" for p*"+((Sellers)sellers.get(e)).getSellPower());
+						}
+					}
 			}
 		}
 	}

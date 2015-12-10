@@ -64,13 +64,11 @@ public abstract class Agent {
 	}
 	
 	public void addExchange( double quantity, double price){
-		System.out.println(this.name+": ");
 		this.priceSum+=(price*quantity);
 		this.quantity+=quantity;
 	}
 	
 	public double getAvgPrice(){
-		System.out.println("AvgPrice:"+((this.priceSum)/(this.quantity))+", Quantity:"+(double)this.quantity+", priceSum:"+this.priceSum);
 		return (this.priceSum)/(this.quantity);
 	}
 	

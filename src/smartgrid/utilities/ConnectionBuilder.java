@@ -35,9 +35,9 @@ public class ConnectionBuilder {
 					}while(((double)conCount/(double)consumers.size())<p);
 				}
 				//Storage buys/sells to main grid 
-				//s.setSellTo(mainGrid);
+				s.setSellTo(mainGrid);
 				s.setBuyFrom(mainGrid);
-				//mainGrid.setSellTo(s);
+				mainGrid.setSellTo(s);
 				mainGrid.setBuyFrom(s);
 				smartPrint.println(1,s.getName()+" connected to MainGrid");
 			}

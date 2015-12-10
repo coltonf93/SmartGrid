@@ -196,10 +196,12 @@
 					<thead>
 						<tr>
 							<th>Agent</th>
-							<th>Buy Price</th>
-							<th>Sell Price</th>
-							<th>Final Daily Net Profit</th>
-							<th>Total Net Profit</th>
+							<th>Average Buy Price</th>
+							<th>Average Sell Price</th>
+							<th>Total Profit</th>
+							<th>Total Expense</th>
+							<th>Daily Net</th>
+							<th>Total Net </th>
 						</tr>
 					</thead>
 					<tbody>
