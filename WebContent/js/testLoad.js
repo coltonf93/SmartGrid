@@ -291,7 +291,7 @@ function updateTableData(){
 			expense=testData.agents[agent].expense;
 			finalDailyExpense=testData.agents[agent].dailyExpense;
 		}
-		$('#agentData tbody').append('<tr id="tid'+agent+'"><td><a href="#" onclick="agentDetails('+agent+')">'+testData.agents[agent].name+'</a></td><td>$'+parseFloat(avgFinalBuyBid).toFixed(3)+'</td><td>$'+parseFloat(avgFinalSellBid).toFixed(3)+'</td><td>$'+parseFloat(profit).toFixed(3)+'</td><td>$'+parseFloat(expense).toFixed(3)+'</td><td>$'+parseFloat(finalDailyProfit-finalDailyExpense).toFixed(3)+'</td><td>$'+parseFloat(profit-expense).toFixed(3)+'</td></tr>');
+		$('#agentData tbody').append('<tr id="tid'+agent+'"><td><a href="#" onclick="agentDetails('+agent+')">'+testData.agents[agent].name+'</a></td><td>$'+parseFloat(profit).toFixed(3)+'</td><td>$'+parseFloat(expense).toFixed(3)+'</td><td>$'+parseFloat(finalDailyProfit-finalDailyExpense).toFixed(3)+'</td><td>$'+parseFloat(profit-expense).toFixed(3)+'</td></tr>');
 	}
 	$('#agentData').DataTable();
 }

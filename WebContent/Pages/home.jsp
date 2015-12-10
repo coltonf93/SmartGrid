@@ -106,7 +106,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class='col-md-8'>
+		<div class='col-md-7'>
 			<div class="box box-default color-palette-box">
 				<div class="box-header with-border">
 					<h3 class="box-title">
@@ -143,9 +143,36 @@
 				<div id="avgPrice" style="height: 250px;"></div>
 			</div>
 		</div>
+		
+		<div class="col-md-5">
+			<div class="box box-default color-palette-box">
+				<div class="box-header with-border">
+					<h3 class="box-title">
+						<i class="ion ion-ios-eye"></i> Agent Details
+					</h3>
+				</div>
+				<table id="agentData" class="table table-striped table-bordered"
+					cellspacing="0" width="100%">
+					<thead>
+						<tr>
+							<th>Agent</th>
+							<th>Total Profit</th>
+							<th>Total Expense</th>
+							<th>Daily Net</th>
+							<th>Total Net </th>
+						</tr>
+					</thead>
+					<tbody>
+
+					</tbody>
+				</table>
+			</div>
+
 		</div>
-		<div class="row">
-		<div class='col-md-8'>
+		
+		
+		
+		<div class='col-md-7'>
 			<div class="box box-default color-palette-box">
 				<div class="box-header with-border">
 					<h3 class="box-title">
@@ -184,34 +211,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-8">
-			<div class="box box-default color-palette-box">
-				<div class="box-header with-border">
-					<h3 class="box-title">
-						<i class="ion ion-ios-eye"></i> Agent Details
-					</h3>
-				</div>
-				<table id="agentData" class="table table-striped table-bordered"
-					cellspacing="0" width="100%">
-					<thead>
-						<tr>
-							<th>Agent</th>
-							<th>Average Buy Price</th>
-							<th>Average Sell Price</th>
-							<th>Total Profit</th>
-							<th>Total Expense</th>
-							<th>Daily Net</th>
-							<th>Total Net </th>
-						</tr>
-					</thead>
-					<tbody>
-
-					</tbody>
-				</table>
-			</div>
-
-		</div>
-
+		
 	</div>
 <div id="singleAgent" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog modal-lg">
