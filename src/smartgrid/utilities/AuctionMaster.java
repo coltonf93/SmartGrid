@@ -42,10 +42,7 @@ public class AuctionMaster {
 		this.buyers.add(buyer);
 	}
 
-	public void exchange(Buyers buyer, Sellers seller){
-		
-		//System.out.println("STATIC DAY CHECK: "+SmartGridDriver.getDay());
-		
+	public void exchange(Buyers buyer, Sellers seller){	
 		double price=0;//agreed upon exchange price
 		if(buyer.getName().equals("MainGrid")|| seller.getName().equals("MainGrid")){
 			if(seller.getName().equals("MainGrid")){//the seller is main grid
@@ -101,7 +98,6 @@ public class AuctionMaster {
 			for(int j=0;j<sellers.size()&&buyer.getBuyPower()>0;j++){//All connected sellers offer their prices and availability, cheapest first 
 				seller=(Sellers)sellers.get(j);//TODO Sellers is a higher level than storage so storage has issues I think
 				this.exchange(buyer, seller);
-				//System.out.println("Seller("+seller.getName()+") bid at "+seller.getSellPrice()+"\\unit and Buyer("+buyer.getName()+") bit at "+buyer.getBuyPrice()+"\\unit agreeing at "+price+"\\unit.");
 			}
 		}
 	}

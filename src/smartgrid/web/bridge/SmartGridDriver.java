@@ -44,7 +44,6 @@ public class SmartGridDriver{
 		this.consumerCount=consumerCount;
 		this.storageCount=storageCount;
 		this.connectivity=connectivity;
-		System.out.println("Storage: "+stCap+","+stCapVar+","+stDecay);
 		String[] cCons = cConsumption.split(",");
 		this.consumerConsumption = new double[cCons.length];
 		for(int i = 0; i < cCons.length; i++) {

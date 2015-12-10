@@ -33,7 +33,6 @@ public class WebSync {
 	
 	public void saveTest(String testName, String description, int cCount, int wCount, int sCount, int stCount, double connectivity, double[] cCons, double[] sGen, double[] wGen) throws IOException{
 		smartPrint.println(8,"Saving Test to json file.");
-		System.out.println("save test start");
 		//Hackish workaround to solve the cyclic serilization issue
 		ArrayList<String[]>links = new ArrayList<String[]>();
 		for(int i=0;i<agents.size();i++){

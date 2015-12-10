@@ -1,5 +1,5 @@
 var agents;
-
+var sRate=1;
 function basicData(){
 	/*Updates the primary numbers*/
 	$('#cCount').text(testData.cCount);
@@ -90,9 +90,9 @@ function avgGraph(){
 
 function updateAvgPrice(hour){
 	$('#avgPrice').text("");
-	
 		var graphData2=[];
-		for(dy=0;dy<testData.agents[0].avgPrices[0].length;dy++){
+		console.log(sRate);
+		for(dy=0;dy<testData.agents[0].avgPrices[0].length;dy+=sRate){
 			var solarPriceSum=0;
 			var windPriceSum=0;
 			var consumerPriceSum=0;
@@ -174,7 +174,7 @@ function updateAvgPrice(hour){
 function updateAvgBid(hour){
 	$('#avgBid').text("");
 		var graphData=[];
-		for(dy=0;dy<testData.agents[0].avgPrices[0].length;dy++){
+		for(dy=0;dy<testData.agents[0].avgPrices[0].length;dy+=sRate){
 			var solarBidSum=0;
 			var windBidSum=0;
 			var consumerBidSum=0;
@@ -299,13 +299,18 @@ function updateTableData(){
 function loadJson(jsonString) {
 	    testData=jQuery.parseJSON(jsonString); 
 	    console.log(testData);
-	    document.addEventListener('DOMContentLoaded', function(){ 
+	    $( document ).ready(function() {
+	        sRate=1;
+			if(testData.days>100){
+				sRate=Math.round(testData.days/100);
+			}
 	    	gridConnection();	
 	 	    avgGraph();
 	 	    basicData();
 	 	    updateTableData();
 	 	    updateAvgPrice(24);
 	 	    updateAvgBid(24);
+	 	
 	    });
 	   
 }
